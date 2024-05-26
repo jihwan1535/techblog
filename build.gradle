@@ -29,6 +29,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'org.slf4j:jcl-over-slf4j'
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
