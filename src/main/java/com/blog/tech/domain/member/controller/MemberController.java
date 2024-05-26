@@ -1,6 +1,9 @@
 package com.blog.tech.domain.member.controller;
 
-import com.blog.tech.domain.member.dto.request.JoinMemberBean;
+import java.sql.SQLException;
+
+import com.blog.tech.domain.member.dto.request.RegisterMemberBean;
+import com.blog.tech.domain.member.dto.response.RegisteredMemberBean;
 import com.blog.tech.domain.member.service.MemberService;
 
 import jakarta.validation.Valid;
@@ -13,8 +16,8 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	public void join(@Valid final JoinMemberBean joinMemberBean) {
-		memberService.registerAccount(joinMemberBean);
+	public RegisteredMemberBean register(@Valid final RegisterMemberBean registerMemberBean) throws SQLException {
+		return memberService.registerAccount(registerMemberBean);
 		//memberService.registerMember(joinMemberBean);
 	}
 

@@ -3,11 +3,12 @@ package com.blog.tech.domain.common;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public interface CRUDIfs<ENTITY> {
 
 	ENTITY save(final ENTITY data) throws SQLException;
-	ENTITY findById(final Long id);
+	Optional<ENTITY> findById(final Long id);
 	List<ENTITY> findByAll();
 	void delete(final Long id);
 

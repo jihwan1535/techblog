@@ -1,12 +1,14 @@
 package com.blog.tech.global.servlet;
 
 import java.io.IOException;
-import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.blog.tech.domain.member.controller.MemberController;
-import com.blog.tech.domain.member.dto.request.JoinMemberBean;
-import com.blog.tech.domain.member.service.MemberService;
+import com.blog.tech.domain.member.dto.response.RegisteredMemberBean;
+import com.blog.tech.domain.member.dto.request.RegisterMemberBean;
+import com.blog.tech.domain.member.repository.dao.MemberDao;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,10 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/join")
 public class JoinMemberServlet extends HttpServlet {
 
-	private final MemberController memberController;
+	private MemberController memberController;
 
-	public JoinMemberServlet(final MemberController memberController) {
-		this.memberController = memberController;
+	@Override
+	public void init() throws ServletException {
+		final ServletContext context = this.getServletContext();
+		memberController = (MemberController) context.getAttribute("memberController");
 	}
 
 	@Override
@@ -34,7 +38,17 @@ public class JoinMemberServlet extends HttpServlet {
 		final String image = req.getParameter("image");
 		final String aboutMe = req.getParameter("about_me");
 
-		memberController.join(JoinMemberBean.of(email, password, nickname, image, aboutMe));
+		resp.setContentType("text/html; charset=UTF-8");
+		try {
+			final RegisteredMemberBean register = memberController.register(RegisterMemberBean.of(email, password, nickname, image, aboutMe));
+			req.setAttribute("register", register);
+			RequestDispatcher rd = req.getRequestDispatcher(
+				"/test/test.jsp"
+			);
+			rd.include(req, resp);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 

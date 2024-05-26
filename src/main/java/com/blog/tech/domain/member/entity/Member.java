@@ -2,13 +2,17 @@ package com.blog.tech.domain.member.entity;
 
 import com.blog.tech.domain.common.BaseEntity;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
-@Builder
+@SuperBuilder
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id", callSuper = true)
 public class Member extends BaseEntity {
 
 	private Long id;

@@ -1,16 +1,12 @@
 package com.blog.tech.domain.member.dto.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-public record JoinMemberBean(
+public record RegisterMemberBean(
 	@NotBlank
 	@Email
 	String email,
@@ -30,8 +26,8 @@ public record JoinMemberBean(
 	String aboutMe
 ) {
 
-	public static JoinMemberBean of(String email, String password, String nickname, String image, String aboutMe) {
-		return new JoinMemberBean(email, password, nickname, image, aboutMe);
+	public static RegisterMemberBean of(String email, String password, String nickname, String image, String aboutMe) {
+		return new RegisterMemberBean(email, password, nickname, image, aboutMe);
 	}
 
 }
