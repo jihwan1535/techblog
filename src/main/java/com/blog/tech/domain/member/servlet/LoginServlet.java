@@ -1,23 +1,24 @@
-package com.blog.tech.global.servlet;
+package com.blog.tech.domain.member.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.member.controller.MemberController;
-import com.blog.tech.domain.member.dto.response.RegisteredMemberBean;
-import com.blog.tech.domain.member.dto.request.RegisterMemberBean;
-import com.blog.tech.domain.member.repository.dao.MemberDao;
+import com.blog.tech.domain.member.dto.request.LoginRequestBean;
+import com.blog.tech.domain.member.dto.response.LoginResponseBean;
+import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/join")
-public class JoinMemberServlet extends HttpServlet {
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
 
 	private MemberController memberController;
 
@@ -34,22 +35,17 @@ public class JoinMemberServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
-		final String nickname = req.getParameter("nickname");
-		final String image = req.getParameter("image");
-		final String aboutMe = req.getParameter("about_me");
 
 		resp.setContentType("text/html; charset=UTF-8");
 		try {
-			final RegisteredMemberBean register = memberController.register(RegisterMemberBean.of(email, password, nickname, image, aboutMe));
-			req.setAttribute("register", register);
-			RequestDispatcher rd = req.getRequestDispatcher(
-				"/join/joinResult.jsp"
-			);
+			final LoginResponseBean login = memberController.login(LoginRequestBean.of(email, password));
+			System.out.println(login.toString());
+			req.setAttribute("login", login);
+			RequestDispatcher rd = req.getRequestDispatcher("/member/loginResult.jsp");
 			rd.include(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 	@Override
