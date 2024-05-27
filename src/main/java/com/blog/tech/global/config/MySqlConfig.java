@@ -23,7 +23,6 @@ public class MySqlConfig implements ServletContextListener {
 
 	private Connection conn;
 
-
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
 		try {
