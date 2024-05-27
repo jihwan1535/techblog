@@ -1,6 +1,14 @@
 package com.blog.tech.domain.member.repository.ifs;
 
-import com.blog.tech.domain.common.CRUDIfs;
+import java.sql.SQLException;
+import java.util.Optional;
 
-public interface MemberInfoRepository {
+import com.blog.tech.domain.common.CRUDIfs;
+import com.blog.tech.domain.member.entity.Member;
+import com.blog.tech.domain.member.entity.MemberInfo;
+
+public interface MemberInfoRepository extends CRUDIfs<MemberInfo> {
+
+	Optional<MemberInfo> findByMemberId(final Long memberId) throws SQLException;
+
 }

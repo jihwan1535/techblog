@@ -43,7 +43,7 @@ public class JoinMemberServlet extends HttpServlet {
 			final RegisteredMemberBean register = memberController.register(RegisterMemberBean.of(email, password, nickname, image, aboutMe));
 			req.setAttribute("register", register);
 			RequestDispatcher rd = req.getRequestDispatcher(
-				"/test/test.jsp"
+				"/join/joinResult.jsp"
 			);
 			rd.include(req, resp);
 		} catch (SQLException e) {
@@ -59,4 +59,5 @@ public class JoinMemberServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 }

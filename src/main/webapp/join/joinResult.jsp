@@ -4,23 +4,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Registration Result</title>
+    <title>회원가입</title>
 </head>
 <body>
-<h1>Registration Result</h1>
 <%
     RegisteredMemberBean member = (RegisteredMemberBean) request.getAttribute("register");
-    if (member != null) {
 %>
-<p>Id: <%= member.id() %></p>
-<p>Email: <%= member.email() %></p>
-<p>Password: <%= member.password() %></p>
-<%
-} else {
-%>
-<p>No member registered.</p>
-<%
-    }
-%>
+    <h1><%= member.id()%>번 째 회원</h1>
+    <p><%= member.nickname() %>님께서 <%= member.createdAt()%> 부로 가입하셨습니다.</p>
+    <br>
+    <a href="../index.jsp">메인으로 돌아가기</a>
 </body>
 </html>

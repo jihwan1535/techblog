@@ -1,4 +1,4 @@
-package com.blog.tech.global.utility;
+package com.blog.tech.global.utility.db;
 
 import java.sql.Connection;
 

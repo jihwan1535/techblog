@@ -16,8 +16,8 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	public RegisteredMemberBean register(@Valid final RegisterMemberBean registerMemberBean) throws SQLException {
-		return memberService.registerAccount(registerMemberBean);
+	public RegisteredMemberBean register(final RegisterMemberBean registerMemberBean) throws SQLException {
+		return memberService.register(registerMemberBean);
 		//memberService.registerMember(joinMemberBean);
 	}
 

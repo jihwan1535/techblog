@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.member.entity.Member;
+import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
-import com.blog.tech.global.utility.DBUtility;
+import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
+import com.blog.tech.global.utility.db.mapper.MemberMapper;
 
 public class MemberDao implements MemberRepository {
 
@@ -23,32 +25,57 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public Member save(final Member data) throws SQLException {
-		final String sql = "INSERT INTO member (id, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
-		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		if (findById(data.getId()).isPresent()) {
+			update(data);
+			return data;
+		}
+		return create(data);
+	}
 
-		pstmt.setLong(1, 0);
-		pstmt.setString(2, data.getEmail());
-		pstmt.setString(3, data.getPassword());
-		pstmt.setTimestamp(4, Timestamp.valueOf(data.getCreatedAt()));
-		pstmt.setTimestamp(5, Timestamp.valueOf(data.getUpdatedAt()));
+	private void update(final Member data) throws SQLException {
+		final String sql = "UPDATE member SET email = ?, password = ?, created_at = ?, updated_at = ? WHERE id = ?";
+		final PreparedStatement pstmt = conn.prepareStatement(sql);
+		setUpdatePstmt(pstmt, data);
 
 		final int rows = pstmt.executeUpdate();
+		pstmt.close();
+		System.out.println("Updated " + rows + " row(s).");
+	}
 
+	private Member create(final Member data) throws SQLException {
+		final String sql = "INSERT INTO member (id, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
+		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		setCreatePstmt(pstmt, data);
+
+		final int rows = pstmt.executeUpdate();
 		ResultSet rs = pstmt.getGeneratedKeys();
 		if (rs.next()) {
 			data.setId(rs.getLong(1));
 		}
 		rs.close();
 		pstmt.close();
-
 		System.out.println("Inserted " + rows + " row(s).");
 
 		return data;
 	}
 
 	@Override
-	public Optional<Member> findById(final Long id) {
-		return null;
+	public Optional<Member> findById(final Long id) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member WHERE id = ?");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Member member = MemberMapper.from(rs);
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(member);
 	}
 
 	@Override
@@ -73,18 +100,27 @@ public class MemberDao implements MemberRepository {
 			return Optional.empty();
 		}
 
-		final Member member = Member.builder()
-			.id(rs.getLong("id"))
-			.email(rs.getString("email"))
-			.password(rs.getString("password"))
-			.createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-			.updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
-			.build();
-
+		final Member member = MemberMapper.from(rs);
 		rs.close();
 		pstmt.close();
 
 		return Optional.of(member);
+	}
+
+	private void setCreatePstmt(final PreparedStatement pstmt, final Member data) throws SQLException {
+		pstmt.setLong(1, data.getId());
+		pstmt.setString(2, data.getEmail());
+		pstmt.setString(3, data.getPassword());
+		pstmt.setTimestamp(4, Timestamp.valueOf(data.getCreatedAt()));
+		pstmt.setTimestamp(5, Timestamp.valueOf(data.getUpdatedAt()));
+	}
+
+	private void setUpdatePstmt(final PreparedStatement pstmt, final Member data) throws SQLException {
+		pstmt.setString(1, data.getEmail());
+		pstmt.setString(2, data.getPassword());
+		pstmt.setTimestamp(3, Timestamp.valueOf(data.getCreatedAt()));
+		pstmt.setTimestamp(4, Timestamp.valueOf(data.getUpdatedAt()));
+		pstmt.setLong(5, data.getId());
 	}
 
 }

@@ -1,15 +1,18 @@
 package com.blog.tech.domain.member.dto.response;
 
+import java.time.LocalDateTime;
+
 import com.blog.tech.domain.member.entity.Member;
+import com.blog.tech.domain.member.entity.MemberInfo;
 
 public record RegisteredMemberBean(
 	Long id,
-	String email,
-	String password
+	String nickname,
+	LocalDateTime createdAt
 ) {
 
-	public static RegisteredMemberBean of(final Member member) {
-		return new RegisteredMemberBean(member.getId(), member.getEmail(), member.getPassword());
+	public static RegisteredMemberBean of(final MemberInfo member) {
+		return new RegisteredMemberBean(member.getId(), member.getNickname(), member.getCreatedAt());
 	}
 
 }
