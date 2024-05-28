@@ -80,12 +80,23 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public List<Member> findByAll() {
+		/*
+		* todo
+		*  admin일 경우, 전체 회원 조회 기능이 필요
+		*  또는 일반 회원도 전체 회원 조회가 가능하게 할 지?
+		* */
 		return null;
 	}
 
 	@Override
-	public void delete(final Long id) {
+	public void delete(final Long id) throws SQLException {
+		final String sql = "DELETE FROM member WHERE id = ?";
+		final PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setLong(1, id);
 
+		final int rows = pstmt.executeUpdate();
+		pstmt.close();
+		System.out.println("Updated " + rows + " row(s).");
 	}
 
 	@Override

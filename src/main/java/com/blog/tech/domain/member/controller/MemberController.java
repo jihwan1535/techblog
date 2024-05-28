@@ -2,11 +2,11 @@ package com.blog.tech.domain.member.controller;
 
 import java.sql.SQLException;
 
-import com.blog.tech.domain.member.dto.request.RegisterMemberBean;
-import com.blog.tech.domain.member.dto.response.RegisteredMemberBean;
+import com.blog.tech.domain.member.dto.request.LoginRequestBean;
+import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
+import com.blog.tech.domain.member.dto.response.LoginResponseBean;
+import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.service.MemberService;
-
-import jakarta.validation.Valid;
 
 public class MemberController {
 
@@ -16,9 +16,12 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	public RegisteredMemberBean register(final RegisterMemberBean registerMemberBean) throws SQLException {
-		return memberService.register(registerMemberBean);
+	public RegisterResponseBean register(final RegisterRequestBean request) throws SQLException {
+		return memberService.register(request);
 		//memberService.registerMember(joinMemberBean);
 	}
 
+	public LoginResponseBean login(final LoginRequestBean request) throws SQLException {
+		return memberService.login(request);
+	}
 }

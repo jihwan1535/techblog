@@ -1,12 +1,11 @@
-package com.blog.tech.global.servlet;
+package com.blog.tech.domain.member.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.member.controller.MemberController;
-import com.blog.tech.domain.member.dto.response.RegisteredMemberBean;
-import com.blog.tech.domain.member.dto.request.RegisterMemberBean;
-import com.blog.tech.domain.member.repository.dao.MemberDao;
+import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -40,11 +39,10 @@ public class JoinMemberServlet extends HttpServlet {
 
 		resp.setContentType("text/html; charset=UTF-8");
 		try {
-			final RegisteredMemberBean register = memberController.register(RegisterMemberBean.of(email, password, nickname, image, aboutMe));
+			final RegisterResponseBean register = memberController.register(
+				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
 			req.setAttribute("register", register);
-			RequestDispatcher rd = req.getRequestDispatcher(
-				"/join/joinResult.jsp"
-			);
+			RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
 			rd.include(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

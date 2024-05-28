@@ -4,9 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
 
-public record RegisterMemberBean(
+public record RegisterRequestBean(
 	@NotBlank
 	@Email
 	String email,
@@ -26,8 +25,8 @@ public record RegisterMemberBean(
 	String aboutMe
 ) {
 
-	public static RegisterMemberBean of(String email, String password, String nickname, String image, String aboutMe) {
-		return new RegisterMemberBean(email, password, nickname, image, aboutMe);
+	public static RegisterRequestBean of(String email, String password, String nickname, String image, String aboutMe) {
+		return new RegisterRequestBean(email, password, nickname, image, aboutMe);
 	}
 
 }
