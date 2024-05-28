@@ -12,10 +12,11 @@
 </head>
 <body>
 <%
-    LoginResponseBean member = (LoginResponseBean) request.getAttribute("login");
+    final LoginResponseBean member = (LoginResponseBean) request.getAttribute("login");
 %>
-<h1><%= member.id()%>번 째 회원</h1>
-<p><%= member.nickname() %>님께서는 <%= member.status()%> 상태 입니다.</p>
+<h1>탈퇴 처리된 계정</h1>
+<p><%= member.nickname() %>님은 <%= member.status()%> 상태 입니다.</p>
+<p>회원탈퇴를 취소 하시겠습니까?</p> <!-- todo member status 변경 작업 -->
 <br>
 <a href="../index.jsp">메인으로 돌아가기</a>
 </body>

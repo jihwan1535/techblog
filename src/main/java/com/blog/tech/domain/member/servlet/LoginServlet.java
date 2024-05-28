@@ -7,6 +7,7 @@ import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.response.LoginResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.entity.vo.MemberStatus;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -39,9 +41,12 @@ public class LoginServlet extends HttpServlet {
 		resp.setContentType("text/html; charset=UTF-8");
 		try {
 			final LoginResponseBean login = memberController.login(LoginRequestBean.of(email, password));
-			System.out.println(login.toString());
 			req.setAttribute("login", login);
-			RequestDispatcher rd = req.getRequestDispatcher("/member/loginResult.jsp");
+			final RequestDispatcher rd = switch (login.status()) {
+				case MemberStatus.REGISTERED -> setCookie(req, resp, login);
+				case MemberStatus.DORMANCY -> req.getRequestDispatcher("/member/dormancyStatus.jsp");
+				case MemberStatus.UNREGISTERED -> req.getRequestDispatcher("/member/unRegisteredStatus.jsp");
+			};
 			rd.include(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -54,6 +59,22 @@ public class LoginServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		doGet(req, resp);
+	}
+
+	private RequestDispatcher setCookie(
+		final HttpServletRequest req,
+		final HttpServletResponse resp,
+		final LoginResponseBean login
+	) {
+		final HttpSession session = req.getSession();
+		session.setAttribute("member_id", login.id());
+		session.setAttribute("member_nickname", login.nickname());
+
+		Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
+		sessionCookie.setMaxAge(30 * 60);
+		resp.addCookie(sessionCookie);
+
+		return req.getRequestDispatcher("/member/loginSuccess.jsp");
 	}
 
 }
