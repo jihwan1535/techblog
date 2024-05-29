@@ -106,6 +106,26 @@ public class MemberInfoDao implements MemberInfoRepository {
 		return Optional.of(memberInfo);
 	}
 
+	@Override
+	public Optional<MemberInfo> findByNickname(final String nickname) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE nickname = ?");
+		pstmt.setString(1, nickname);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final MemberInfo memberInfo = MemberInfoMapper.from(rs);
+
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(memberInfo);
+	}
+
 	private void setCreatePstmt(final PreparedStatement pstmt, final MemberInfo data) throws SQLException {
 		pstmt.setLong(1, data.getId());
 		pstmt.setLong(2, data.getMemberId());
