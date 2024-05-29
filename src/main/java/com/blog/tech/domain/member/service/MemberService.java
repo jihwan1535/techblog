@@ -25,6 +25,12 @@ public class MemberService {
 	}
 
 	public RegisterResponseBean register(final RegisterRequestBean request) throws SQLException {
+		memberRepository.findByEmail(request.email()).ifPresent(it -> {
+			throw new RuntimeException("Duplication");
+		});
+		memberInfoRepository.findByNickname(request.nickname()).ifPresent(it -> {
+			throw new RuntimeException("already registered nickname");
+		});
 		final Member memberAccount = registerAccount(request);
 		final MemberInfo memberInfo = registerMember(request, memberAccount);
 		return RegisterResponseBean.of(memberInfo);
@@ -42,16 +48,10 @@ public class MemberService {
 			.updatedAt(LocalDateTime.now())
 			.build();
 
-		memberInfoRepository.findByMemberId(member.getId()).ifPresent(it -> {
-			throw new RuntimeException("already registered");
-		});
 		return memberInfoRepository.save(memberInfo);
 	}
 
 	private Member registerAccount(final RegisterRequestBean request) throws SQLException {
-		if (memberRepository.findByEmail(request.email()).isPresent()) {
-			throw new RuntimeException("Duplication");
-		}
 		final Member member = Member.builder()
 			.id(0L)
 			.email(request.email())
