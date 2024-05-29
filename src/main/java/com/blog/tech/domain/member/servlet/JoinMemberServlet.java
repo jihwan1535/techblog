@@ -37,7 +37,6 @@ public class JoinMemberServlet extends HttpServlet {
 		final String image = req.getParameter("image");
 		final String aboutMe = req.getParameter("about_me");
 
-		resp.setContentType("text/html; charset=UTF-8");
 		try {
 			final RegisterResponseBean register = memberController.register(
 				RegisterRequestBean.of(email, password, nickname, image, aboutMe));

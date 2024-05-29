@@ -38,7 +38,6 @@ public class LoginServlet extends HttpServlet {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
 
-		resp.setContentType("text/html; charset=UTF-8");
 		try {
 			final LoginResponseBean login = memberController.login(LoginRequestBean.of(email, password));
 			req.setAttribute("login", login);

@@ -65,8 +65,11 @@ public class MemberService {
 
 	public LoginResponseBean login(final LoginRequestBean request) throws SQLException {
 		final Member member = memberRepository.findByEmail(request.email()).orElseThrow(() -> {
-			throw new RuntimeException("invalid email");
+			throw new RuntimeException("Invalid email");
 		});
+		if (!member.getPassword().equals(request.password())) {
+			throw new RuntimeException("Invalid password");
+		}
 		final MemberInfo memberInfo = memberInfoRepository.findByMemberId(member.getId()).orElseThrow(() -> {
 			try {
 				memberRepository.delete(member.getId());
@@ -77,4 +80,5 @@ public class MemberService {
 		});
 		return LoginResponseBean.of(memberInfo);
 	}
+
 }
