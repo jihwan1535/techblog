@@ -18,7 +18,6 @@
 <p><%= member.image() %> - 프로필 사진</p>
 <p><%= member.aboutMe() %> - 자기소개</p>
 <p><%= member.postCount() %> 작성한 게시글 수</p>
-<p><%= member.updateAt() %> 마지막 프로필 수정일</p>
 <br>
 <a href="/main">메인으로 돌아가기</a>
 </body>

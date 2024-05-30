@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Objects" %><%--
   Created by IntelliJ IDEA.
   User: jihwa
   Date: 2024-05-30
@@ -12,7 +12,11 @@
 </head>
 <body>
     <a href="/register">회원가입</a>
+    <%if (Objects.isNull(session.getAttribute("member"))) {%>
     <a href="/login">로그인</a>
+    <%} else { %>
+    <a href="/logout">로그아웃</a>
+    <%}%>
     <br>
     <input class="nickname" type="text"/>
     <input class="button" type="button" onclick="profile();" value="button"/>
