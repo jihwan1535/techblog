@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
+import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
@@ -81,4 +82,10 @@ public class MemberService {
 		return MemberResponseBean.of(memberInfo);
 	}
 
+	public ProfileResponseBean profile(final String nickname) throws SQLException {
+		final MemberInfo memberInfo = memberInfoRepository.findByNickname(nickname).orElseThrow(() -> {
+			throw new RuntimeException("Invalid member");
+		});
+		return ProfileResponseBean.of(memberInfo);
+	}
 }

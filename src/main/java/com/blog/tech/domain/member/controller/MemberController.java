@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
+import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.service.MemberService;
 
@@ -25,4 +26,7 @@ public class MemberController {
 		return memberService.login(request);
 	}
 
+	public ProfileResponseBean profile(final String nickname) throws SQLException {
+		return memberService.profile(nickname);
+	}
 }

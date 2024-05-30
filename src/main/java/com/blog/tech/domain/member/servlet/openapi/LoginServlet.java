@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet;
+package com.blog.tech.domain.member.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;

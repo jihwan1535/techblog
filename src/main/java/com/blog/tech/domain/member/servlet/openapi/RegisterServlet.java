@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet;
+package com.blog.tech.domain.member.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,7 +42,7 @@ public class RegisterServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
-		final String nickname = req.getParameter("nickname");
+		final String nickname = "@" + req.getParameter("nickname");
 		final String image = req.getParameter("image");
 		final String aboutMe = req.getParameter("about_me");
 
