@@ -12,7 +12,7 @@
 </head>
 <body>
     <h1>login page</h1>
-    <form action="/loginProcess" method="post">
+    <form action="/login" method="post">
         <label for="email">id:</label><br>
         <input type="email" id="email" name="email"><br>
         <label for="password">Password:</label><br>

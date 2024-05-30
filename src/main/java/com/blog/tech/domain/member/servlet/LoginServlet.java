@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/loginProcess")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
 	private MemberController memberController;
@@ -34,9 +34,19 @@ public class LoginServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
+		final RequestDispatcher rd = req.getRequestDispatcher("/member/login.jsp");
+		rd.forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(
+		final HttpServletRequest req,
+		final HttpServletResponse resp
+	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
 
+		// todo resp.sendRedirect 로 보완하기
 		try {
 			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, password));
 			req.setAttribute("member", member);
@@ -49,14 +59,6 @@ public class LoginServlet extends HttpServlet {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	protected void doPost(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
-	) throws ServletException, IOException {
-		doGet(req, resp);
 	}
 
 	private RequestDispatcher setCookie(

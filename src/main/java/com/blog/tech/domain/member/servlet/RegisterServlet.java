@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/join")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
 	private MemberController memberController;
@@ -28,6 +28,15 @@ public class RegisterServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
+		final HttpServletRequest req,
+		final HttpServletResponse resp
+	) throws ServletException, IOException {
+		final RequestDispatcher rd = req.getRequestDispatcher("/member/register.jsp");
+		rd.forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
@@ -47,14 +56,6 @@ public class RegisterServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
-	}
-
-	@Override
-	protected void doPost(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
-	) throws ServletException, IOException {
-		doGet(req, resp);
 	}
 
 }
