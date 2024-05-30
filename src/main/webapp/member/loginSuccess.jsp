@@ -1,4 +1,4 @@
-<%@ page import="com.blog.tech.domain.member.dto.response.LoginResponseBean" %><%--
+<%@ page import="com.blog.tech.domain.member.dto.response.MemberResponseBean" %><%--
   Created by IntelliJ IDEA.
   User: jihwa
   Date: 2024-05-28
@@ -12,12 +12,11 @@
 </head>
 <body>
 <%
-    final Long memberId = (Long)session.getAttribute("member_id");
-    final String nickname = (String)session.getAttribute("member_nickname");
+    final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
 %>
-<h1><%= memberId%>번 째 회원</h1>
-<p><%= nickname %>님 로그인에 성공하셨습니다.</p>
+<h1><%= member.id() %>번 째 회원</h1>
+<p><%= member.nickname() %>님 로그인에 성공하셨습니다.</p>
 <br>
-<a href="../index.jsp">메인으로 돌아가기</a>
+<a href="/main">메인으로 돌아가기</a>
 </body>
 </html>

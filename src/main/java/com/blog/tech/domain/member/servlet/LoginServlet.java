@@ -5,8 +5,7 @@ import java.sql.SQLException;
 
 import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
-import com.blog.tech.domain.member.dto.response.LoginResponseBean;
-import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
 
 import jakarta.servlet.RequestDispatcher;
@@ -19,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/login")
+@WebServlet("/loginProcess")
 public class LoginServlet extends HttpServlet {
 
 	private MemberController memberController;
@@ -39,14 +38,14 @@ public class LoginServlet extends HttpServlet {
 		final String password = req.getParameter("password");
 
 		try {
-			final LoginResponseBean login = memberController.login(LoginRequestBean.of(email, password));
-			req.setAttribute("login", login);
-			final RequestDispatcher rd = switch (login.status()) {
-				case MemberStatus.REGISTERED -> setCookie(req, resp, login);
+			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, password));
+			req.setAttribute("member", member);
+			final RequestDispatcher rd = switch (member.status()) {
+				case MemberStatus.REGISTERED -> setCookie(req, resp, member);
 				case MemberStatus.DORMANCY -> req.getRequestDispatcher("/member/dormancyStatus.jsp");
 				case MemberStatus.UNREGISTERED -> req.getRequestDispatcher("/member/unRegisteredStatus.jsp");
 			};
-			rd.include(req, resp);
+			rd.forward(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -63,13 +62,12 @@ public class LoginServlet extends HttpServlet {
 	private RequestDispatcher setCookie(
 		final HttpServletRequest req,
 		final HttpServletResponse resp,
-		final LoginResponseBean login
+		final MemberResponseBean member
 	) {
 		final HttpSession session = req.getSession();
-		session.setAttribute("member_id", login.id());
-		session.setAttribute("member_nickname", login.nickname());
+		session.setAttribute("member", member);
 
-		Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
+		final Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
 		sessionCookie.setMaxAge(30 * 60);
 		resp.addCookie(sessionCookie);
 

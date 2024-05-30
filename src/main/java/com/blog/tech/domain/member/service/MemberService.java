@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
-import com.blog.tech.domain.member.dto.response.LoginResponseBean;
+import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
@@ -63,7 +63,7 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-	public LoginResponseBean login(final LoginRequestBean request) throws SQLException {
+	public MemberResponseBean login(final LoginRequestBean request) throws SQLException {
 		final Member member = memberRepository.findByEmail(request.email()).orElseThrow(() -> {
 			throw new RuntimeException("Invalid email");
 		});
@@ -78,7 +78,7 @@ public class MemberService {
 			}
 			throw new RuntimeException("invalid member");
 		});
-		return LoginResponseBean.of(memberInfo);
+		return MemberResponseBean.of(memberInfo);
 	}
 
 }

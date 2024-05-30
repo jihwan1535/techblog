@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/join")
-public class JoinMemberServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
 	private MemberController memberController;
 
@@ -41,8 +41,8 @@ public class JoinMemberServlet extends HttpServlet {
 			final RegisterResponseBean register = memberController.register(
 				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
 			req.setAttribute("register", register);
-			RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
-			rd.include(req, resp);
+			final RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
+			rd.forward(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
