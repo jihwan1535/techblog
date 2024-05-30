@@ -25,7 +25,13 @@ public record RegisterRequestBean(
 	String aboutMe
 ) {
 
-	public static RegisterRequestBean of(String email, String password, String nickname, String image, String aboutMe) {
+	public static RegisterRequestBean of(
+		final String email,
+		final String password,
+		final String nickname,
+		final String image,
+		final String aboutMe
+	) {
 		return new RegisterRequestBean(email, password, nickname, image, aboutMe);
 	}
 

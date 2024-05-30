@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
+import com.blog.tech.domain.member.dto.request.ProfileRequestBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
-import com.blog.tech.domain.member.dto.response.LoginResponseBean;
+import com.blog.tech.domain.member.dto.response.MemberResponseBean;
+import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
@@ -63,7 +65,7 @@ public class MemberService {
 		return memberRepository.save(member);
 	}
 
-	public LoginResponseBean login(final LoginRequestBean request) throws SQLException {
+	public MemberResponseBean login(final LoginRequestBean request) throws SQLException {
 		final Member member = memberRepository.findByEmail(request.email()).orElseThrow(() -> {
 			throw new RuntimeException("Invalid email");
 		});
@@ -78,7 +80,29 @@ public class MemberService {
 			}
 			throw new RuntimeException("invalid member");
 		});
-		return LoginResponseBean.of(memberInfo);
+		return MemberResponseBean.of(memberInfo);
 	}
 
+	public ProfileResponseBean profile(final String nickname) throws SQLException {
+		final MemberInfo memberInfo = memberInfoRepository.findByNickname(nickname).orElseThrow(() -> {
+			throw new RuntimeException("Invalid member");
+		});
+		return ProfileResponseBean.of(memberInfo);
+	}
+
+	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) throws SQLException {
+		final MemberInfo memberInfo = memberInfoRepository.findById(id).orElseThrow(() -> {
+			throw new RuntimeException("Invalid member");
+		});
+		memberInfoRepository.findByNickname(request.nickname()).ifPresent(it -> {
+			throw new RuntimeException("Duplication Nickname");
+		});
+
+		memberInfo.setNickname(request.nickname());
+		memberInfo.setImage(request.image());
+		memberInfo.setAboutMe(request.aboutMe());
+
+		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);
+		return ProfileResponseBean.of(updateProfile);
+	}
 }

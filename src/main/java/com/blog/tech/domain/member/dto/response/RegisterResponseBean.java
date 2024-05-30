@@ -10,8 +10,11 @@ public record RegisterResponseBean(
 ) {
 
 	public static RegisterResponseBean of(final MemberInfo member) {
-		final String format = Utility.DateTimeFormatter(member.getCreatedAt());
-		return new RegisterResponseBean(member.getId(), member.getNickname(), format);
+		return new RegisterResponseBean(
+			member.getId(),
+			member.getNickname(),
+			Utility.DateTimeFormatter(member.getCreatedAt())
+		);
 	}
 
 }

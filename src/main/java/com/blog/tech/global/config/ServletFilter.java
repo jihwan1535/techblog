@@ -19,8 +19,8 @@ public class ServletFilter implements Filter {
 		final ServletResponse servletResponse,
 		final FilterChain filterChain
 	) throws IOException, ServletException {
-		HttpServletRequest rq = (HttpServletRequest) servletRequest;
-		HttpServletResponse resp = (HttpServletResponse) servletResponse;
+		final HttpServletRequest rq = (HttpServletRequest) servletRequest;
+		final HttpServletResponse resp = (HttpServletResponse) servletResponse;
 		rq.setCharacterEncoding("utf-8");
 		resp.setCharacterEncoding("utf-8");
 		resp.setContentType("text/html;charset=utf-8");

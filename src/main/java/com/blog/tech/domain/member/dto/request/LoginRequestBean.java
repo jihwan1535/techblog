@@ -8,4 +8,5 @@ public record LoginRequestBean(
 	public static LoginRequestBean of(final String email, final String pw) {
 		return new LoginRequestBean(email, pw);
 	}
+
 }

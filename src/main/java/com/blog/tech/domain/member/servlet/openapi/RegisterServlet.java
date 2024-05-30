@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet;
+package com.blog.tech.domain.member.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/join")
-public class JoinMemberServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegisterServlet extends HttpServlet {
 
 	private MemberController memberController;
 
@@ -31,22 +31,8 @@ public class JoinMemberServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final String email = req.getParameter("email");
-		final String password = req.getParameter("password");
-		final String nickname = req.getParameter("nickname");
-		final String image = req.getParameter("image");
-		final String aboutMe = req.getParameter("about_me");
-
-		try {
-			final RegisterResponseBean register = memberController.register(
-				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
-			req.setAttribute("register", register);
-			RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
-			rd.include(req, resp);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
+		final RequestDispatcher rd = req.getRequestDispatcher("/member/register.jsp");
+		rd.forward(req, resp);
 	}
 
 	@Override
@@ -54,7 +40,22 @@ public class JoinMemberServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		doGet(req, resp);
+		final String email = req.getParameter("email");
+		final String password = req.getParameter("password");
+		final String nickname = "@" + req.getParameter("nickname");
+		final String image = req.getParameter("image");
+		final String aboutMe = req.getParameter("about_me");
+
+		try {
+			final RegisterResponseBean register = memberController.register(
+				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
+			req.setAttribute("register", register);
+			final RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
+			rd.forward(req, resp);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 }
