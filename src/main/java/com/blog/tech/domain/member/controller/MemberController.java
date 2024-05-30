@@ -3,6 +3,7 @@ package com.blog.tech.domain.member.controller;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
+import com.blog.tech.domain.member.dto.request.ProfileRequestBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
@@ -28,5 +29,9 @@ public class MemberController {
 
 	public ProfileResponseBean profile(final String nickname) throws SQLException {
 		return memberService.profile(nickname);
+	}
+
+	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) throws SQLException {
+		return memberService.profileUpdate(id, request);
 	}
 }

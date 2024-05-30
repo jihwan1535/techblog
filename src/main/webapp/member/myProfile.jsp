@@ -21,7 +21,7 @@
 <p><%= member.commentCount() %> 작성한 댓글 수</p>
 <p><%= member.updateAt() %> 마지막 프로필 수정일</p>
 <br>
-<a href="/">프로필 수정하기</a> <br>
+<a href="/api/members/profile">프로필 수정하기</a> <br>
 <a href="/main">메인으로 돌아가기</a>
 </body>
 </html>

@@ -1,9 +1,11 @@
-package com.blog.tech.domain.member.servlet.openapi;
+package com.blog.tech.domain.member.servlet.api;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+
+import com.blog.tech.domain.member.entity.vo.MemberStatus;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -14,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/logout")
+@WebServlet("/api/logout")
 public class LogOutServlet extends HttpServlet {
 
 	@Override
@@ -25,7 +27,7 @@ public class LogOutServlet extends HttpServlet {
 		final Optional<Cookie> optionalCookie = Arrays.stream(req.getCookies())
 			.filter(it -> it.getName().equals("JSESSIONID"))
 			.findFirst();
-		final HttpSession session = req.getSession();
+		final HttpSession session = req.getSession(false);
 		if (optionalCookie.isEmpty() || Objects.isNull(session.getAttribute("member"))) {
 			req.setAttribute("alert", "Invalid Access");
 			final RequestDispatcher rd = req.getRequestDispatcher("/exception/alert.jsp");
