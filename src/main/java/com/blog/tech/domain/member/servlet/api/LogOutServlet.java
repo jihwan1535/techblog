@@ -27,17 +27,10 @@ public class LogOutServlet extends HttpServlet {
 		final Optional<Cookie> optionalCookie = Arrays.stream(req.getCookies())
 			.filter(it -> it.getName().equals("JSESSIONID"))
 			.findFirst();
-		final HttpSession session = req.getSession(false);
-		if (optionalCookie.isEmpty() || Objects.isNull(session.getAttribute("member"))) {
-			req.setAttribute("alert", "Invalid Access");
-			final RequestDispatcher rd = req.getRequestDispatcher("/exception/alert.jsp");
-			rd.include(req, resp);
-		} else {
-			final Cookie cookie = optionalCookie.get();
-			cookie.setMaxAge(0);
-			resp.addCookie(cookie);
-			resp.sendRedirect("/main");
-		}
+		final Cookie cookie = optionalCookie.get();
+		cookie.setMaxAge(0);
+		resp.addCookie(cookie);
+		resp.sendRedirect("/main");
 	}
 
 }

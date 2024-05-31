@@ -16,12 +16,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-@WebFilter(filterName = "serviceFilter", urlPatterns = "/api/*")
+@WebFilter(filterName = "authorizationFilter", urlPatterns = "/api/*")
 public class AuthorizationFilter implements Filter {
+
+	private final String NO_LOGIN_MESSAGE = "Invalid Access: 로그인을 해주세요.";
+	private final String NO_MEMBER_MESSAGE = "Invalid Access: 사용자 정보를 찾을 수 없습니다.";
+	private final String INVALID_SESSION_MESSAGE = "Invalid Access: 유효하지 않은 세션입니다.";
+	private final String DORMANCY_MESSAGE = "Invalid Access: 휴면해제를 해주세요.";
+	private final String UNREGISTER_MESSAGE = "Invalid Access: 탈퇴 처리를 진행중인 회원입니다.";
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,46 +43,41 @@ public class AuthorizationFilter implements Filter {
 	) throws IOException, ServletException {
 		final HttpServletRequest req = (HttpServletRequest) servletRequest;
 		final HttpServletResponse resp = (HttpServletResponse) servletResponse;
-
-		final Optional<Cookie> optionalCookie = Arrays.stream(req.getCookies())
-			.filter(it -> it.getName().equals("JSESSIONID"))
-			.findFirst();
-		if (optionalCookie.isEmpty()) {
-			req.setAttribute("alert", "Invalid Access: 로그인을 해주세요.");
-			forwardToAlert(req, resp);
-			return;
-		}
-
 		final HttpSession session = req.getSession(false);
-		if (session == null) {
-			req.setAttribute("alert", "Invalid Access: 유효하지 않은 세션입니다.");
-			forwardToAlert(req, resp);
-			return;
-		}
 
-		final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
-		if (member == null) {
-			req.setAttribute("alert", "Invalid Access: 사용자 정보를 찾을 수 없습니다.");
-			forwardToAlert(req, resp);
-			return;
-		}
-		if (!member.status().equals(MemberStatus.DORMANCY)) {
-			req.setAttribute("alert", "Invalid Access: 휴면해제를 해주세요." );
-			forwardToAlert(req, resp);
-			return;
-		}
-		if (!member.status().equals(MemberStatus.UNREGISTERED)) {
-			req.setAttribute("alert", "Invalid Access: 탈퇴 처리를 진행중인 회원입니다.." );
-			forwardToAlert(req, resp);
-			return;
+		if (Objects.isNull(session)) {
+			forwardToAlert(session, req, resp, INVALID_SESSION_MESSAGE);
+		} else {
+			final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
+
+			if (Objects.isNull(member)) {
+				forwardToAlert(session, req, resp, NO_LOGIN_MESSAGE);
+			} else if (member.status().equals(MemberStatus.DORMANCY)) {
+				forwardToAlert(session, req, resp, DORMANCY_MESSAGE);
+			} else if (member.status().equals(MemberStatus.UNREGISTERED)) {
+				forwardToAlert(session, req, resp, UNREGISTER_MESSAGE);
+			}
 		}
 
 		filterChain.doFilter(req, resp);
 	}
 
-	private void forwardToAlert(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		final RequestDispatcher rd = req.getRequestDispatcher("/exception/alert.jsp");
-		rd.include(req, resp);
+	private void forwardToAlert(
+		final HttpSession session,
+		final HttpServletRequest req,
+		final HttpServletResponse resp,
+		final String alertMessage
+	) throws ServletException, IOException {
+		String originalUrl = req.getContextPath() + "/main";
+		if (Objects.nonNull(session) && Objects.nonNull(session.getAttribute("originalUrl"))) {
+			originalUrl = (String)session.getAttribute("originalUrl");
+		}
+
+		req.setAttribute("originalUrl", originalUrl);
+		req.setAttribute("alert", alertMessage);
+
+		final RequestDispatcher rd = req.getRequestDispatcher("/exception");
+		rd.forward(req, resp);
 	}
 
 }
