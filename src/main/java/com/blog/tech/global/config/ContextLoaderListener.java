@@ -14,7 +14,7 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
 @WebListener
-public class MySqlConfig implements ServletContextListener {
+public class ContextLoaderListener implements ServletContextListener {
 
 	private final String DB_URL = "jdbc:mysql://localhost:3306/blog?userSSL=false&userUnicode=true&allowPublicKeyRetrieval=true";
 	private final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -34,7 +34,6 @@ public class MySqlConfig implements ServletContextListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 
 	}
 

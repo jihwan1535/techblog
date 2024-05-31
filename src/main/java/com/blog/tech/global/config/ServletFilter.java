@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebFilter(filterName = "servletFilter", urlPatterns = "/*")
 public class ServletFilter implements Filter {
+
 	@Override
 	public void doFilter(
 		final ServletRequest servletRequest,
@@ -27,4 +28,5 @@ public class ServletFilter implements Filter {
 
 		filterChain.doFilter(rq, resp);
 	}
+
 }
