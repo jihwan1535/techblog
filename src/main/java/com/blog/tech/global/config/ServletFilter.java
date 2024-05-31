@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebFilter(filterName = "servletFilter", urlPatterns = "/*")
 public class ServletFilter implements Filter {
 
 	@Override
@@ -35,11 +34,12 @@ public class ServletFilter implements Filter {
 		if (Objects.nonNull(session) && Objects.nonNull(session.getAttribute("originalUrl"))) {
 			originalUrl = (String)session.getAttribute("originalUrl");
 		}
-
+		System.out.println(">>>>>>>>>>>>>>>>> " + originalUrl);
 		filterChain.doFilter(req, resp);
-
-		if (Objects.nonNull(session)) {
-			session.setAttribute("originalUrl", req.getRequestURI());
+		System.out.println("<<<<<<<<<<<<<<<<< " + req.getRequestURI());
+		final HttpSession filteringSession = req.getSession(false);
+		if (Objects.nonNull(filteringSession)) {
+			filteringSession.setAttribute("originalUrl", req.getRequestURI());
 		}
 	}
 
