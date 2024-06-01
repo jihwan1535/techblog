@@ -1,6 +1,9 @@
 package com.blog.tech.domain.member.servlet.openapi;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -33,9 +36,9 @@ public class ProfileServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String requestURI = req.getRequestURI();
-		final String nickname = requestURI.substring(requestURI.lastIndexOf('/') + 1);
-
+		final String encodedNickname = requestURI.substring(requestURI.lastIndexOf('/') + 1);
 		try {
+			final String nickname = URLDecoder.decode(encodedNickname, StandardCharsets.UTF_8.toString());
 			final ProfileResponseBean profile = memberController.profile(nickname);
 			req.setAttribute("profile", profile);
 
