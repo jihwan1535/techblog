@@ -8,6 +8,7 @@ import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.dto.response.AvailableResponseBean;
 import com.blog.tech.domain.member.service.MemberService;
 
 public class MemberController {
@@ -20,7 +21,6 @@ public class MemberController {
 
 	public RegisterResponseBean register(final RegisterRequestBean request) throws SQLException {
 		return memberService.register(request);
-		//memberService.registerMember(joinMemberBean);
 	}
 
 	public MemberResponseBean login(final LoginRequestBean request) throws SQLException {
@@ -34,4 +34,9 @@ public class MemberController {
 	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) throws SQLException {
 		return memberService.profileUpdate(id, request);
 	}
+
+	public AvailableResponseBean checkNickname(final String nickname) throws SQLException {
+		return memberService.isValidNickname(nickname);
+	}
+
 }

@@ -9,6 +9,7 @@ import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.dto.response.AvailableResponseBean;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.entity.vo.MemberRole;
@@ -106,4 +107,14 @@ public class MemberService {
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);
 		return ProfileResponseBean.of(updateProfile);
 	}
+
+	public AvailableResponseBean isValidNickname(final String nickname) throws SQLException {
+		final String DUPLICATION = "DUPLICATION";
+		final String AVAILABLE = "AVAILABLE";
+		if (memberInfoRepository.findByNickname(nickname).isPresent()) {
+			return AvailableResponseBean.of(DUPLICATION);
+		}
+		return AvailableResponseBean.of(AVAILABLE);
+	}
+
 }

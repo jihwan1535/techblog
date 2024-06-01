@@ -9,6 +9,8 @@
 <html>
 <head>
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
 <%
@@ -21,7 +23,39 @@
 <p><%= member.commentCount() %> 작성한 댓글 수</p>
 <p><%= member.updateAt() %> 마지막 프로필 수정일</p>
 <br>
-<a href="/api/members/profile">프로필 수정하기</a> <br>
 <a href="/main">메인으로 돌아가기</a>
+<hr>
+<form action="/api/members/profile" method="post">
+    <label for="nickname">닉네임:</label><br>
+    <input type="text" id="nickname" name="nickname" value="<%= member.nickname() %>">
+    <button type="button" id="checkNickname">닉네임 중복검사</button><br>
+    <label for="image">프로필 사진:</label><br>
+    <input type="file" id="image" name="image"><br>
+    <label for="about_me">자기소개:</label><br>
+    <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
+    <input type="submit" value="프로필 수정하기" onclick="">
+</form>
+<script>
+    $(document).ready(function(){
+        $("#checkNickname").click(function(){
+            var nickname = $("#nickname").val();
+            $.ajax({
+                url: '/checkNickname',
+                data: {nickname: nickname},
+                type: 'GET',
+                success: function(response){
+                    if(response == 'AVAILABLE'){
+                        alert("사용 가능한 닉네임입니다.");
+                    } else {
+                        alert("이미 사용중인 닉네임입니다.");
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

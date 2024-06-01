@@ -1,6 +1,8 @@
 package com.blog.tech.domain.member.servlet.api;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -49,8 +51,10 @@ public class ProfileServlet  extends HttpServlet {
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
 		try {
 			final ProfileResponseBean profile = memberController.profileUpdate(member.id(), updateInfo);
-			final String redirectUrl = profile.nickname();
-			resp.sendRedirect("/" + redirectUrl);
+			final String contextPath = "/profile/@";
+			final String encodedNickname = URLEncoder.encode(profile.nickname(), StandardCharsets.UTF_8.toString());
+			final String redirectUrl = contextPath + encodedNickname;
+			resp.sendRedirect(redirectUrl);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
