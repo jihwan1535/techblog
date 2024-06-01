@@ -11,7 +11,6 @@
     <title>Tech Blog</title>
 </head>
 <body>
-    <%System.out.println("테스트테스트테스트");%>
     <!-- login/logout 기능에서 사용하므로 실제 main 에서는 session 을 false 시키는게 좋을듯 -->
     <a href="/register">회원가입</a>
     <%if (Objects.isNull(session.getAttribute("member"))) {%>

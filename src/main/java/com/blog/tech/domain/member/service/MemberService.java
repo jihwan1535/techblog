@@ -9,6 +9,7 @@ import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
+import com.blog.tech.domain.member.dto.response.AvailableResponseBean;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.entity.vo.MemberRole;
@@ -18,8 +19,11 @@ import com.blog.tech.domain.member.repository.ifs.MemberRepository;
 
 public class MemberService {
 
-	final MemberRepository memberRepository;
-	final MemberInfoRepository memberInfoRepository;
+	private final MemberRepository memberRepository;
+	private final MemberInfoRepository memberInfoRepository;
+	private final String DUPLICATION = "DUPLICATION";
+	private final String AVAILABLE = "AVAILABLE";
+
 
 	public MemberService(final MemberRepository memberRepository, final MemberInfoRepository memberInfoRepository) {
 		this.memberRepository = memberRepository;
@@ -105,5 +109,19 @@ public class MemberService {
 
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);
 		return ProfileResponseBean.of(updateProfile);
+	}
+
+	public AvailableResponseBean isValidNickname(final String nickname) throws SQLException {
+		if (memberInfoRepository.findByNickname(nickname).isPresent()) {
+			return AvailableResponseBean.of(DUPLICATION);
+		}
+		return AvailableResponseBean.of(AVAILABLE);
+	}
+
+	public AvailableResponseBean isValidEmail(final String email) throws SQLException {
+		if (memberRepository.findByEmail(email).isPresent()) {
+			return AvailableResponseBean.of(DUPLICATION);
+		}
+		return AvailableResponseBean.of(AVAILABLE);
 	}
 }
