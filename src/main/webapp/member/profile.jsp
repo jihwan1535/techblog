@@ -14,7 +14,7 @@
 <%
     final ProfileResponseBean member = (ProfileResponseBean)request.getAttribute("profile");
 %>
-<p><%= member.nickname() %>의 프로필</p>
+<p><%= "@"+member.nickname() %>의 프로필</p>
 <p><%= member.image() %> - 프로필 사진</p>
 <p><%= member.aboutMe() %> - 자기소개</p>
 <p><%= member.postCount() %> 작성한 게시글 수</p>

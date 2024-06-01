@@ -44,6 +44,7 @@ public class MemberService {
 			.memberId(member.getId())
 			.nickname(request.nickname())
 			.image(request.image())
+			.aboutMe(request.aboutMe())
 			.role(MemberRole.MEMBER)
 			.status(MemberStatus.REGISTERED)
 			.createdAt(LocalDateTime.now())
