@@ -36,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String requestURI = req.getRequestURI();
-		final String encodedNickname = requestURI.substring(requestURI.lastIndexOf('/') + 1);
+		final String encodedNickname = requestURI.substring(requestURI.lastIndexOf('/') + 2);
 		try {
 			final String nickname = URLDecoder.decode(encodedNickname, StandardCharsets.UTF_8.toString());
 			final ProfileResponseBean profile = memberController.profile(nickname);
