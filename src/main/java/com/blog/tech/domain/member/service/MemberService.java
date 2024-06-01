@@ -85,7 +85,7 @@ public class MemberService {
 
 	public ProfileResponseBean profile(final String nickname) throws SQLException {
 		final MemberInfo memberInfo = memberInfoRepository.findByNickname(nickname).orElseThrow(() -> {
-			throw new RuntimeException("Invalid member");
+			throw new RuntimeException("Invalid member : " + nickname);
 		});
 		return ProfileResponseBean.of(memberInfo);
 	}

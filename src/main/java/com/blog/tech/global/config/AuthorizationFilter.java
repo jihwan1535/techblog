@@ -21,7 +21,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-@WebFilter(filterName = "authorizationFilter", urlPatterns = "/api/*")
+
 public class AuthorizationFilter implements Filter {
 
 	private final String NO_LOGIN_MESSAGE = "Invalid Access: 로그인을 해주세요.";
