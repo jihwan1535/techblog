@@ -10,7 +10,6 @@
 <head>
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
 <body>
 <%
@@ -25,17 +24,19 @@
 <br>
 <a href="/main">메인으로 돌아가기</a>
 <hr>
-<form action="/api/members/profile" method="post">
-    <label for="nickname">닉네임:</label><br>
+<form id="profileForm" action="/api/members/profile" method="post">
+    <label for="nickname">닉네임:</label>
     <input type="text" id="nickname" name="nickname" value="<%= member.nickname() %>">
     <button type="button" id="checkNickname">닉네임 중복검사</button><br>
-    <label for="image">프로필 사진:</label><br>
+    <label for="image">프로필 사진:</label>
     <input type="file" id="image" name="image"><br>
-    <label for="about_me">자기소개:</label><br>
+    <label for="about_me">자기소개</label><br>
     <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
-    <input type="submit" value="프로필 수정하기" onclick="">
+    <input type="submit" value="프로필 수정하기">
 </form>
 <script>
+    var isNicknameAvailable = false;
+
     $(document).ready(function(){
         $("#checkNickname").click(function(){
             var nickname = $("#nickname").val();
@@ -46,8 +47,10 @@
                 success: function(response){
                     if(response == 'AVAILABLE'){
                         alert("사용 가능한 닉네임입니다.");
+                        isNicknameAvailable = true;
                     } else {
                         alert("이미 사용중인 닉네임입니다.");
+                        isNicknameAvailable = false;
                     }
                 },
                 error: function(error){
@@ -55,6 +58,13 @@
                 }
             });
         });
+    });
+
+    $("#profileForm").submit(function(e){
+        if(!isNicknameAvailable){
+            e.preventDefault();
+            alert("닉네임 중복 검사를 통과해야 합니다.");
+        }
     });
 </script>
 </body>

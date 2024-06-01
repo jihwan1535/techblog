@@ -39,4 +39,7 @@ public class MemberController {
 		return memberService.isValidNickname(nickname);
 	}
 
+	public AvailableResponseBean checkEmail(final String email) throws SQLException {
+		return memberService.isValidEmail(email);
+	}
 }

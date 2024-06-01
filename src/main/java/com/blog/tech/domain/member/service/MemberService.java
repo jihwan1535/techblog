@@ -19,8 +19,11 @@ import com.blog.tech.domain.member.repository.ifs.MemberRepository;
 
 public class MemberService {
 
-	final MemberRepository memberRepository;
-	final MemberInfoRepository memberInfoRepository;
+	private final MemberRepository memberRepository;
+	private final MemberInfoRepository memberInfoRepository;
+	private final String DUPLICATION = "DUPLICATION";
+	private final String AVAILABLE = "AVAILABLE";
+
 
 	public MemberService(final MemberRepository memberRepository, final MemberInfoRepository memberInfoRepository) {
 		this.memberRepository = memberRepository;
@@ -109,12 +112,16 @@ public class MemberService {
 	}
 
 	public AvailableResponseBean isValidNickname(final String nickname) throws SQLException {
-		final String DUPLICATION = "DUPLICATION";
-		final String AVAILABLE = "AVAILABLE";
 		if (memberInfoRepository.findByNickname(nickname).isPresent()) {
 			return AvailableResponseBean.of(DUPLICATION);
 		}
 		return AvailableResponseBean.of(AVAILABLE);
 	}
 
+	public AvailableResponseBean isValidEmail(final String email) throws SQLException {
+		if (memberRepository.findByEmail(email).isPresent()) {
+			return AvailableResponseBean.of(DUPLICATION);
+		}
+		return AvailableResponseBean.of(AVAILABLE);
+	}
 }
