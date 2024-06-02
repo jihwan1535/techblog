@@ -77,7 +77,7 @@
 <%
     final ProfileResponseBean member = (ProfileResponseBean)request.getAttribute("profile");
 %>
-<p><%= member.nickname() %>의 프로필</p>
+<p><label id = "memberNickname"><%= member.nickname() %></label>의 프로필</p>
 <div class="imagePreview">
     <img class="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
 </div><br>
@@ -97,36 +97,44 @@
     <input type="file" id="imageUploader" style="display:none;"><br>
     <div class="imagePreview" id="imagePreview">
         <img class="profileImage" id="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
-        <input type="hidden" id="image" name="image">
+        <input type="hidden" id="image" name="image" value="<%= member.image() %>">
     </div><br>
     <label for="about_me">자기소개</label><br>
     <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
     <input type="submit" value="프로필 수정하기">
 </form>
 <script>
-    var isNicknameAvailable = false;
+    var isNicknameAvailable = true;
+    var nickName = $("#memberNickname").val();
 
-    $(document).ready(function(){
-        $("#checkNickname").click(function(){
-            var nickname = $("#nickname").val();
-            $.ajax({
-                url: '/checkNickname',
-                data: {nickname: nickname},
-                type: 'GET',
-                success: function(response){
-                    if(response == 'AVAILABLE'){
-                        alert("사용 가능한 닉네임입니다.");
-                        isNicknameAvailable = true;
-                    } else {
-                        alert("이미 사용중인 닉네임입니다.");
-                        isNicknameAvailable = false;
-                    }
-                },
-                error: function(error){
-                    console.log(error);
+    $("#checkNickname").click(function(){
+        var changeNickname = $("#nickname").val();
+        $.ajax({
+            url: '/checkNickname',
+            data: {nickname: changeNickname},
+            type: 'GET',
+            success: function(response){
+                if(response == 'AVAILABLE'){
+                    alert("사용 가능한 닉네임입니다.");
+                    isNicknameAvailable = true;
+                } else {
+                    alert("이미 사용중인 닉네임입니다.");
+                    isNicknameAvailable = false;
                 }
-            });
+            },
+            error: function(error){
+                console.log(error);
+            }
         });
+    });
+
+    $("#checkNickname").change(function(){
+        var changeNickname = $("#nickname").val();
+        if (nickName != changeNickname) {
+            isNicknameAvailable = false;
+        } else {
+            isNicknameAvailable = true;
+        }
     });
 
     $("#profileForm").submit(function(e){
@@ -162,6 +170,7 @@
             });
         }
     });
+
 
 </script>
 </body>

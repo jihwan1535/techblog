@@ -101,7 +101,9 @@ public class MemberService {
 			throw new RuntimeException("Invalid member");
 		});
 		memberInfoRepository.findByNickname(request.nickname()).ifPresent(it -> {
-			throw new RuntimeException("Duplication Nickname");
+			if (!it.getNickname().equals(memberInfo.getNickname())) {
+				throw new RuntimeException("Duplication NickName : " + it.getNickname());
+			}
 		});
 
 		memberInfo.setNickname(request.nickname());
