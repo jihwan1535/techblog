@@ -10,6 +10,68 @@
 <head>
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input[type="submit"] {
+            padding: 10px 15px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #007bb5;
+        }
+
+        #imagePreview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 <%
@@ -28,8 +90,12 @@
     <label for="nickname">닉네임:</label>
     <input type="text" id="nickname" name="nickname" value="<%= member.nickname() %>">
     <button type="button" id="checkNickname">닉네임 중복검사</button><br>
-    <label for="image">프로필 사진:</label>
-    <input type="file" id="image" name="image"><br>
+    <label for="imageButton">프로필 사진:</label>
+    <button type="button" id="imageButton">이미지 선택</button>
+    <input type="file" id="imageUploader" name="imageUploader" style="display:none;"><br>
+    <div id="imagePreview">
+        <img src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
+    </div><br>
     <label for="about_me">자기소개</label><br>
     <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
     <input type="submit" value="프로필 수정하기">
@@ -66,6 +132,33 @@
             alert("닉네임 중복 검사를 통과해야 합니다.");
         }
     });
+
+    $('#imageButton').click(function() {
+        $('#imageUploader').click();
+    });
+
+    $("#imageUploader").change(function(){
+        var file = this.files[0];
+        if (file) {
+            var formData = new FormData();
+            formData.append('image', file);
+
+            $.ajax({
+                url: '/uploader/image',
+                data: formData,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                success: function(response){
+                    $("#profileImage").attr("src", response.imageSrc);
+                },
+                error: function(error){
+                    console.error('이미지 업로드 실패');
+                }
+            });
+        }
+    });
+
 </script>
 </body>
 </html>
