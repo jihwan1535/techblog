@@ -65,7 +65,7 @@
             background-color: #007bb5;
         }
 
-        #imagePreview img {
+        .imagePreview img {
             max-width: 100%;
             height: auto;
             display: block;
@@ -78,7 +78,9 @@
     final ProfileResponseBean member = (ProfileResponseBean)request.getAttribute("profile");
 %>
 <p><%= member.nickname() %>의 프로필</p>
-<p><%= member.image() %> - 프로필 사진</p>
+<div class="imagePreview">
+    <img class="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
+</div><br>
 <p><%= member.aboutMe() %> - 자기소개</p>
 <p><%= member.postCount() %> 작성한 게시글 수</p>
 <p><%= member.commentCount() %> 작성한 댓글 수</p>
@@ -92,9 +94,10 @@
     <button type="button" id="checkNickname">닉네임 중복검사</button><br>
     <label for="imageButton">프로필 사진:</label>
     <button type="button" id="imageButton">이미지 선택</button>
-    <input type="file" id="imageUploader" name="imageUploader" style="display:none;"><br>
-    <div id="imagePreview">
-        <img src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
+    <input type="file" id="imageUploader" style="display:none;"><br>
+    <div class="imagePreview" id="imagePreview">
+        <img class="profileImage" id="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
+        <input type="hidden" id="image" name="image">
     </div><br>
     <label for="about_me">자기소개</label><br>
     <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
@@ -150,7 +153,8 @@
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    $("#profileImage").attr("src", response.imageSrc);
+                    $("#profileImage").attr("src", response);
+                    $("#image").val(response);
                 },
                 error: function(error){
                     console.error('이미지 업로드 실패');

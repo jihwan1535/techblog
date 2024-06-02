@@ -1,9 +1,7 @@
 package com.blog.tech.domain.member.dto.response;
 
-import java.time.LocalDateTime;
-
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.global.utility.Utility;
+import com.blog.tech.global.utility.DateFormatter;
 
 public record ProfileResponseBean(
 	Long id,
@@ -23,7 +21,7 @@ public record ProfileResponseBean(
 			memberInfo.getAboutMe(),
 			memberInfo.getPostCount(),
 			memberInfo.getCommentCount(),
-			Utility.DateTimeFormatter(memberInfo.getUpdatedAt())
+			DateFormatter.format(memberInfo.getUpdatedAt())
 		);
 	}
 

@@ -16,6 +16,7 @@ import com.blog.tech.domain.member.entity.vo.MemberRole;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
+import com.blog.tech.global.utility.Uploader;
 
 public class MemberService {
 
@@ -104,7 +105,7 @@ public class MemberService {
 		});
 
 		memberInfo.setNickname(request.nickname());
-		memberInfo.setImage(request.image());
+		memberInfo.setImage(Uploader.imageSave(request.image()));
 		memberInfo.setAboutMe(request.aboutMe());
 
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);
