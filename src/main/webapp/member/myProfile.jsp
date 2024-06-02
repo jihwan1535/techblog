@@ -94,6 +94,7 @@
     <button type="button" id="checkNickname">닉네임 중복검사</button><br>
     <label for="imageButton">프로필 사진:</label>
     <button type="button" id="imageButton">이미지 선택</button>
+    <button type="button" id="defaultImageButton">기본 이미지로 변경</button>
     <input type="file" id="imageUploader" style="display:none;"><br>
     <div class="imagePreview" id="imagePreview">
         <img class="profileImage" id="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
@@ -106,6 +107,8 @@
 <script>
     var isNicknameAvailable = true;
     var nickName = $("#memberNickname").val();
+
+    const defaultImageUrl = 'http://localhost:8888\\upload\\images\\profile.png'
 
     $("#checkNickname").click(function(){
         var changeNickname = $("#nickname").val();
@@ -171,7 +174,10 @@
         }
     });
 
-
+    $('#defaultImageButton').click(function() {
+        $("#profileImage").attr("src", defaultImageUrl);
+        $("#image").val(defaultImageUrl);
+    });
 </script>
 </body>
 </html>

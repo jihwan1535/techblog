@@ -48,7 +48,7 @@ public class MemberService {
 			.id(0L)
 			.memberId(member.getId())
 			.nickname(request.nickname())
-			.image(request.image())
+			.image(Uploader.imageSave(request.image()))
 			.aboutMe(request.aboutMe())
 			.role(MemberRole.MEMBER)
 			.status(MemberStatus.REGISTERED)
@@ -107,7 +107,7 @@ public class MemberService {
 		});
 
 		memberInfo.setNickname(request.nickname());
-		memberInfo.setImage(Uploader.imageSave(request.image()));
+		memberInfo.setImage(Uploader.imageSave(request.image(), memberInfo.getImage()));
 		memberInfo.setAboutMe(request.aboutMe());
 
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);

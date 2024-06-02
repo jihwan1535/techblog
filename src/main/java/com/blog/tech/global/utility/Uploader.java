@@ -19,38 +19,71 @@ public class Uploader {
 	public static final String IMAGE_DIR = SLASH + "images";
 	public static final String FILE_DIR =  SLASH + "files";
 	private static final String URL = "http://localhost:8888";
-	private static final String DEFAULT_IMAGE = "user.png";
+	private static final String DEFAULT_IMAGE = "profile.png";
 
 	public static String imageUpload(final Part temp) {
 		final String tempImagePath = UPLOAD_DIR + IMAGE_DIR + TEMP_DIR;
 		final String tempSavePath = SYSTEM_PATH + tempImagePath;
-
 		makeDirectory(tempSavePath);
 
 		final String saveTempName = parseSaveFileName(temp);
 		final File uploadPath = new File(tempSavePath, saveTempName);
-
 		transferFile(temp, uploadPath);
+
 		return URL + tempImagePath + saveTempName;
 	}
 
-	public static String imageSave(final String imageUrl) {
-		final String imageName = imageUrl.substring(imageUrl.lastIndexOf(SLASH) + 1);
-		if (imageName.equals(DEFAULT_IMAGE)) {
-			return imageUrl;
+	public static String imageSave(final String newImageUrl, final String originalImageUrl) {
+		final String imageName = newImageUrl.substring(newImageUrl.lastIndexOf(SLASH) + 1);
+		if (imageName.equals(DEFAULT_IMAGE) || newImageUrl.equals(originalImageUrl)) {
+			return newImageUrl;
 		}
 
 		final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
-		final Path imageSavePath = Paths.get(imagePath + SLASH + imageName);
+		saveFile(imageName, imagePath);
 
+		if (!newImageUrl.equals(originalImageUrl)) {
+			deleteFile(originalImageUrl);
+		}
+
+		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
+	}
+
+	public static String imageSave(final String newImageUrl) {
+		final String imageName = newImageUrl.substring(newImageUrl.lastIndexOf(SLASH) + 1);
+		if (imageName.equals(DEFAULT_IMAGE)) {
+			return newImageUrl;
+		}
+
+		final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
+		saveFile(imageName, imagePath);
+
+		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
+	}
+
+	private static void saveFile(final String imageName, final String imagePath) {
+		final Path imageSavePath = Paths.get(imagePath + SLASH + imageName);
 		final Path tempSavePath = Paths.get(imagePath + TEMP_DIR + SLASH + imageName);
+
 		try {
 			Files.move(tempSavePath, imageSavePath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
-		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
+	private static void deleteFile(final String originalImageUrl) {
+		final String imageName = originalImageUrl.substring(originalImageUrl.lastIndexOf(SLASH) + 1);
+		if (!imageName.equals(DEFAULT_IMAGE)) {
+			final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
+			final Path imageSavedPath = Paths.get(imagePath + SLASH + imageName);
+
+			try {
+				Files.deleteIfExists(imageSavedPath);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	private static void makeDirectory(final String fileSavePath) {

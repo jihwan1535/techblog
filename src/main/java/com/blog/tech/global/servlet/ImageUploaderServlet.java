@@ -22,7 +22,6 @@ public class ImageUploaderServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Part image = req.getPart("image");
-		final String fileName = image.getSubmittedFileName();
 		final String saveUrl = Uploader.imageUpload(image);
 
 		resp.setContentType("text/plain");
