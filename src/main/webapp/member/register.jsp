@@ -9,10 +9,51 @@
 <html>
 <head>
     <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <h1>회원가입 page</h1>
+<div class="popup-container" id="popupContainer">
+    <div class="popup" id="page1">
+        <h3>회원가입 page</h3>
+        <div class="mb-3">
+            <form id="registerForm1">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <button type="button" id="checkEmail">이메일 중복검사</button><br>
+
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password"><br>
+                <input type="password" id="password_confirm"><br>
+
+                <button type="button" class="btn btn-primary" onclick="nextPage()">다음으로</button>
+            </form>
+        </div>
+    </div>
+    <div class="popup" id="page2">
+        <h3>회원가입 page</h3>
+        <div class="mb-3">
+            <form id="registerForm" action="/register" method="post">
+                <label for="nickname">Nickname:</label><br>
+                <input type="text" id="nickname" name="nickname">
+                <button type="button" id="checkNickname">닉네임 중복검사</button><br>
+
+                <label for="image">Image:</label><br>
+                <input type="text" id="image" name="image"><br>
+
+                <label for="about_me">About Me:</label><br>
+                <textarea id="about_me" name="about_me"></textarea><br>
+
+                <button type="button" class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button type="submit" class="btn btn-success" value="Submit">가입 완료</button>
+            </form>
+        </div>
+    </div>
+    <!--
     <form id="registerForm" action="/register" method="post">
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email">
@@ -29,6 +70,8 @@
         <textarea id="about_me" name="about_me"></textarea><br>
         <input type="submit" value="Submit">
     </form>
+    -->
+</div>
     <script>
         var isEmailAvailable = false;
         var isPasswordValid = false;
@@ -115,6 +158,17 @@
             });
 
         });
+
+        function nextPage() {
+            document.getElementById("page1").style.display = "none";
+            document.getElementById("page2").style.display = "block";
+        }
+
+        function prevPage() {
+            document.getElementById("page1").style.display = "block";
+            document.getElementById("page2").style.display = "none";
+        }
+
     </script>
 </body>
 </html>

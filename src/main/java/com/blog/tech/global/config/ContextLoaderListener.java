@@ -19,7 +19,7 @@ public class ContextLoaderListener implements ServletContextListener {
 	private final String DB_URL = "jdbc:mysql://localhost:3306/blog?userSSL=false&userUnicode=true&allowPublicKeyRetrieval=true";
 	private final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 	private final String USER_NAME = "root";
-	private final String PASSWORD = "1535";
+	private final String PASSWORD = "1315";
 
 	private Connection conn;
 
