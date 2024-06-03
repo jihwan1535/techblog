@@ -75,33 +75,36 @@
 </head>
 <body>
 <%
-    final ProfileResponseBean member = (ProfileResponseBean)request.getAttribute("profile");
+    final ProfileResponseBean profile = (ProfileResponseBean)request.getAttribute("profile");
+	final String nickname = profile.member().nickname();
+	final String image = profile.member().image();
+	final String aboutMe = profile.aboutMe();
 %>
-<p><label id = "memberNickname"><%= member.nickname() %></label>의 프로필</p>
+<p><label id = "memberNickname"><%= nickname %></label>의 프로필</p>
 <div class="imagePreview">
-    <img class="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
+    <img class="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;">
 </div><br>
-<p><%= member.aboutMe() %> - 자기소개</p>
-<p><%= member.postCount() %> 작성한 게시글 수</p>
-<p><%= member.commentCount() %> 작성한 댓글 수</p>
-<p><%= member.updateAt() %> 마지막 프로필 수정일</p>
+<p><%= aboutMe %> - 자기소개</p>
+<p><%= profile.postCount() %> 작성한 게시글 수</p>
+<p><%= profile.commentCount() %> 작성한 댓글 수</p>
+<p><%= profile.updateAt() %> 마지막 프로필 수정일</p>
 <br>
 <a href="/main">메인으로 돌아가기</a>
 <hr>
 <form id="profileForm" action="/api/members/profile" method="post">
     <label for="nickname">닉네임:</label>
-    <input type="text" id="nickname" name="nickname" value="<%= member.nickname() %>">
+    <input type="text" id="nickname" name="nickname" value="<%= nickname %>">
     <button type="button" id="checkNickname">닉네임 중복검사</button><br>
     <label for="imageButton">프로필 사진:</label>
     <button type="button" id="imageButton">이미지 선택</button>
     <button type="button" id="defaultImageButton">기본 이미지로 변경</button>
     <input type="file" id="imageUploader" style="display:none;"><br>
     <div class="imagePreview" id="imagePreview">
-        <img class="profileImage" id="profileImage" src="<%= member.image() %>" alt="Profile Image" style="max-width: 200px;">
-        <input type="hidden" id="image" name="image" value="<%= member.image() %>">
+        <img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;">
+        <input type="hidden" id="image" name="image" value="<%= image %>">
     </div><br>
     <label for="about_me">자기소개</label><br>
-    <textarea id="about_me" name="about_me"><%= member.aboutMe() %></textarea><br>
+    <textarea id="about_me" name="about_me"><%= aboutMe %></textarea><br>
     <input type="submit" value="프로필 수정하기">
 </form>
 <script>

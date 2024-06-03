@@ -4,9 +4,7 @@ import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.global.utility.DateFormatter;
 
 public record ProfileResponseBean(
-	Long id,
-	String nickname,
-	String image,
+	MemberResponseBean member,
 	String aboutMe,
 	Integer postCount,
 	Integer commentCount,
@@ -15,14 +13,16 @@ public record ProfileResponseBean(
 
 	public static ProfileResponseBean of(final MemberInfo memberInfo) {
 		return new ProfileResponseBean(
-			memberInfo.getId(),
-			memberInfo.getNickname(),
-			memberInfo.getImage(),
+			from(memberInfo),
 			memberInfo.getAboutMe(),
 			memberInfo.getPostCount(),
 			memberInfo.getCommentCount(),
 			DateFormatter.format(memberInfo.getUpdatedAt())
 		);
+	}
+
+	private static MemberResponseBean from(final MemberInfo memberInfo) {
+		return MemberResponseBean.of(memberInfo);
 	}
 
 }
