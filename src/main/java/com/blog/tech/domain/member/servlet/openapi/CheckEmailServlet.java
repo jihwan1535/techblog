@@ -23,12 +23,8 @@ public class CheckEmailServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		try {
-			InitialContext ctx = new InitialContext();
-			memberController = (MemberController) ctx.lookup("java:global/your_application_name/MemberController");
-		} catch (NamingException e) {
-			throw new ServletException("Failed to lookup MemberController", e);
-		}
+		final ServletContext context = this.getServletContext();
+		memberController = (MemberController)context.getAttribute("memberController");
 	}
 
 	@Override
@@ -36,18 +32,14 @@ public class CheckEmailServlet extends HttpServlet {
 			final HttpServletRequest req,
 			final HttpServletResponse resp
 	) throws ServletException, IOException {
-		if (memberController == null) {
-			throw new ServletException("MemberController not initialized");
-		}
-
 		final String email = req.getParameter("email");
 		try {
 			final AvailableResponseBean isAvail = memberController.checkEmail(email);
 			resp.setContentType("text/plain");
 			resp.getWriter().write(isAvail.status());
 		} catch (SQLException e) {
-			throw new ServletException("Failed to check email", e);
+			throw new RuntimeException(e);
 		}
 	}
-}
 
+}
