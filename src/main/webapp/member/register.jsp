@@ -19,58 +19,49 @@
 <body>
 <div class="popup-container" id="popupContainer">
     <div class="popup" id="page1">
-        <h3>회원가입 page</h3>
+        <h3 class="text-center">회원가입</h3>
         <div class="mb-3">
             <form id="registerForm1">
-                <label for="email">Email:</label>
+                <label for="email">Email:</label><br>
                 <input type="email" id="email" name="email">
-                <button type="button" id="checkEmail">이메일 중복검사</button><br>
+                <button type="button" id="checkEmail">이메일 중복검사</button><br><br>
 
                 <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password"><br>
-                <input type="password" id="password_confirm"><br>
-
-                <button type="button" class="btn btn-primary" onclick="nextPage()">다음으로</button>
+                 <input class="p-1" type="password" id="password" name="password"><br>
+                 <input class="p-1" type="password" id="password_confirm"><br><br>
+                <div class="container">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary float-right" onclick="nextPage()">다음으로</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
     <div class="popup" id="page2">
-        <h3>회원가입 page</h3>
+        <h3 class="text-center">회원가입</h3>
         <div class="mb-3">
             <form id="registerForm" action="/register" method="post">
                 <label for="nickname">Nickname:</label><br>
                 <input type="text" id="nickname" name="nickname">
-                <button type="button" id="checkNickname">닉네임 중복검사</button><br>
+                <button type="button" id="checkNickname">닉네임 중복검사</button><br><br>
 
                 <label for="image">Image:</label><br>
-                <input type="text" id="image" name="image"><br>
-
+                <input type="text" id="image" name="image"><br><br>
                 <label for="about_me">About Me:</label><br>
-                <textarea id="about_me" name="about_me"></textarea><br>
-
-                <button type="button" class="btn btn-secondary" onclick="prevPage()">이전</button>
-                <button type="submit" class="btn btn-success" value="Submit">가입 완료</button>
+                <div class="d-flex flex-row bd-highlight mb-3">
+                    <div class="bd-highlight">
+                        <textarea id="about_me" name="about_me"></textarea><br><br>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" onclick="prevPage()">이전</button>
+                        <button type="submit" class="btn btn-success" value="Submit">가입 완료</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-    <!--
-    <form id="registerForm" action="/register" method="post">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email">
-        <button type="button" id="checkEmail">이메일 중복검사</button><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password"><br>
-        <input type="password" id="password_confirm"><br>
-        <label for="nickname">Nickname:</label><br>
-        <input type="text" id="nickname" name="nickname">
-        <button type="button" id="checkNickname">닉네임 중복검사</button><br>
-        <label for="image">Image:</label><br>
-        <input type="text" id="image" name="image"><br>
-        <label for="about_me">About Me:</label><br>
-        <textarea id="about_me" name="about_me"></textarea><br>
-        <input type="submit" value="Submit">
-    </form>
-    -->
 </div>
     <script>
         var isEmailAvailable = false;
