@@ -38,4 +38,5 @@ public class CheckEmailServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

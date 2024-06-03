@@ -35,7 +35,11 @@ public class Uploader {
 
 	public static String imageSave(final String newImageUrl, final String originalImageUrl) {
 		final String imageName = newImageUrl.substring(newImageUrl.lastIndexOf(SLASH) + 1);
-		if (imageName.equals(DEFAULT_IMAGE) || newImageUrl.equals(originalImageUrl)) {
+		if (imageName.equals(DEFAULT_IMAGE)) {
+			deleteFile(originalImageUrl);
+			return newImageUrl;
+		}
+		if (newImageUrl.equals(originalImageUrl)) {
 			return newImageUrl;
 		}
 
@@ -45,7 +49,6 @@ public class Uploader {
 		if (!newImageUrl.equals(originalImageUrl)) {
 			deleteFile(originalImageUrl);
 		}
-
 		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
 	}
 
