@@ -14,7 +14,7 @@ import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
 @WebListener
-public class ContextLoaderListener implements ServletContextListener {
+public class MysqlLoaderListener implements ServletContextListener {
 
 	private final String DB_URL = "jdbc:mysql://localhost:3306/blog?userSSL=false&userUnicode=true&allowPublicKeyRetrieval=true";
 	private final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -28,13 +28,10 @@ public class ContextLoaderListener implements ServletContextListener {
 		try {
 			Class.forName(DB_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
-			final MemberService memberService = new MemberService(new MemberDao(conn), new MemberInfoDao(conn));
-			final MemberController memberController = new MemberController(memberService);
-			sce.getServletContext().setAttribute("memberController", memberController);
+			sce.getServletContext().setAttribute("conn", conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
