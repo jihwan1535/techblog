@@ -27,8 +27,9 @@
                 <button type="button" id="checkEmail">이메일 중복검사</button><br><br>
 
                 <label for="password">Password:</label><br>
-                 <input class="p-1" type="password" id="password" name="password"><br>
-                 <input class="p-1" type="password" id="password_confirm"><br><br>
+                <input class="p-1" type="password" id="password" name="password"><br>
+                <input class="p-1" type="password" id="password_confirm"><br><br>
+
                 <div class="container">
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-secondary float-right" onclick="nextPage()">다음으로</button>
@@ -40,7 +41,7 @@
     <div class="popup" id="page2">
         <h3 class="text-center">회원가입</h3>
         <div class="mb-3">
-            <form id="registerForm" action="/register" method="post">
+            <form id="registerForm2" action="/register" method="post">
                 <label for="nickname">Nickname:</label><br>
                 <input type="text" id="nickname" name="nickname">
                 <button type="button" id="checkNickname">닉네임 중복검사</button><br><br>
@@ -56,13 +57,32 @@
                 <div class="container">
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-secondary me-2" onclick="prevPage()">이전</button>
-                        <button type="submit" class="btn btn-success" value="Submit">가입 완료</button>
+                        <button type="button" class="btn btn-success" onclick="submitForm()">가입 완료</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+    <script>
+        function submitForm() {
+            // 첫 번째 폼 데이터 수집
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // 두 번째 폼 데이터 수집
+            var nickname = document.getElementById("nickname").value;
+            var image = document.getElementById("image").value;
+            var aboutMe = document.getElementById("about_me").value;
+
+            // 두 번째 폼에 첫 번째 폼 데이터 추가
+            document.getElementById("registerForm2").innerHTML += '<input type="hidden" name="email" value="' + email + '">';
+            document.getElementById("registerForm2").innerHTML += '<input type="hidden" name="password" value="' + password + '">';
+
+            // 두 번째 폼 제출
+            document.getElementById("registerForm2").submit();
+        }
+    </script>
     <script>
         var isEmailAvailable = false;
         var isPasswordValid = false;

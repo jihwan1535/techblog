@@ -28,8 +28,8 @@ public class RegisterServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final RequestDispatcher rd = req.getRequestDispatcher("/member/register.jsp");
 		rd.forward(req, resp);
@@ -37,8 +37,8 @@ public class RegisterServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
@@ -48,7 +48,7 @@ public class RegisterServlet extends HttpServlet {
 
 		try {
 			final RegisterResponseBean register = memberController.register(
-				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
+					RegisterRequestBean.of(email, password, nickname, image, aboutMe));
 			req.setAttribute("register", register);
 			final RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
 			rd.forward(req, resp);
