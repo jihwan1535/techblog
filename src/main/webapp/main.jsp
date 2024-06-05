@@ -59,7 +59,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mx-3">
             <li class="nav-item active">
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/member/login.jsp">Login</a>
+                <% if (Objects.isNull(session.getAttribute("member"))) { %>
+                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">로그인</a>
+                <% } else { %>
+                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/api/logout">로그아웃</a>
+                <% } %>
             </li>
             <li class="nav-item">
                 <button type="button" class="btn btn-outline-light login-btn" data-target="#modal" data-toggle="#modal" onclick="openPopup()">Sign-up</button>
