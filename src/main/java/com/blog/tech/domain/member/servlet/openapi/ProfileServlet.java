@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 import com.blog.tech.domain.member.controller.MemberController;
+import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 
 import jakarta.servlet.RequestDispatcher;
@@ -23,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
 public class ProfileServlet extends HttpServlet {
 
 	private MemberController memberController;
+	private static final String MY_PROFILE = "/member/myProfile.jsp";
+	private static final String OTHER_PROFILE = "/member/profile.jsp";
 
 	@Override
 	public void init() throws ServletException {
@@ -32,8 +35,8 @@ public class ProfileServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String requestURI = req.getRequestURI();
 		final String encodedNickname = requestURI.substring(requestURI.lastIndexOf('/') + 2);
@@ -43,16 +46,25 @@ public class ProfileServlet extends HttpServlet {
 			req.setAttribute("profile", profile);
 
 			final HttpSession session = req.getSession(false);
-			if (Objects.isNull(session) || Objects.isNull(session.getAttribute("member"))) {
-				final RequestDispatcher rd = req.getRequestDispatcher("/member/profile.jsp");
-				rd.include(req, resp);
+			final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
+			if (Objects.isNull(session) || Objects.isNull(member)) {
+				includeToProfile(req, resp, OTHER_PROFILE);
+			} else if (member.nickname().equals(nickname)) {
+				includeToProfile(req, resp, MY_PROFILE);
 			} else {
-				final RequestDispatcher rd = req.getRequestDispatcher("/member/myProfile.jsp");
-				rd.include(req, resp);
+				includeToProfile(req, resp, OTHER_PROFILE);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	private void includeToProfile(
+			final HttpServletRequest req,
+			final HttpServletResponse resp,
+			final String url
+	) throws ServletException, IOException {
+		final RequestDispatcher rd = req.getRequestDispatcher(url);
+		rd.include(req, resp);
+	}
 }

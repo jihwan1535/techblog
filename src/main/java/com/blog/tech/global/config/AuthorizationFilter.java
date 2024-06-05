@@ -37,9 +37,9 @@ public class AuthorizationFilter implements Filter {
 
 	@Override
 	public void doFilter(
-		final ServletRequest servletRequest,
-		final ServletResponse servletResponse,
-		final FilterChain filterChain
+			final ServletRequest servletRequest,
+			final ServletResponse servletResponse,
+			final FilterChain filterChain
 	) throws IOException, ServletException {
 		final HttpServletRequest req = (HttpServletRequest) servletRequest;
 		final HttpServletResponse resp = (HttpServletResponse) servletResponse;
@@ -63,10 +63,10 @@ public class AuthorizationFilter implements Filter {
 	}
 
 	private void forwardToAlert(
-		final HttpSession session,
-		final HttpServletRequest req,
-		final HttpServletResponse resp,
-		final String alertMessage
+			final HttpSession session,
+			final HttpServletRequest req,
+			final HttpServletResponse resp,
+			final String alertMessage
 	) throws ServletException, IOException {
 		String originalUrl = req.getContextPath() + "/main";
 		if (Objects.nonNull(session) && Objects.nonNull(session.getAttribute("originalUrl"))) {

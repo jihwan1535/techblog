@@ -1,22 +1,17 @@
 package com.blog.tech.domain.member.servlet.openapi;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -31,8 +26,8 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final RequestDispatcher rd = req.getRequestDispatcher("/member/login.jsp");
 		rd.forward(req, resp);
@@ -40,8 +35,8 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
@@ -62,9 +57,9 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	private RequestDispatcher setCookie(
-		final HttpServletRequest req,
-		final HttpServletResponse resp,
-		final MemberResponseBean member
+			final HttpServletRequest req,
+			final HttpServletResponse resp,
+			final MemberResponseBean member
 	) {
 		final HttpSession session = req.getSession();
 		session.setAttribute("member", member);

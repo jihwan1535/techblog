@@ -14,8 +14,8 @@ public class ExceptionServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final RequestDispatcher rd = req.getRequestDispatcher("/exception/alert.jsp");
 		rd.forward(req, resp);

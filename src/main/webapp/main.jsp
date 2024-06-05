@@ -8,42 +8,42 @@
 <%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <html>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="css/leftsidebar.css">
-    <link rel="stylesheet" href="css/rightsidebar.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Title</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="css/leftsidebar.css">
+<link rel="stylesheet" href="css/rightsidebar.css">
 
-    <style>
-        .login-btn {
-            background-color: white !important;
-            color: black !important;
-        }
-        .popup-container{
-            display: block;
-            top: 0; left : 0; width:50%; height:50%;
-        }
-        .popup{
-            background-color: #fff;
-            width: 80%;
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 20px;
-            border-radius: 10px;
-            border: 3px solid black;
-            align-content: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
+<style>
+    .login-btn {
+        background-color: white !important;
+        color: black !important;
+    }
+    .popup-container{
+        display: block;
+        top: 0; left : 0; width:50%; height:50%;
+    }
+    .popup{
+        background-color: #fff;
+        width: 80%;
+        max-width: 500px;
+        margin: 40px auto;
+        padding: 20px;
+        border-radius: 10px;
+        border: 3px solid black;
+        align-content: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
 </head>
 <body>
 
@@ -53,20 +53,20 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <form class="d-flex my-2 my-lg-0">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-light" type="submit">Search</button>
+        <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
+        <button class="btn btn-light button" type="button" onclick="profile();">Search</button>
     </form>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mx-3">
             <li class="nav-item active">
                 <% if (Objects.isNull(session.getAttribute("member"))) { %>
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">로그인</a>
+                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">Login</a>
                 <% } else { %>
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/api/logout">로그아웃</a>
+                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/api/logout">Logout</a>
                 <% } %>
             </li>
             <li class="nav-item">
-                <button type="button" class="btn btn-outline-light login-btn" data-target="#modal" data-toggle="#modal" onclick="openPopup()">Sign-up</button>
+                <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
             </li>
         </ul>
     </div>
@@ -116,6 +116,12 @@
 <div class="popup-container" id="popupContainer"></div>
 
 <script>
+    function profile() {
+        var nickname = document.querySelector('.nickname').value;
+        var url = "/profile/@" + nickname;
+        window.location.href = url;
+    }
+
     function openPopup() {
         $.ajax({
             url: "/member/register.jsp",

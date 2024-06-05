@@ -15,8 +15,8 @@ public class LogoutServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final HttpSession session = req.getSession(false);
 		if (Objects.nonNull(session)) {

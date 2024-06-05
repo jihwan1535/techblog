@@ -37,12 +37,9 @@ public class ProfileServlet  extends HttpServlet {
 
 	@Override
 	protected void doPost(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
+			final HttpServletRequest req,
+			final HttpServletResponse resp
 	) throws ServletException, IOException {
-		// todo 사용자 검증 후, 수정 가능하도록
-		// 사용자가 본인이 맞는지 확인할 필요 없음. 사용자 검증 시 본인의 세션으로 검증하기 때문
-		// 세션 하이재킹과 같은 문제가 있지만 추후에 https 처리할 때 생각
 		final HttpSession session = req.getSession(false);
 		final String nickname = req.getParameter("nickname");
 		final String image = req.getParameter("image");
@@ -51,8 +48,10 @@ public class ProfileServlet  extends HttpServlet {
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
 		try {
 			final ProfileResponseBean profile = memberController.profileUpdate(member.id(), updateInfo);
+			session.setAttribute("member", profile.member());
 			final String contextPath = "/profile/@";
-			final String encodedNickname = URLEncoder.encode(profile.nickname(), StandardCharsets.UTF_8.toString());
+			final String profileNickName = profile.member().nickname();
+			final String encodedNickname = URLEncoder.encode(profileNickName, StandardCharsets.UTF_8.toString());
 			final String redirectUrl = contextPath + encodedNickname;
 			resp.sendRedirect(redirectUrl);
 		} catch (SQLException e) {

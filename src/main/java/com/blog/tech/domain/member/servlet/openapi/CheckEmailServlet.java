@@ -13,9 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
 @WebServlet("/checkEmail")
 public class CheckEmailServlet extends HttpServlet {
 

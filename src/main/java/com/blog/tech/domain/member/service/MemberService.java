@@ -16,6 +16,7 @@ import com.blog.tech.domain.member.entity.vo.MemberRole;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
+import com.blog.tech.global.utility.Uploader;
 
 public class MemberService {
 
@@ -44,28 +45,28 @@ public class MemberService {
 
 	private MemberInfo registerMember(final RegisterRequestBean request, final Member member) throws SQLException {
 		final MemberInfo memberInfo = MemberInfo.builder()
-			.id(0L)
-			.memberId(member.getId())
-			.nickname(request.nickname())
-			.image(request.image())
-			.aboutMe(request.aboutMe())
-			.role(MemberRole.MEMBER)
-			.status(MemberStatus.REGISTERED)
-			.createdAt(LocalDateTime.now())
-			.updatedAt(LocalDateTime.now())
-			.build();
+				.id(0L)
+				.memberId(member.getId())
+				.nickname(request.nickname())
+				.image(Uploader.imageSave(request.image()))
+				.aboutMe(request.aboutMe())
+				.role(MemberRole.MEMBER)
+				.status(MemberStatus.REGISTERED)
+				.createdAt(LocalDateTime.now())
+				.updatedAt(LocalDateTime.now())
+				.build();
 
 		return memberInfoRepository.save(memberInfo);
 	}
 
 	private Member registerAccount(final RegisterRequestBean request) throws SQLException {
 		final Member member = Member.builder()
-			.id(0L)
-			.email(request.email())
-			.password(request.password())
-			.createdAt(LocalDateTime.now())
-			.updatedAt(LocalDateTime.now())
-			.build();
+				.id(0L)
+				.email(request.email())
+				.password(request.password())
+				.createdAt(LocalDateTime.now())
+				.updatedAt(LocalDateTime.now())
+				.build();
 
 		return memberRepository.save(member);
 	}
@@ -100,11 +101,13 @@ public class MemberService {
 			throw new RuntimeException("Invalid member");
 		});
 		memberInfoRepository.findByNickname(request.nickname()).ifPresent(it -> {
-			throw new RuntimeException("Duplication Nickname");
+			if (!it.getNickname().equals(memberInfo.getNickname())) {
+				throw new RuntimeException("Duplication NickName : " + it.getNickname());
+			}
 		});
 
 		memberInfo.setNickname(request.nickname());
-		memberInfo.setImage(request.image());
+		memberInfo.setImage(Uploader.imageSave(request.image(), memberInfo.getImage()));
 		memberInfo.setAboutMe(request.aboutMe());
 
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);

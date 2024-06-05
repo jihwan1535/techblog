@@ -12,12 +12,16 @@
 </head>
 <body>
 <%
-    final ProfileResponseBean member = (ProfileResponseBean)request.getAttribute("profile");
+    final ProfileResponseBean profile = (ProfileResponseBean)request.getAttribute("profile");
+    final String nickname = profile.member().nickname();
+    final String image = profile.member().image();
 %>
-<p><%= "@"+member.nickname() %>의 프로필</p>
-<p><%= member.image() %> - 프로필 사진</p>
-<p><%= member.aboutMe() %> - 자기소개</p>
-<p><%= member.postCount() %> 작성한 게시글 수</p>
+<p><%= "@"+ nickname %>의 프로필</p>
+<div class="imagePreview">
+    <img class="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;">
+</div><br>
+<p><%= profile.aboutMe() %> - 자기소개</p>
+<p><%= profile.postCount() %> 작성한 게시글 수</p>
 <br>
 <a href="/main">메인으로 돌아가기</a>
 </body>
