@@ -1,7 +1,7 @@
 package com.blog.tech.domain.member.dto.response;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.global.utility.Utility;
+import com.blog.tech.global.utility.DateFormatter;
 
 public record RegisterResponseBean(
 	Long id,
@@ -13,7 +13,7 @@ public record RegisterResponseBean(
 		return new RegisterResponseBean(
 			member.getId(),
 			member.getNickname(),
-			Utility.DateTimeFormatter(member.getCreatedAt())
+			DateFormatter.format(member.getCreatedAt())
 		);
 	}
 

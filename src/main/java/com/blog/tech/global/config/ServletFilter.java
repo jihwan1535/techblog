@@ -25,20 +25,27 @@ public class ServletFilter implements Filter {
 	) throws IOException, ServletException {
 		final HttpServletRequest req = (HttpServletRequest) servletRequest;
 		final HttpServletResponse resp = (HttpServletResponse) servletResponse;
-		req.setCharacterEncoding("utf-8");
-		resp.setCharacterEncoding("utf-8");
-		resp.setContentType("text/html;charset=utf-8");
+
+		final String requestURI = req.getRequestURI();
+		if (!requestURI.startsWith("/upload/images")) {
+			req.setCharacterEncoding("utf-8");
+			resp.setCharacterEncoding("utf-8");
+			resp.setContentType("text/html;charset=utf-8");
+		}
+
 		final HttpSession session = req.getSession(false);
 		String originalUrl = req.getContextPath() + "/main";
 		if (Objects.nonNull(session) && Objects.nonNull(session.getAttribute("originalUrl"))) {
 			originalUrl = (String)session.getAttribute("originalUrl");
 		}
+
 		System.out.println(">>>>>>>>>>>>>>>>> " + originalUrl);
 		filterChain.doFilter(req, resp);
 		System.out.println("<<<<<<<<<<<<<<<<< " + req.getRequestURI());
+
 		final HttpSession filteringSession = req.getSession(false);
 		if (Objects.nonNull(filteringSession)) {
-			filteringSession.setAttribute("originalUrl", req.getRequestURI());
+			filteringSession.setAttribute("originalUrl", requestURI);
 		}
 	}
 
