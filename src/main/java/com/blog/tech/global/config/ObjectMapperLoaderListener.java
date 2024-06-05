@@ -9,7 +9,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
+@WebListener
 public class ObjectMapperLoaderListener implements ServletContextListener {
 
 	@Override
