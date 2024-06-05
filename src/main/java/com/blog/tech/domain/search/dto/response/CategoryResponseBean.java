@@ -1,4 +1,4 @@
-package com.blog.tech.domain.search.response;
+package com.blog.tech.domain.search.dto.response;
 
 import com.blog.tech.domain.search.entity.Category;
 

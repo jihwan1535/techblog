@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.blog.tech.domain.search.controller.SearchController;
-import com.blog.tech.domain.search.response.CategoryResponseBean;
+import com.blog.tech.domain.search.dto.response.CategoryResponseBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/categories")
-public class CategoryServlet extends HttpServlet {
+public class GetCategoriesServlet extends HttpServlet {
 
 	private SearchController searchController;
 	private ObjectMapper objectMapper;

@@ -1,12 +1,18 @@
 package com.blog.tech.domain.search.repository.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.search.entity.Category;
 import com.blog.tech.domain.search.entity.Topic;
 import com.blog.tech.domain.search.repository.ifs.TopicRepository;
+import com.blog.tech.global.utility.db.mapper.CategoryMapper;
+import com.blog.tech.global.utility.db.mapper.TopicMapper;
 
 public class TopicDao implements TopicRepository {
 
@@ -27,12 +33,38 @@ public class TopicDao implements TopicRepository {
 	}
 
 	@Override
-	public List<Topic> findAll() {
-		return null;
+	public List<Topic> findAll() throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM TOPIC");
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Topic> topics = new ArrayList<>();
+		while (rs.next()) {
+			topics.add(TopicMapper.from(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+		return topics;
 	}
 
 	@Override
 	public void delete(final Long id) throws SQLException {
 
+	}
+
+	@Override
+	public List<Topic> findAllByCategoryId(final Long categoryId) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM TOPIC WHERE category_id = ?");
+		pstmt.setLong(1, categoryId);
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Topic> topics = new ArrayList<>();
+		while (rs.next()) {
+			topics.add(TopicMapper.from(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+		return topics;
 	}
 }
