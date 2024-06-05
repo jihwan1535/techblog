@@ -77,7 +77,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	@Override
-	public List<MemberInfo> findByAll() {
+	public List<MemberInfo> findAll() {
 		return null;
 	}
 

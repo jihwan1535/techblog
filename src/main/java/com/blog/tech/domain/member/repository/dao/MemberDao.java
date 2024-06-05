@@ -79,7 +79,7 @@ public class MemberDao implements MemberRepository {
 	}
 
 	@Override
-	public List<Member> findByAll() {
+	public List<Member> findAll() {
 		/*
 		* todo
 		*  admin일 경우, 전체 회원 조회 기능이 필요

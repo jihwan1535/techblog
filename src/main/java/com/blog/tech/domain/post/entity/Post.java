@@ -1,6 +1,9 @@
 package com.blog.tech.domain.post.entity;
 
+import java.time.LocalDateTime;
+
 import com.blog.tech.domain.common.BaseEntity;
+import com.blog.tech.domain.post.dto.request.PostRequestBean;
 import com.blog.tech.domain.post.entity.vo.Status;
 
 import lombok.AllArgsConstructor;
@@ -28,5 +31,19 @@ public class Post extends BaseEntity {
 	private Integer scrapCount;
 	private Boolean alarm;
 	private Status status;
+
+	public static Post to(final PostRequestBean bean) {
+		return Post.builder()
+			.id(0L)
+			.memberInfoId(bean.memberId())
+			.topicId(bean.topicId())
+			.categoryId(bean.categoryId())
+			.tile(bean.title())
+			.content(bean.content())
+			.status(Status.REGISTERED)
+			.createdAt(LocalDateTime.now())
+			.updatedAt(LocalDateTime.now())
+			.build();
+	}
 
 }

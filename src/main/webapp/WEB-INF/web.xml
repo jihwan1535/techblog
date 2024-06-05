@@ -9,6 +9,10 @@
     <listener>
         <listener-class>com.blog.tech.global.config.ControllerLoaderListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>com.blog.tech.global.config.ObjectMapperLoaderListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>servletFilter</filter-name>
         <filter-class>com.blog.tech.global.config.ServletFilter</filter-class>

@@ -9,6 +9,7 @@ import com.blog.tech.domain.member.service.MemberService;
 import com.blog.tech.domain.post.controller.PostController;
 import com.blog.tech.domain.post.repository.dao.CategoryDao;
 import com.blog.tech.domain.post.repository.dao.CommentDao;
+import com.blog.tech.domain.post.repository.dao.PostAttachDao;
 import com.blog.tech.domain.post.repository.dao.PostDao;
 import com.blog.tech.domain.post.repository.dao.ReplyDao;
 import com.blog.tech.domain.post.repository.dao.TopicDao;
@@ -27,12 +28,13 @@ public class ControllerLoaderListener implements ServletContextListener {
 	}
 
 	private void setPostController(final Connection conn, final ServletContextEvent sce) {
-		final CategoryDao categoryDao = new CategoryDao(conn);
-		final CommentDao commentDao = new CommentDao(conn);
-		final PostDao postDao = new PostDao(conn);
-		final ReplyDao replyDao = new ReplyDao(conn);
-		final TopicDao topicDao = new TopicDao(conn);
-		final PostService postService = new PostService(categoryDao, postDao, topicDao, replyDao, commentDao);
+		final CategoryDao category = new CategoryDao(conn);
+		final CommentDao comment = new CommentDao(conn);
+		final PostDao post = new PostDao(conn);
+		final ReplyDao reply = new ReplyDao(conn);
+		final TopicDao topic = new TopicDao(conn);
+		final PostAttachDao postAttach = new PostAttachDao(conn);
+		final PostService postService = new PostService(category, post, topic, reply, comment, postAttach);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}

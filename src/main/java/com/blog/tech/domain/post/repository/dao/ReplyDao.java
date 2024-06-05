@@ -27,7 +27,7 @@ public class ReplyDao implements ReplyRepository {
 	}
 
 	@Override
-	public List<Reply> findByAll() {
+	public List<Reply> findAll() {
 		return null;
 	}
 

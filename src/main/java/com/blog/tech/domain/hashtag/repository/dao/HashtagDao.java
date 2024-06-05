@@ -27,7 +27,7 @@ public class HashtagDao implements HashtagRepository {
 	}
 
 	@Override
-	public List<Hashtag> findByAll() {
+	public List<Hashtag> findAll() {
 		return null;
 	}
 

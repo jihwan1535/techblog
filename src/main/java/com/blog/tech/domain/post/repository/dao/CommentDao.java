@@ -27,7 +27,7 @@ public class CommentDao implements CommentRepository {
 	}
 
 	@Override
-	public List<Comment> findByAll() {
+	public List<Comment> findAll() {
 		return null;
 	}
 

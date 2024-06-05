@@ -27,7 +27,7 @@ public class TopicDao implements TopicRepository {
 	}
 
 	@Override
-	public List<Topic> findByAll() {
+	public List<Topic> findAll() {
 		return null;
 	}
 

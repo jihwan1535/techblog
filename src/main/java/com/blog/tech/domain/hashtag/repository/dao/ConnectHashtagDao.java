@@ -27,7 +27,7 @@ public class ConnectHashtagDao implements ConnectHashtagRepository {
 	}
 
 	@Override
-	public List<ConnectHashtag> findByAll() {
+	public List<ConnectHashtag> findAll() {
 		return null;
 	}
 
