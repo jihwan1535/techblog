@@ -6,30 +6,30 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page import="java.util.Objects" %>
-<%@ page import="com.blog.tech.domain.member.dto.response.MemberResponseBean" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="css/leftsidebar.css">
-    <link rel="stylesheet" href="css/rightsidebar.css">
+<title>Title</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="css/leftsidebar.css">
+<link rel="stylesheet" href="css/rightsidebar.css">
 
-    <style>
-        .login-btn {
-            background-color: white !important;
-            color: black !important;
-        }
-    </style>
+<style>
+    .login-btn {
+        background-color: white !important;
+        color: black !important;
+    }
+</style>
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
     <a class="navbar-brand ms-3" href="#">Tech Blog</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,18 +49,12 @@
                 <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
             </li>
             <% } else { %>
-            <%
-                final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
-                final Long id = member.id();
-                final String nickname = member.nickname();
-                final String image = member.image();
-            %>
             <li class="nav-item">
                 <a class="btn btn-light button" href="/Posting">포스팅</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
+                    <img src="<%= session.getAttribute("profileImageUrl") %>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/settings">설정</a></li>
