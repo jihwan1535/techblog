@@ -13,8 +13,8 @@ public class PostController {
 		this.postService = postService;
 	}
 
-	public void writeOnPost(final PostRequestBean request) throws SQLException, SQLException {
-		postService.writeOnPost(request);
+	public void writeOnPost(final Long memberId, final PostRequestBean request) throws SQLException {
+		postService.writeOnPost(memberId, request);
 	}
 
 }

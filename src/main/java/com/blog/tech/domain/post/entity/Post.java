@@ -32,10 +32,10 @@ public class Post extends BaseEntity {
 	private Boolean alarm;
 	private Status status;
 
-	public static Post to(final PostRequestBean bean) {
+	public static Post to(final Long memberId, final PostRequestBean bean) {
 		return Post.builder()
 			.id(0L)
-			.memberInfoId(bean.memberId())
+			.memberInfoId(memberId)
 			.topicId(bean.topicId())
 			.categoryId(bean.categoryId())
 			.tile(bean.title())

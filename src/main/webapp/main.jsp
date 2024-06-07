@@ -15,8 +15,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="css/leftsidebar.css">
-    <link rel="stylesheet" href="css/rightsidebar.css">
+    <link rel="stylesheet" href="/css/leftsidebar.css">
+    <link rel="stylesheet" href="/css/rightsidebar.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
@@ -45,7 +45,7 @@
                 final String image = member.image();
             %>
             <li class="nav-item">
-                <a class="btn btn-light button" href="/Posting">포스팅</a>
+                <a class="btn btn-light button" href="/api/posting">포스팅</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,9 +67,7 @@
         <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
         <hr/>
     </div>
-    <ul id="nav-content" class="list-group">
-        <!--Category 추가될 부분-->
-    </ul>
+    <ul id="nav-content" class="list-group"></ul>
 </div>
 
 <div id="nav-bar-right">
@@ -93,7 +91,7 @@
     </div>
 </div>
 
-<div id="topics"></div> <!-- 토픽들이 여기에 동적으로 생성 -->
+<div id="topics"></div>
 
 <script>
     function profile() {

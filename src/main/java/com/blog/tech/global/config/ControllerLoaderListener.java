@@ -32,10 +32,11 @@ public class ControllerLoaderListener implements ServletContextListener {
 	}
 
 	private void setPostController(final Connection conn, final ServletContextEvent sce) {
-		final CommentDao commentDao = new CommentDao(conn);
-		final PostDao postDao = new PostDao(conn);
-		final ReplyDao replyDao = new ReplyDao(conn);
-		final PostService postService = new PostService(postDao, replyDao, commentDao);
+		final CommentDao comment = new CommentDao(conn);
+		final PostDao post = new PostDao(conn);
+		final ReplyDao reply = new ReplyDao(conn);
+		final MemberInfoDao member = new MemberInfoDao(conn);
+		final PostService postService = new PostService(post, reply, comment, member);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}
