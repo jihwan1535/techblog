@@ -6,11 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
+import com.blog.tech.domain.search.entity.Category;
+import com.blog.tech.global.utility.db.mapper.CategoryMapper;
+import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class PostDao implements PostRepository {
 
@@ -97,5 +101,21 @@ public class PostDao implements PostRepository {
 	@Override
 	public void delete(final Long id) throws SQLException {
 
+	}
+
+	@Override
+	public List<Post> findTop10AllByIdDescId(final Long id) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post WHERE id < ? ORDER BY id DESC LIMIT 10");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Post> posts = new ArrayList<>();
+		while (rs.next()) {
+			posts.add(PostMapper.from(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+		return posts;
 	}
 }

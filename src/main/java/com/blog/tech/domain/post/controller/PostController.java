@@ -1,8 +1,10 @@
 package com.blog.tech.domain.post.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.blog.tech.domain.post.dto.request.PostRequestBean;
+import com.blog.tech.domain.post.dto.response.PostsResponseBean;
 import com.blog.tech.domain.post.service.PostService;
 
 public class PostController {
@@ -17,4 +19,7 @@ public class PostController {
 		postService.writeOnPost(memberId, request);
 	}
 
+	public List<PostsResponseBean> getAllPosts(final Long postId) throws SQLException {
+		return postService.getAllPosts(postId);
+	}
 }
