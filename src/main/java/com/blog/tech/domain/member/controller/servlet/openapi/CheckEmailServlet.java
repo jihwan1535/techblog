@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet.openapi;
+package com.blog.tech.domain.member.controller.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/checkNickname")
-public class CheckNameServlet extends HttpServlet {
+@WebServlet("/checkEmail")
+public class CheckEmailServlet extends HttpServlet {
 
 	private MemberController memberController;
 
@@ -29,13 +29,14 @@ public class CheckNameServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final String nickname = req.getParameter("nickname");
+		final String email = req.getParameter("email");
 		try {
-			final AvailableResponseBean isAvail = memberController.checkNickname(nickname);
+			final AvailableResponseBean isAvail = memberController.checkEmail(email);
 			resp.setContentType("text/plain");
 			resp.getWriter().write(isAvail.status());
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

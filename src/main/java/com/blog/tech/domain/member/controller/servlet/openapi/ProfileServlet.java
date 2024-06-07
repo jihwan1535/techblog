@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet.openapi;
+package com.blog.tech.domain.member.controller.servlet.openapi;
 
 import java.io.IOException;
 import java.net.URLDecoder;

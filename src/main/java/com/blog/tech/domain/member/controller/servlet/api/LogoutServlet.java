@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet.api;
+package com.blog.tech.domain.member.controller.servlet.api;
 
 import java.io.IOException;
 import java.util.Objects;

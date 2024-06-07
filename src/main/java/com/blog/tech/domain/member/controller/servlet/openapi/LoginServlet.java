@@ -1,4 +1,4 @@
-package com.blog.tech.domain.member.servlet.openapi;
+package com.blog.tech.domain.member.controller.servlet.openapi;
 
 import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;

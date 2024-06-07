@@ -3,6 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+    <listener>
+        <listener-class>com.blog.tech.global.config.MysqlLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.blog.tech.global.config.ControllerLoaderListener</listener-class>
+    </listener>
     <filter>
         <filter-name>servletFilter</filter-name>
         <filter-class>com.blog.tech.global.config.ServletFilter</filter-class>
