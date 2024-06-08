@@ -29,7 +29,21 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public Optional<Topic> findById(final Long id) throws SQLException {
-		return Optional.empty();
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic WHERE id = ?");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Topic topic = Topic.builder().id(rs.getLong(1)).categoryId(rs.getLong(2)).name(rs.getString(3)).build();
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(topic);
 	}
 
 	@Override

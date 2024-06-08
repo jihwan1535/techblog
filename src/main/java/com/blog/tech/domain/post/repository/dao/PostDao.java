@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 import com.blog.tech.domain.search.entity.Category;
 import com.blog.tech.global.utility.db.mapper.CategoryMapper;
+import com.blog.tech.global.utility.db.mapper.MemberMapper;
 import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class PostDao implements PostRepository {
@@ -90,7 +92,21 @@ public class PostDao implements PostRepository {
 
 	@Override
 	public Optional<Post> findById(final Long id) throws SQLException {
-		return Optional.empty();
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post WHERE id = ?");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Post post = PostMapper.from(rs);
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(post);
 	}
 
 	@Override
