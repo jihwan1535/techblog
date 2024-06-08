@@ -1,4 +1,4 @@
-package com.blog.tech.global.servlet;
+package com.blog.tech;
 
 import java.io.IOException;
 

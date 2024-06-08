@@ -76,9 +76,12 @@
                 $('#user-id').text(jsonData.member_info.id);
                 $('#post-id').text(jsonData.post_info.id);
 
+                console.log(jsonData.post_info.content);
+                var content = jsonData.post_info.content;
+                console.log(content);
                 const editor = new tui.Editor.factory({
                     el: document.querySelector('#post-content'),
-                    initialValue: jsonData.post_info.content,
+                    initialValue: content,
                     viewer: true,
                     height: 'auto'
                 });

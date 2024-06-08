@@ -23,14 +23,6 @@
         <label for="nickname">Nickname:</label><br>
         <input type="text" id="nickname" name="nickname">
         <button type="button" id="checkNickname">닉네임 중복검사</button><br>
-        <label for="imageButton">프로필 사진:</label>
-        <button type="button" id="imageButton">이미지 선택</button>
-        <button type="button" id="defaultImageButton">기본 이미지로 변경</button>
-        <input type="file" id="imageUploader" style="display:none;"><br>
-        <div class="imagePreview" id="imagePreview">
-            <img class="profileImage" id="profileImage" alt="Profile Image" style="max-width: 200px;">
-            <input type="hidden" id="image" name="image">
-        </div><br>
         <label for="about_me">About Me:</label><br>
         <textarea id="about_me" name="about_me"></textarea><br>
         <input type="submit" value="Submit">
@@ -38,7 +30,6 @@
     <script>
         var isEmailAvailable = false;
         var isPasswordValid = false;
-        const defaultImageUrl = "http://localhost:8888\\upload\\images\\profile.png"
 
         const validateEmail = (email) => {
             const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -124,38 +115,6 @@
             }
         });
 
-
-        $('#imageButton').click(function() {
-            $('#imageUploader').click();
-        });
-
-        $("#imageUploader").change(function(){
-            var file = this.files[0];
-            if (file) {
-                var formData = new FormData();
-                formData.append('image', file);
-
-                $.ajax({
-                    url: '/uploader/image',
-                    data: formData,
-                    type: 'POST',
-                    contentType: false,
-                    processData: false,
-                    success: function(response){
-                        $("#profileImage").attr("src", response);
-                        $("#image").val(response);
-                    },
-                    error: function(error){
-                        console.error('이미지 업로드 실패');
-                    }
-                });
-            }
-        });
-
-        $('#defaultImageButton').click(function() {
-            $("#profileImage").attr("src", defaultImageUrl);
-            $("#image").val(defaultImageUrl);
-        });
     </script>
 </body>
 </html>

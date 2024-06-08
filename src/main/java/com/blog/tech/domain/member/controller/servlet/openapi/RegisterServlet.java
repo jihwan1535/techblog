@@ -43,12 +43,11 @@ public class RegisterServlet extends HttpServlet {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
 		final String nickname = req.getParameter("nickname");
-		final String image = req.getParameter("image");
 		final String aboutMe = req.getParameter("about_me");
 
 		try {
-			final RegisterResponseBean register = memberController.register(
-				RegisterRequestBean.of(email, password, nickname, image, aboutMe));
+			final RegisterResponseBean register =
+				memberController.register(RegisterRequestBean.of(email, password, nickname, aboutMe));
 			req.setAttribute("register", register);
 			final RequestDispatcher rd = req.getRequestDispatcher("/member/registerResult.jsp");
 			rd.forward(req, resp);

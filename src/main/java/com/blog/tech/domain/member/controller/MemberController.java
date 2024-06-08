@@ -28,7 +28,7 @@ public class MemberController {
 	}
 
 	public ProfileResponseBean profile(final String nickname) throws SQLException {
-		return memberService.profile(nickname);
+		return memberService.getProfile(nickname);
 	}
 
 	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) throws SQLException {
