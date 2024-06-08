@@ -111,7 +111,7 @@
     var isNicknameAvailable = true;
     var nickName = $("#memberNickname").val();
 
-    const defaultImageUrl = 'http://localhost:8888\\upload\\images\\profile.png'
+    const defaultImageUrl = 'http://localhost:8888/upload/images/profile/profile.png'
 
     $("#checkNickname").click(function(){
         var changeNickname = $("#nickname").val();
@@ -161,7 +161,7 @@
             formData.append('image', file);
 
             $.ajax({
-                url: '/uploader/image',
+                url: '/api/uploader/images/profile',
                 data: formData,
                 type: 'POST',
                 contentType: false,

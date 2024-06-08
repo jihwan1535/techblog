@@ -43,7 +43,7 @@
                         const formData = new FormData();
                         formData.append('image', blob);
 
-                        fetch('/uploader/image', {
+                        fetch('/api/uploader/images/posts', {
                             method: 'POST',
                             body: formData
                         }).then(response => {

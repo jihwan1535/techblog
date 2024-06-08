@@ -2,10 +2,9 @@ package com.blog.tech.global.utility;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import jakarta.servlet.http.Part;
@@ -14,79 +13,60 @@ public class Uploader {
 
 	public static final String SYSTEM_PATH = System.getProperty("user.home");
 	public static final String SLASH = File.separator;
-	public static final String UPLOAD_DIR = SLASH + "upload";
-	public static final String TEMP_DIR = SLASH + "temp";
-	public static final String IMAGE_DIR = SLASH + "images";
-	public static final String FILE_DIR =  SLASH + "files";
+	public static final String IMAGE_PATH = SLASH + "upload" + SLASH + "images";
+	public static final String PROFILE_PATH = IMAGE_PATH + SLASH + "profile" + SLASH;
+	public static final String POST_PATH = IMAGE_PATH + SLASH + "posts" + SLASH;
+	public static final String PROFILE_URL = "/upload/images/profile/";
+	public static final String POST_URL = "/upload/images/posts/";
 	private static final String URL = "http://localhost:8888";
-	private static final String DEFAULT_IMAGE = "profile.png";
+	public static final String DEFAULT_IMAGE = "http://localhost:8888/" + PROFILE_URL + "profile.png";
 
-	public static String imageUpload(final Part temp) {
-		final String tempImagePath = UPLOAD_DIR + IMAGE_DIR + TEMP_DIR;
-		final String tempSavePath = SYSTEM_PATH + tempImagePath;
-		makeDirectory(tempSavePath);
+	public static String profileImageUpload(final Part image, final String nickname) {
+		final String hashPath = generateHash(nickname);
+		final String imageSavePath = SYSTEM_PATH + PROFILE_PATH + hashPath + SLASH;
+		makeDirectory(imageSavePath);
 
-		final String saveTempName = parseSaveFileName(temp);
-		final File uploadPath = new File(tempSavePath, saveTempName);
-		transferFile(temp, uploadPath);
+		final String saveImageName = parseSaveFileName(image);
+		final File uploadPath = new File(imageSavePath, saveImageName);
+		transferFile(image, uploadPath);
 
-		return URL + tempImagePath + saveTempName;
+		return URL + PROFILE_URL + hashPath + "/" + saveImageName;
 	}
 
-	public static String imageSave(final String newImageUrl, final String originalImageUrl) {
-		final String imageName = newImageUrl.substring(newImageUrl.lastIndexOf(SLASH) + 1);
-		if (imageName.equals(DEFAULT_IMAGE)) {
-			deleteFile(originalImageUrl);
-			return newImageUrl;
-		}
-		if (newImageUrl.equals(originalImageUrl)) {
-			return newImageUrl;
-		}
+	public static String postImageUpload(final Part image, final String nickname) {
+		final String hashPath = generateHash(nickname);
+		final String imageSavePath = SYSTEM_PATH + POST_PATH + hashPath + SLASH;
+		makeDirectory(imageSavePath);
 
-		final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
-		saveFile(imageName, imagePath);
+		final String saveImageName = parseSaveFileName(image);
+		final File uploadPath = new File(imageSavePath, saveImageName);
+		transferFile(image, uploadPath);
 
-		if (!newImageUrl.equals(originalImageUrl)) {
-			deleteFile(originalImageUrl);
-		}
-		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
+		return URL + POST_URL + hashPath + "/" + saveImageName;
 	}
 
-	public static String imageSave(final String newImageUrl) {
-		final String imageName = newImageUrl.substring(newImageUrl.lastIndexOf(SLASH) + 1);
-		if (imageName.equals(DEFAULT_IMAGE)) {
-			return newImageUrl;
-		}
-
-		final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
-		saveFile(imageName, imagePath);
-
-		return URL + UPLOAD_DIR + IMAGE_DIR + SLASH + imageName;
-	}
-
-	private static void saveFile(final String imageName, final String imagePath) {
-		final Path imageSavePath = Paths.get(imagePath + SLASH + imageName);
-		final Path tempSavePath = Paths.get(imagePath + TEMP_DIR + SLASH + imageName);
-
+	private static String generateHash(String nickname) {
 		try {
-			Files.move(tempSavePath, imageSavePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] encodedhash = digest.digest(nickname.getBytes(StandardCharsets.UTF_8));
+			return bytesToHex(encodedhash);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
-	private static void deleteFile(final String originalImageUrl) {
-		final String imageName = originalImageUrl.substring(originalImageUrl.lastIndexOf(SLASH) + 1);
-		if (!imageName.equals(DEFAULT_IMAGE)) {
-			final String imagePath = SYSTEM_PATH + UPLOAD_DIR + IMAGE_DIR;
-			final Path imageSavedPath = Paths.get(imagePath + SLASH + imageName);
-
-			try {
-				Files.deleteIfExists(imageSavedPath);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+	// 바이트 배열을 16진수 문자열로 변환
+	private static String bytesToHex(byte[] hash) {
+		StringBuilder hexString = new StringBuilder(2 * hash.length);
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if (hex.length() == 1) {
+				hexString.append('0');
 			}
+			hexString.append(hex);
 		}
+		return hexString.toString();
 	}
 
 	private static void makeDirectory(final String fileSavePath) {
@@ -101,7 +81,7 @@ public class Uploader {
 		final String extension = fileName.substring(fileName.lastIndexOf("."));
 		final String fileBaseName = UUID.randomUUID().toString().substring(0, 8);
 
-		return SLASH + fileBaseName + "_" + System.currentTimeMillis() + extension;
+		return fileBaseName + "_" + System.currentTimeMillis() + extension;
 	}
 
 	private static void transferFile(final Part file, final File uploadPath) {
