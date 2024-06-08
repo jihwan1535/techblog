@@ -17,6 +17,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/leftsidebar.css">
     <link rel="stylesheet" href="/css/rightsidebar.css">
+    <style>
+        #posts-container {
+            height: 500px; /* 필요한 높이로 설정 */
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
@@ -61,35 +67,46 @@
         </ul>
     </div>
 </nav>
-<div id="nav-bar">
-    <input id="nav-toggle" type="checkbox"/>
-    <div id="nav-header"><a id="nav-title" href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i>카테고리</a>
-        <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
-        <hr/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3">
+            <div id="nav-bar">
+                <input id="nav-toggle" type="checkbox"/>
+                <div id="nav-header"><a id="nav-title" href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i>카테고리</a>
+                    <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
+                    <hr/>
+                </div>
+                <ul id="nav-content" class="list-group"></ul>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="posts-container" class="mt-5"></div>
+        </div>
+        <div class="col-lg-3">
+            <div id="nav-bar-right">
+                <input id="nav-toggle-right" type="checkbox"/>
+                <div id="nav-header-right"><a id="nav-title-right" href="https://codepen.io" target="_blank">C<i class="fab fa-codepen"></i>DEPEN</a>
+                    <label for="nav-toggle-right"><span id="nav-toggle-burger-right"></span></label>
+                    <hr/>
+                </div>
+                <div id="nav-content-right">
+                    <div class="nav-button-right"><i class="fas fa-palette"></i><span>Your Work</span></div>
+                    <div class="nav-button-right"><i class="fas fa-images"></i><span>Assets</span></div>
+                    <div class="nav-button-right"><i class="fas fa-thumbtack"></i><span>Pinned Items</span></div>
+                    <hr/>
+                    <div class="nav-button-right"><i class="fas fa-heart"></i><span>Following</span></div>
+                    <div class="nav-button-right"><i class="fas fa-chart-line"></i><span>Trending</span></div>
+                    <div class="nav-button-right"><i class="fas fa-fire"></i><span>Challenges</span></div>
+                    <div class="nav-button-right"><i class="fas fa-magic"></i><span>Spark</span></div>
+                    <hr/>
+                    <div class="nav-button-right"><i class="fas fa-gem"></i><span>Codepen Pro</span></div>
+                    <div id="nav-content-highlight-right"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <ul id="nav-content" class="list-group"></ul>
 </div>
 
-<div id="nav-bar-right">
-    <input id="nav-toggle-right" type="checkbox"/>
-    <div id="nav-header-right"><a id="nav-title-right" href="https://codepen.io" target="_blank">C<i class="fab fa-codepen"></i>DEPEN</a>
-        <label for="nav-toggle-right"><span id="nav-toggle-burger-right"></span></label>
-        <hr/>
-    </div>
-    <div id="nav-content-right">
-        <div class="nav-button-right"><i class="fas fa-palette"></i><span>Your Work</span></div>
-        <div class="nav-button-right"><i class="fas fa-images"></i><span>Assets</span></div>
-        <div class="nav-button-right"><i class="fas fa-thumbtack"></i><span>Pinned Items</span></div>
-        <hr/>
-        <div class="nav-button-right"><i class="fas fa-heart"></i><span>Following</span></div>
-        <div class="nav-button-right"><i class="fas fa-chart-line"></i><span>Trending</span></div>
-        <div class="nav-button-right"><i class="fas fa-fire"></i><span>Challenges</span></div>
-        <div class="nav-button-right"><i class="fas fa-magic"></i><span>Spark</span></div>
-        <hr/>
-        <div class="nav-button-right"><i class="fas fa-gem"></i><span>Codepen Pro</span></div>
-        <div id="nav-content-highlight-right"></div>
-    </div>
-</div>
 
 <div id="topics"></div>
 
@@ -142,6 +159,70 @@
                 }
             });
         }
+    });
+</script>
+<script>
+    // posts 불러오는 script
+    let lastPostId = Number.MAX_SAFE_INTEGER;
+    let isLoading = false;
+
+    function loadPosts() {
+        if (isLoading) return;
+        isLoading = true;
+
+        $.ajax({
+            url: '/posts',
+            data: {
+                post_id: lastPostId
+            },
+            success: function(data) {
+                try {
+                    let cleanedData = JSON.stringify(data);
+                    const posts = JSON.parse(cleanedData);
+
+                    if (posts.length > 0) {
+                        lastPostId = posts[posts.length - 1].post_id;
+                        renderPosts(posts);
+                    }
+                } catch (e) {
+                    console.error('JSON parsing error:', e);
+                } finally {
+                    isLoading = false;
+                }
+            },
+            error: function() {
+                alert('Failed to load posts');
+                isLoading = false;
+            }
+        });
+    }
+
+    function renderPosts(posts) {
+        const container = $('#posts-container');
+        posts.forEach(post => {
+            const postHtml = `<div class="post" id=` + post.post_id + `>
+                    <h3>` + post.post_title + `</h3>
+                    <p>작성일:` + post.post_created_at + `</p>
+                    <p>작성자:` + post.member_name + `</p>
+                    <img src=` + post.member_image + ` id=` + post.member_id + ` alt=` + post.member_name + ` class="img-thumbnail" style="width: 50px; height: 50px;">
+                </div>`;
+            container.append(postHtml);
+        });
+
+        $('.post').click(function() {
+            const postId = $(this).attr('id');
+            window.location.href = '/post/getPost.jsp?post_id=' + postId;
+        });
+    }
+
+    $(document).ready(function() {
+        loadPosts();
+
+        $('#posts-container').scroll(function() {
+            if ($(this).scrollTop() + $(this).height() >= this.scrollHeight - 10) {
+                loadPosts();
+            }
+        });
     });
 </script>
 </body>

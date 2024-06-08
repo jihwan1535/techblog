@@ -120,7 +120,7 @@ public class PostDao implements PostRepository {
 	}
 
 	@Override
-	public List<Post> findTop10AllByIdDescId(final Long id) throws SQLException {
+	public List<Post> findTop10ByIdDescId(final Long id) throws SQLException {
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post WHERE id < ? ORDER BY id DESC LIMIT 10");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();

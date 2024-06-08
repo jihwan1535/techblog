@@ -16,6 +16,10 @@
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            cursor: pointer; /* 포스트 클릭 가능하게 변경 */
+        }
+        .post:hover {
+            background-color: #f0f0f0; /* 포스트 hover 효과 추가 */
         }
     </style>
     <script>
@@ -56,15 +60,20 @@
         function renderPosts(posts) {
             const container = $('#posts-container');
             posts.forEach(post => {
-                container.append(`
-                    <div class="post" id=` + post.post_id + `>
-                        <h3>` + post.post_title + `</h3>
-                        <p>작성일:` + post.post_created_at + `</p>
-                        <p>작성자:` + post.member_name + `</p>
-                        <img src=` + post.member_image + ` id=` + post.member_id + ` alt=`+post.member_name+`
+                const postHtml = `<div class="post" id=` + post.post_id + `>
+                    <h3>` + post.post_title + `</h3>
+                <p>작성일:` + post.post_created_at + `</p>
+                <p>작성자:` + post.member_name + `</p>
+                <img src=` + post.member_image + ` id=` + post.member_id + ` alt=`+post.member_name+`
                             class="img-thumbnail" style="width: 50px; height: 50px;">
                     </div>
-                `);
+                `;
+                container.append(postHtml);
+            });
+
+            $('.post').click(function() {
+                const postId = $(this).attr('id');
+                window.location.href = 'getPost.jsp?post_id=' + postId;
             });
         }
 

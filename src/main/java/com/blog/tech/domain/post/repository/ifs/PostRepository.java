@@ -7,5 +7,5 @@ import com.blog.tech.domain.common.CRUDIfs;
 import com.blog.tech.domain.post.entity.Post;
 
 public interface PostRepository extends CRUDIfs<Post> {
-	List<Post> findTop10AllByIdDescId(final Long id) throws SQLException;
+	List<Post> findTop10ByIdDescId(final Long id) throws SQLException;
 }

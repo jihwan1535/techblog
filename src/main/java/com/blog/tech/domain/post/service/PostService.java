@@ -53,7 +53,7 @@ public class PostService {
 	}
 
 	public List<PostsResponseBean> getAllPosts(final Long postId) throws SQLException {
-		final List<Post> posts = postRepository.findTop10AllByIdDescId(postId);
+		final List<Post> posts = postRepository.findTop10ByIdDescId(postId);
 		final List<MemberInfo> members = getMemberInfos(posts);
 		return IntStream.range(0, posts.size())
 			.mapToObj(i -> PostsResponseBean.of(posts.get(i), members.get(i)))
