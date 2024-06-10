@@ -203,7 +203,7 @@
             formData.append('image', file);
 
             $.ajax({
-                url: '/uploader/image',
+                url: '/api/uploader/images/profile',
                 data: formData,
                 type: 'POST',
                 contentType: false,
