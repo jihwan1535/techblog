@@ -14,16 +14,19 @@ public class Uploader {
 	public static final String SYSTEM_PATH = System.getProperty("user.home");
 	public static final String SLASH = File.separator;
 	public static final String IMAGE_PATH = SLASH + "upload" + SLASH + "images";
-	public static final String PROFILE_PATH = IMAGE_PATH + SLASH + "profile" + SLASH;
-	public static final String POST_PATH = IMAGE_PATH + SLASH + "posts" + SLASH;
+	public static final String FILE_PATH = SLASH + "upload" + SLASH + "files";
+	public static final String PROFILE_IMAGE_PATH = IMAGE_PATH + SLASH + "profile" + SLASH;
+	public static final String POST_FILE_PATH = FILE_PATH + SLASH + "posts" + SLASH;
+	public static final String POST_IMAGE_PATH = IMAGE_PATH + SLASH + "posts" + SLASH;
 	public static final String PROFILE_URL = "/upload/images/profile/";
 	public static final String POST_URL = "/upload/images/posts/";
+	public static final String POST_FILE_URL = "/upload/files/posts/";
 	private static final String URL = "http://localhost:8888";
 	public static final String DEFAULT_IMAGE = "http://localhost:8888/" + PROFILE_URL + "profile.png";
 
 	public static String profileImageUpload(final Part image, final String nickname) {
 		final String hashPath = generateHash(nickname);
-		final String imageSavePath = SYSTEM_PATH + PROFILE_PATH + hashPath + SLASH;
+		final String imageSavePath = SYSTEM_PATH + PROFILE_IMAGE_PATH + hashPath + SLASH;
 		makeDirectory(imageSavePath);
 
 		final String saveImageName = parseSaveFileName(image);
@@ -35,7 +38,7 @@ public class Uploader {
 
 	public static String postImageUpload(final Part image, final String nickname) {
 		final String hashPath = generateHash(nickname);
-		final String imageSavePath = SYSTEM_PATH + POST_PATH + hashPath + SLASH;
+		final String imageSavePath = SYSTEM_PATH + POST_IMAGE_PATH + hashPath + SLASH;
 		makeDirectory(imageSavePath);
 
 		final String saveImageName = parseSaveFileName(image);
@@ -43,6 +46,18 @@ public class Uploader {
 		transferFile(image, uploadPath);
 
 		return URL + POST_URL + hashPath + "/" + saveImageName;
+	}
+
+	public static String postFileUpload(final Part file, final String nickname) {
+		final String hashPath = generateHash(nickname);
+		final String fileSavePath = SYSTEM_PATH + POST_FILE_PATH + hashPath + SLASH;
+		makeDirectory(fileSavePath);
+
+		final String saveImageName = parseSaveFileName(file);
+		final File uploadPath = new File(fileSavePath, saveImageName);
+		transferFile(file, uploadPath);
+
+		return URL + POST_FILE_URL + hashPath + "/" + saveImageName;
 	}
 
 	private static String generateHash(String nickname) {
@@ -91,4 +106,5 @@ public class Uploader {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

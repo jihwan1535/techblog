@@ -15,21 +15,21 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @MultipartConfig
-@WebServlet("/api/uploader/images/posts")
-public class ImageUploaderServlet extends HttpServlet {
+@WebServlet("/api/uploader/files/posts")
+public class FileUploaderServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final Part image = req.getPart("file");
+		final Part file = req.getPart("file");
 		final HttpSession session = req.getSession(false);
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-		final String saveUrl = Uploader.postImageUpload(image, member.nickname());
+		final String saveUrl = Uploader.postFileUpload(file, member.nickname());
 
 		resp.setContentType("text/plain");
 		resp.getWriter().write(saveUrl);
 	}
-	
+
 }

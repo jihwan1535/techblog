@@ -23,7 +23,7 @@ public class ImageUploaderServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final Part image = req.getPart("image");
+		final Part image = req.getPart("file");
 		final HttpSession session = req.getSession(false);
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
 		final String saveUrl = Uploader.profileImageUpload(image, member.nickname());

@@ -11,6 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
@@ -76,9 +77,8 @@
                 $('#user-id').text(jsonData.member_info.id);
                 $('#post-id').text(jsonData.post_info.id);
 
-                console.log(jsonData.post_info.content);
                 var content = jsonData.post_info.content;
-                console.log(content);
+
                 const editor = new tui.Editor.factory({
                     el: document.querySelector('#post-content'),
                     initialValue: content,
