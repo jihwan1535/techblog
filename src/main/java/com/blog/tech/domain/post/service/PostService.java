@@ -1,6 +1,7 @@
 package com.blog.tech.domain.post.service;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -55,7 +56,9 @@ public class PostService {
 		final Post post = Post.to(memberId, request);
 		postRepository.save(post);
 
-		final List<Hashtag> hashtags = request.hashtags().stream()
+		final List<Hashtag> hashtags = Optional.ofNullable(request.hashtags())
+			.orElse(Collections.emptyList())
+			.stream()
 			.map(Hashtag::to)
 			.toList();
 		connectHashtagWithPost(post.getId(), hashtags);

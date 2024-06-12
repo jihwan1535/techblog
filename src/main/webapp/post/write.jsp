@@ -119,7 +119,8 @@
                     title: title,
                     category_id: category,
                     topic_id: topic,
-                    content: content
+                    content: content,
+                    hashtags: null
                 };
 
                 $.ajax({
