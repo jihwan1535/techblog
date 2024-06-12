@@ -146,7 +146,7 @@
         var password_confirm = $("#password_confirm").val();
 
         if (passwordCheck.length > 0) {
-            isPasswordValid = passwordValid(password, password_confirm);
+            isPasswordValid = passwordValid(passwordCheck, password_confirm);
         }
         if (emailCheck.length > 0){
             isEmailValid = emailValidLabel(isEmailAvailable);
@@ -205,7 +205,6 @@
     $('#nextBtn').click(function (){
         /* 비밀번호 저장 */
         password = $('#password').val();
-
     })
 </script>
 

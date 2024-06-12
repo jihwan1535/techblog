@@ -18,9 +18,6 @@ public record RegisterRequestBean(
 	@Size
 	String nickname,
 
-	@NotBlank
-	String image,
-
 	@NotNull
 	String aboutMe
 ) {
@@ -29,10 +26,9 @@ public record RegisterRequestBean(
 		final String email,
 		final String password,
 		final String nickname,
-		final String image,
 		final String aboutMe
 	) {
-		return new RegisterRequestBean(email, password, nickname, image, aboutMe);
+		return new RegisterRequestBean(email, password, nickname, aboutMe);
 	}
 
 }

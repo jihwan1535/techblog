@@ -31,7 +31,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	private MemberInfo create(final MemberInfo data) throws SQLException {
-		final String sql = "INSERT INTO member_info (id, member_id, nickname, image, about_me, role, post_count, comment_count, alarm_count, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		final String sql = "INSERT INTO member_info (id, member_id, nickname, image, about_me, role, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		setCreatePstmt(pstmt, data);
 
@@ -77,7 +77,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	@Override
-	public List<MemberInfo> findByAll() {
+	public List<MemberInfo> findAll() {
 		return null;
 	}
 
@@ -133,12 +133,9 @@ public class MemberInfoDao implements MemberInfoRepository {
 		pstmt.setString(4, data.getImage());
 		pstmt.setString(5, data.getAboutMe());
 		pstmt.setString(6, data.getRole().toString());
-		pstmt.setInt(7, data.getPostCount());
-		pstmt.setInt(8, data.getCommentCount());
-		pstmt.setInt(9, data.getAlarmCount());
-		pstmt.setString(10, data.getStatus().toString());
-		pstmt.setTimestamp(11, Timestamp.valueOf(data.getCreatedAt()));
-		pstmt.setTimestamp(12, Timestamp.valueOf(data.getUpdatedAt()));
+		pstmt.setString(7, data.getStatus().toString());
+		pstmt.setTimestamp(8, Timestamp.valueOf(data.getCreatedAt()));
+		pstmt.setTimestamp(9, Timestamp.valueOf(data.getUpdatedAt()));
 	}
 
 	private void setUpdatePstmt(final PreparedStatement pstmt, final MemberInfo data) throws SQLException {

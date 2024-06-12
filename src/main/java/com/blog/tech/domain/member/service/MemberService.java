@@ -22,8 +22,8 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final MemberInfoRepository memberInfoRepository;
-	private final String DUPLICATION = "DUPLICATION";
-	private final String AVAILABLE = "AVAILABLE";
+	private final String duplication = "DUPLICATION";
+	private final String available = "AVAILABLE";
 
 
 	public MemberService(final MemberRepository memberRepository, final MemberInfoRepository memberInfoRepository) {
@@ -48,7 +48,7 @@ public class MemberService {
 			.id(0L)
 			.memberId(member.getId())
 			.nickname(request.nickname())
-			.image(Uploader.imageSave(request.image()))
+			.image(Uploader.DEFAULT_IMAGE)
 			.aboutMe(request.aboutMe())
 			.role(MemberRole.MEMBER)
 			.status(MemberStatus.REGISTERED)
@@ -89,7 +89,7 @@ public class MemberService {
 		return MemberResponseBean.of(memberInfo);
 	}
 
-	public ProfileResponseBean profile(final String nickname) throws SQLException {
+	public ProfileResponseBean getProfile(final String nickname) throws SQLException {
 		final MemberInfo memberInfo = memberInfoRepository.findByNickname(nickname).orElseThrow(() -> {
 			throw new RuntimeException("Invalid member : " + nickname);
 		});
@@ -107,7 +107,7 @@ public class MemberService {
 		});
 
 		memberInfo.setNickname(request.nickname());
-		memberInfo.setImage(Uploader.imageSave(request.image(), memberInfo.getImage()));
+		memberInfo.setImage(request.image());
 		memberInfo.setAboutMe(request.aboutMe());
 
 		final MemberInfo updateProfile = memberInfoRepository.save(memberInfo);
@@ -116,15 +116,15 @@ public class MemberService {
 
 	public AvailableResponseBean isValidNickname(final String nickname) throws SQLException {
 		if (memberInfoRepository.findByNickname(nickname).isPresent()) {
-			return AvailableResponseBean.of(DUPLICATION);
+			return AvailableResponseBean.of(duplication);
 		}
-		return AvailableResponseBean.of(AVAILABLE);
+		return AvailableResponseBean.of(available);
 	}
 
 	public AvailableResponseBean isValidEmail(final String email) throws SQLException {
 		if (memberRepository.findByEmail(email).isPresent()) {
-			return AvailableResponseBean.of(DUPLICATION);
+			return AvailableResponseBean.of(duplication);
 		}
-		return AvailableResponseBean.of(AVAILABLE);
+		return AvailableResponseBean.of(available);
 	}
 }
