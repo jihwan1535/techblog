@@ -9,39 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <style>
-        .txt_tag {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 5px;
-            padding: 2px 5px;
-            background-color: lightgray;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        .delete-tag {
-            margin-left: 5px;
-            cursor: pointer;
-            color: black;
-            font-size: 12px;
-        }
-        .inp_tag input {
-            border: none;
-            outline: none;
-        }
-        .inp_tag span {
-            color: lightgray;
-            font-size: 14px;
-            font-family: sans-serif;
-        }
-
-        .no-click {
-            pointer-events: none;
-        }
-        .tf_g {
-            font-size: 12px;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -70,17 +37,16 @@
     <script>
         function getHashtags() {
             let tags = [];
-            $('.txt_tag').each(function() {
-                tags.push($('.txt_tag').data('tag'));
+            $('.editor_tag .txt_tag').each(function() {
+                var tagValue = $(this).data('tag');
+                tags.push(tagValue);
             });
             return tags;
         }
 
         $(document).ready(function() {
-
             const { Editor } = toastui;
 
-            // 커스텀 렌더러 플러그인 작성
             function customHTMLRenderer() {
                 return {
                     htmlBlock: {
@@ -102,7 +68,6 @@
                 };
             }
 
-            // toast-ui Editor 초기화
             const editor = new Editor({
                 el: document.querySelector('#content'),
                 height: '500px',
@@ -110,6 +75,25 @@
                 placeholder: "내용을 입력해주세요.",
                 previewStyle: 'vertical',
                 hideModeSwitch: true,
+                hooks: {
+                    addImageBlobHook: function(blob, callback) {
+                        const formData = new FormData();
+                        formData.append('file', blob);
+                        fetch('/api/uploader/images/posts', {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        }).then(url => {
+                            callback(url, 'alt text');
+                        }).catch(error => {
+                            console.error('There has been a problem with your fetch operation:', error);
+                        });
+                    }
+                },
                 customHTMLRenderer: customHTMLRenderer()
             });
 
