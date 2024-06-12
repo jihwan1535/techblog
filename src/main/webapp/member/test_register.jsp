@@ -97,6 +97,8 @@
     var isPasswordValid = false;
     var isEmailValid = false;
     var isCheckingEmail = false;
+    var email;
+    var password;
 
     const validateRegisEmail = (email) => {
         const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -105,7 +107,7 @@
 
     $(document).on('click', '#checkEmail', function (){
         $("#checkEmail").click(function () {
-            var email = $("#email").val();
+            email = $("#email").val();
             if (validateRegisEmail(email)) {
                 if (!isCheckingEmail){
                     isCheckingEmail = true;
@@ -139,14 +141,14 @@
     });
 
     function inputValidation() {
-        var email = $("#email").val();
-        var password = $("#password").val();
+        var emailCheck = $("#email").val();
+        var passwordCheck = $("#password").val();
         var password_confirm = $("#password_confirm").val();
 
-        if (password.length > 0) {
+        if (passwordCheck.length > 0) {
             isPasswordValid = passwordValid(password, password_confirm);
         }
-        if (email.length > 0){
+        if (emailCheck.length > 0){
             isEmailValid = emailValidLabel(isEmailAvailable);
         }
         updateNextBtn();
@@ -193,10 +195,18 @@
            $('#nextBtn').attr('disabled', true);
        }
     }
+
     /* 모달 초기화 */
     $('#signUpModal1').on('hidden.bs.modal', function (e) {
         $(this).find('form')[0].reset()
     });
+
+    /* 다음으로 버튼 눌렀을 시 */
+    $('#nextBtn').click(function (){
+        /* 비밀번호 저장 */
+        password = $('#password').val();
+
+    })
 </script>
 
 <script>
@@ -218,8 +228,8 @@
                     isNicknameAvailable = false;
                 }
             },
-            error: function (error) {
-                console.log(error);
+            error: function (error){
+                console.error(error);
             }
         });
     });
@@ -233,8 +243,13 @@
         var concatData = form1Data + '&' + form2Data;
 
         $.ajax({
-
-        })
+            url: '/register',
+            data: concatData,
+            type: 'POST',
+            success: function (response){
+                console.log(response);
+            }
+        });
     });
 
     /* 폼이 2개로 나누어져있는데 이는 어떻게 */
