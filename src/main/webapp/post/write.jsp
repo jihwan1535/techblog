@@ -4,15 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
+    <link rel="stylesheet" href="http://localhost:8888/post/css/write.css?after" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <style>
+        .txt_tag {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 5px;
+            padding: 2px 5px;
+            background-color: lightgray;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .delete-tag {
+            margin-left: 5px;
+            cursor: pointer;
+            color: black;
+            font-size: 12px;
+        }
+        .inp_tag input {
+            border: none;
+            outline: none;
+        }
+        .inp_tag span {
+            color: lightgray;
+            font-size: 14px;
+            font-family: sans-serif;
+        }
+
         .no-click {
             pointer-events: none;
         }
+        .tf_g {
+            font-size: 12px;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -34,11 +63,21 @@
     </div>
 
     <div id="content" class="form-group"></div>
+    <div class="editor_tag"></div>
     <button id="submitBtn" class="btn btn-primary">작성</button>
 
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
+        function getHashtags() {
+            let tags = [];
+            $('.txt_tag').each(function() {
+                tags.push($('.txt_tag').data('tag'));
+            });
+            return tags;
+        }
+
         $(document).ready(function() {
+
             const { Editor } = toastui;
 
             // 커스텀 렌더러 플러그인 작성
@@ -114,13 +153,15 @@
                 const category = $('#category').val();
                 const topic = $('#topic').val();
                 const content = editor.getMarkdown();
+                const hashtags = getHashtags();
+                console.log(hashtags);
 
                 const postData = {
                     title: title,
                     category_id: category,
                     topic_id: topic,
                     content: content,
-                    hashtags: null
+                    hashtags: hashtags
                 };
 
                 $.ajax({
@@ -182,6 +223,7 @@
             }
         });
     </script>
+    <script src="http://localhost:8888/post/js/hashtag.js"></script>
 </div>
 </body>
 </html>

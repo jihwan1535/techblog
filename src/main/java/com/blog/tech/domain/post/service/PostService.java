@@ -61,6 +61,7 @@ public class PostService {
 			.stream()
 			.map(Hashtag::to)
 			.toList();
+
 		connectHashtagWithPost(post.getId(), hashtags);
 
 		member.writePost();
@@ -73,17 +74,25 @@ public class PostService {
 				final Optional<Hashtag> hasTag = hashtagRepository.findByName(it.getName());
 				if (hasTag.isEmpty()) {
 					final Hashtag hashtag = hashtagRepository.save(it);
-					final ConnectHashtag connect = ConnectHashtag.to(postId, hashtag.getId());
-					connectHashtagRepository.save(connect);
+					connect(hashtag, postId);
 				} else {
 					final Hashtag hashtag = hasTag.get();
-					final ConnectHashtag connect = ConnectHashtag.to(postId, hashtag.getId());
-					connectHashtagRepository.save(connect);
+					connect(hashtag, postId);
 				}
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			}
 		});
+	}
+
+	private void connect(final Hashtag hashtag, final Long postId) throws SQLException {
+		final Optional<ConnectHashtag> connectInfo =
+			connectHashtagRepository.findByHashtagIdAndPostId(hashtag.getId(), postId);
+
+		if (connectInfo.isEmpty()){
+			final ConnectHashtag connect = ConnectHashtag.to(postId, hashtag.getId());
+			connectHashtagRepository.save(connect);
+		}
 	}
 
 	public List<PostsResponseBean> getAllPosts(final Long postId) throws SQLException {

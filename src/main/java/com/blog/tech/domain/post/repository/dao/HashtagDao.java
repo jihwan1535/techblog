@@ -23,7 +23,7 @@ public class HashtagDao implements HashtagRepository {
 
 	@Override
 	public Hashtag save(final Hashtag data) throws SQLException {
-		final String sql = "INSERT INTO post (id, name) VALUES (?, ?)";
+		final String sql = "INSERT INTO hashtag (id, tag) VALUES (?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
 		pstmt.setString(2, data.getName());
@@ -36,7 +36,7 @@ public class HashtagDao implements HashtagRepository {
 
 		rs.close();
 		pstmt.close();
-		System.out.println("Inserted " + rows + " row(s).");
+		System.out.println("Inserted hashtag " + rows + " row(s).");
 
 		return data;
 	}
@@ -57,9 +57,9 @@ public class HashtagDao implements HashtagRepository {
 	}
 
 	@Override
-	public Optional<Hashtag> findByName(final String name) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag WHERE name = ?");
-		pstmt.setString(1, name);
+	public Optional<Hashtag> findByName(final String tag) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag WHERE tag = ?");
+		pstmt.setString(1, tag);
 		final ResultSet rs = pstmt.executeQuery();
 
 		if (!rs.next()) {

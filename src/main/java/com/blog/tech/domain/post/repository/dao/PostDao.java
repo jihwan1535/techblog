@@ -69,7 +69,7 @@ public class PostDao implements PostRepository {
 		}
 		rs.close();
 		pstmt.close();
-		System.out.println("Inserted " + rows + " row(s).");
+		System.out.println("Inserted post " + rows + " row(s).");
 
 		return data;
 	}
