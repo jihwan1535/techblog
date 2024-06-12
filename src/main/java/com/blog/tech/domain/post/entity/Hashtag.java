@@ -12,4 +12,7 @@ public class Hashtag {
 	private Long id;
 	private String name;
 
+	public static Hashtag to(final String hashtag) {
+		return new Hashtag(0L, hashtag);
+	}
 }

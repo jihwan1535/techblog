@@ -2,6 +2,7 @@ package com.blog.tech.domain.post.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
@@ -11,6 +12,8 @@ import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.dto.request.PostRequestBean;
 import com.blog.tech.domain.post.dto.response.PostResponseBean;
 import com.blog.tech.domain.post.dto.response.PostsResponseBean;
+import com.blog.tech.domain.post.entity.ConnectHashtag;
+import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
@@ -33,8 +36,9 @@ public class PostService {
 		final PostRepository postRepository,
 		final MemberInfoRepository memberRepository,
 		final CategoryRepository categoryRepository,
-		final TopicRepository topicRepository, HashtagRepository hashtagRepository,
-		ConnectHashtagRepository connectHashtagRepository
+		final TopicRepository topicRepository,
+		final HashtagRepository hashtagRepository,
+		final ConnectHashtagRepository connectHashtagRepository
 	) {
 		this.postRepository = postRepository;
 		this.memberRepository = memberRepository;
@@ -45,13 +49,38 @@ public class PostService {
 	}
 
 	public void writeOnPost(final Long memberId, final PostRequestBean request) throws SQLException {
-		final Post post = Post.to(memberId, request);
-		postRepository.save(post);
 		final MemberInfo member = memberRepository.findById(memberId).orElseThrow(() -> {
 			throw new RuntimeException("Invalid Member, " + memberId);
 		});
+		final Post post = Post.to(memberId, request);
+		postRepository.save(post);
+
+		final List<Hashtag> hashtags = request.hashtags().stream()
+			.map(Hashtag::to)
+			.toList();
+		connectHashtagWithPost(post.getId(), hashtags);
+
 		member.writePost();
 		memberRepository.save(member);
+	}
+
+	private void connectHashtagWithPost(final Long postId, final List<Hashtag> request) {
+		request.stream().forEach(it -> {
+			try {
+				final Optional<Hashtag> hasTag = hashtagRepository.findByName(it.getName());
+				if (hasTag.isEmpty()) {
+					final Hashtag hashtag = hashtagRepository.save(it);
+					final ConnectHashtag connect = ConnectHashtag.to(postId, hashtag.getId());
+					connectHashtagRepository.save(connect);
+				} else {
+					final Hashtag hashtag = hasTag.get();
+					final ConnectHashtag connect = ConnectHashtag.to(postId, hashtag.getId());
+					connectHashtagRepository.save(connect);
+				}
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+		});
 	}
 
 	public List<PostsResponseBean> getAllPosts(final Long postId) throws SQLException {
@@ -104,6 +133,5 @@ public class PostService {
 			.map(TopicResponseBean::of)
 			.toList();
 	}
-
 
 }

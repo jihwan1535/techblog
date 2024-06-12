@@ -2,10 +2,13 @@ package com.blog.tech.domain.post.controller.servlet.api;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.post.controller.PostController;
 import com.blog.tech.domain.post.dto.request.PostRequestBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -19,11 +22,13 @@ import jakarta.servlet.http.HttpSession;
 public class PostServlet extends HttpServlet {
 
 	private PostController postController;
+	private ObjectMapper objectMapper;
 
 	@Override
 	public void init() throws ServletException {
 		final ServletContext servletContext = this.getServletContext();
 		this.postController = (PostController)servletContext.getAttribute("postController");
+		this.objectMapper = (ObjectMapper)servletContext.getAttribute("objectMapper");
 	}
 
 	@Override
@@ -33,20 +38,13 @@ public class PostServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final HttpSession session = req.getSession(false);
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-		final PostRequestBean request = getPostRequest(req);
+		final PostRequestBean request = objectMapper.readValue(req.getInputStream(), PostRequestBean.class);
+		System.out.println(request.toString());
 		try {
 			postController.writeOnPost(member.id(), request);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private PostRequestBean getPostRequest(final HttpServletRequest req) {
-		final Long topicId = Long.parseLong(req.getParameter("topic_id"));
-		final Long categoryId = Long.parseLong(req.getParameter("category_id"));
-		final String title = req.getParameter("title");
-		final String content = req.getParameter("content");
-		return PostRequestBean.of(topicId, categoryId, title, content);
 	}
 
 }

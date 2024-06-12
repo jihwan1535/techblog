@@ -1,12 +1,17 @@
 package com.blog.tech.domain.post.repository.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
+import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
 
 public class HashtagDao implements HashtagRepository {
 
@@ -18,7 +23,22 @@ public class HashtagDao implements HashtagRepository {
 
 	@Override
 	public Hashtag save(final Hashtag data) throws SQLException {
-		return null;
+		final String sql = "INSERT INTO post (id, name) VALUES (?, ?)";
+		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		pstmt.setLong(1, data.getId());
+		pstmt.setString(2, data.getName());
+
+		final int rows = pstmt.executeUpdate();
+		ResultSet rs = pstmt.getGeneratedKeys();
+		if (rs.next()) {
+			data.setId(rs.getLong(1));
+		}
+
+		rs.close();
+		pstmt.close();
+		System.out.println("Inserted " + rows + " row(s).");
+
+		return data;
 	}
 
 	@Override
@@ -34,5 +54,24 @@ public class HashtagDao implements HashtagRepository {
 	@Override
 	public void delete(final Long id) throws SQLException {
 
+	}
+
+	@Override
+	public Optional<Hashtag> findByName(final String name) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag WHERE name = ?");
+		pstmt.setString(1, name);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Hashtag hashtag = new Hashtag(rs.getLong(1), rs.getString(2));
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(hashtag);
 	}
 }

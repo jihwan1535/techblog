@@ -125,7 +125,8 @@
                 $.ajax({
                     url: '/api/post/write',
                     method: 'POST',
-                    data: postData,
+                    contentType: "application/json",
+                    data: JSON.stringify(postData),
                     success: function(data) {
                         alert('게시글이 성공적으로 작성되었습니다.');
                         window.location.href = "/main";
