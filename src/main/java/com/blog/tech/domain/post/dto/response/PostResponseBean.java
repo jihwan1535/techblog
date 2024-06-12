@@ -2,8 +2,8 @@ package com.blog.tech.domain.post.dto.response;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.domain.search.entity.Category;
-import com.blog.tech.domain.search.entity.Topic;
+import com.blog.tech.domain.post.entity.Category;
+import com.blog.tech.domain.post.entity.Topic;
 
 public record PostResponseBean (
 	MemberInfoResultBean memberInfo,

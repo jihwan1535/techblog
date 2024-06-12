@@ -4,42 +4,44 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
+import com.blog.tech.domain.post.dto.response.TopicResponseBean;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.dto.request.PostRequestBean;
 import com.blog.tech.domain.post.dto.response.PostResponseBean;
 import com.blog.tech.domain.post.dto.response.PostsResponseBean;
 import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.domain.post.repository.ifs.CommentRepository;
+import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
+import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
-import com.blog.tech.domain.post.repository.ifs.ReplyRepository;
-import com.blog.tech.domain.search.entity.Category;
-import com.blog.tech.domain.search.entity.Topic;
-import com.blog.tech.domain.search.repository.ifs.CategoryRepository;
-import com.blog.tech.domain.search.repository.ifs.TopicRepository;
+import com.blog.tech.domain.post.entity.Category;
+import com.blog.tech.domain.post.entity.Topic;
+import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
+import com.blog.tech.domain.post.repository.ifs.TopicRepository;
 
 public class PostService {
 
 	private final PostRepository postRepository;
-	private final ReplyRepository replyRepository;
-	private final CommentRepository commentRepository;
 	private final MemberInfoRepository memberRepository;
 	private final CategoryRepository categoryRepository;
 	private final TopicRepository topicRepository;
+	private final HashtagRepository hashtagRepository;
+	private final ConnectHashtagRepository connectHashtagRepository;
 
 	public PostService(
 		final PostRepository postRepository,
-		final ReplyRepository replyRepository,
-		final CommentRepository commentRepository,
-		final MemberInfoRepository memberRepository, CategoryRepository categoryRepository,
-		TopicRepository topicRepository
+		final MemberInfoRepository memberRepository,
+		final CategoryRepository categoryRepository,
+		final TopicRepository topicRepository, HashtagRepository hashtagRepository,
+		ConnectHashtagRepository connectHashtagRepository
 	) {
 		this.postRepository = postRepository;
-		this.replyRepository = replyRepository;
-		this.commentRepository = commentRepository;
 		this.memberRepository = memberRepository;
 		this.categoryRepository = categoryRepository;
 		this.topicRepository = topicRepository;
+		this.hashtagRepository = hashtagRepository;
+		this.connectHashtagRepository = connectHashtagRepository;
 	}
 
 	public void writeOnPost(final Long memberId, final PostRequestBean request) throws SQLException {
@@ -88,5 +90,20 @@ public class PostService {
 		});
 		return PostResponseBean.of(memberInfo, post, category, topic);
 	}
+
+	public List<CategoryResponseBean> getAllCategories() throws SQLException {
+		final List<Category> categories = categoryRepository.findAll();
+		return categories.stream()
+			.map(CategoryResponseBean::of)
+			.toList();
+	}
+
+	public List<TopicResponseBean> getAllTopicsByCategory(final Long categoryId) throws SQLException {
+		final List<Topic> topics = topicRepository.findAllByCategoryId(categoryId);
+		return topics.stream()
+			.map(TopicResponseBean::of)
+			.toList();
+	}
+
 
 }

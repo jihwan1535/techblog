@@ -10,12 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
-import com.blog.tech.domain.search.entity.Category;
-import com.blog.tech.global.utility.db.mapper.CategoryMapper;
-import com.blog.tech.global.utility.db.mapper.MemberMapper;
 import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class PostDao implements PostRepository {
