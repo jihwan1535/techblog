@@ -40,7 +40,7 @@ public class ControllerLoaderListener implements ServletContextListener {
 		setDaoConnection(conn);
 		setMemberController(sce);
 		setPostController(sce);
-		setSearchController(sce);
+		setCommentController(sce);
 	}
 
 	private void setDaoConnection(final Connection conn) {
@@ -61,8 +61,8 @@ public class ControllerLoaderListener implements ServletContextListener {
 		sce.getServletContext().setAttribute("postController", postController);
 	}
 
-	private void setSearchController(final ServletContextEvent sce) {
-		final CommentService commentService = new CommentService(memberInfo, comment, reply);
+	private void setCommentController(final ServletContextEvent sce) {
+		final CommentService commentService = new CommentService(memberInfo, post, comment, reply);
 		final CommentController commentController = new CommentController(commentService);
 		sce.getServletContext().setAttribute("commentController", commentController);
 	}

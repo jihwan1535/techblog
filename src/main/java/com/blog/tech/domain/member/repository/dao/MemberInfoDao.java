@@ -42,19 +42,20 @@ public class MemberInfoDao implements MemberInfoRepository {
 		}
 		rs.close();
 		pstmt.close();
-		System.out.println("Inserted " + rows + " row(s).");
+		System.out.println("Inserted memberInfo " + rows + " row(s).");
 
 		return data;
 	}
 
 	private void update(final MemberInfo data) throws SQLException {
-		final String sql = "UPDATE member_info SET member_id = ?, nickname = ?, image = ?, about_me = ?, role = ?, post_count = ?, comment_count = ?, alarm_count = ?, status = ?, created_at = ?, updated_at = ? WHERE id = ?";
+		final String sql = "UPDATE member_info SET member_id = ?, nickname = ?, image = ?, about_me = ?, role = ?, "
+			+ "post_count = ?, comment_count = ?, alarm_count = ?, status = ?, created_at = ?, updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		setUpdatePstmt(pstmt, data);
 
 		final int rows = pstmt.executeUpdate();
 		pstmt.close();
-		System.out.println("Updated " + rows + " row(s).");
+		System.out.println("Updated member_info " + rows + " row(s).");
 	}
 
 	@Override

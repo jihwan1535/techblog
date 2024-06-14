@@ -46,4 +46,8 @@ public class Post extends BaseEntity {
 			.build();
 	}
 
+	public void commentIncreasing() {
+		this.commentCount++;
+	}
+
 }
