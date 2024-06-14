@@ -1,6 +1,6 @@
 package com.blog.tech.domain.comment.dto.request;
 
-public record EditCommentRequestBean(
+public record EditCommentRequest(
 	Long commentId,
 	String content
 ) {

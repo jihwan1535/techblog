@@ -23,7 +23,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public MemberInfo save(final MemberInfo data) throws SQLException {
-		if (findById(data.getId()).isPresent()) {
+		if (data.getId() > 0) {
 			update(data);
 			return data;
 		}

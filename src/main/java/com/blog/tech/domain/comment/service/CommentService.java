@@ -4,10 +4,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
-import com.blog.tech.domain.comment.dto.request.EditCommentRequestBean;
-import com.blog.tech.domain.comment.dto.response.CommentsResponseBean;
+import com.blog.tech.domain.comment.dto.request.CommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
+import com.blog.tech.domain.comment.dto.request.ReplyRequest;
+import com.blog.tech.domain.comment.dto.response.CommentsResponse;
 import com.blog.tech.domain.comment.entity.Comment;
+import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
@@ -35,11 +38,11 @@ public class CommentService {
 		this.replyRepository = replyRepository;
 	}
 
-	public void writeCommentOnPost(final Long memberId, final CommentRequestBean request) throws SQLException {
+	public void writeCommentOnPost(final Long memberId, final CommentRequest request) throws SQLException {
 		final Post post = postRepository.findById(request.postId()).orElseThrow(() -> {
 			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
 		});
-		final MemberInfo memberInfo = memberInfoRepository.findByMemberId(memberId).orElseThrow(() -> {
+		final MemberInfo memberInfo = memberInfoRepository.findById(memberId).orElseThrow(() -> {
 			throw new IllegalArgumentException("NOT FOUND MEMBER " + memberId);
 		});
 
@@ -52,12 +55,12 @@ public class CommentService {
 		memberInfoRepository.save(memberInfo);
 	}
 
-	public List<CommentsResponseBean> allCommentsAndReplies(final Long postId) throws SQLException {
+	public List<CommentsResponse> allCommentsAndReplies(final Long postId) throws SQLException {
 		final List<Comment> comments = commentRepository.findTop10ByPostIdAndStatusDescId(postId);
 		final List<MemberInfo> memberInfos = getMemberInfos(comments);
 
 		return IntStream.range(0, comments.size())
-			.mapToObj(i -> CommentsResponseBean.of(memberInfos.get(i), comments.get(i)))
+			.mapToObj(i -> CommentsResponse.of(memberInfos.get(i), comments.get(i)))
 			.toList();
 	}
 
@@ -74,9 +77,9 @@ public class CommentService {
 			}).toList();
 	}
 
-	public void unRegisterComment(final Long memberId, final Long commentId) throws SQLException {
-		final Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
-			throw new IllegalArgumentException("NOT FOUND COMMENT " + commentId);
+	public void unRegisterComment(final Long memberId, final DeleteCommentRequest request) throws SQLException {
+		final Comment comment = commentRepository.findById(request.commentId()).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND COMMENT " + request.commentId());
 		});
 		if (comment.getMemberInfoId() != memberId) {
 			throw new IllegalArgumentException("NOT SAME USER");
@@ -84,14 +87,21 @@ public class CommentService {
 		final MemberInfo memberInfo = memberInfoRepository.findById(memberId).orElseThrow(() -> {
 			throw new IllegalArgumentException("NOT FOUND MEMBER " + memberId);
 		});
+		final Post post = postRepository.findById(request.postId()).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
+		});
+
 		memberInfo.commentDecreasing();
+		post.commentDecreasing();
 		comment.setStatus(Status.UNREGISTERED);
 		comment.updateTime();
+
 		commentRepository.save(comment);
 		memberInfoRepository.save(memberInfo);
+		postRepository.save(post);
 	}
 
-	public void updateComment(final Long memberId, final EditCommentRequestBean request) throws SQLException {
+	public void updateComment(final Long memberId, final EditCommentRequest request) throws SQLException {
 		final Comment comment = commentRepository.findById(request.commentId()).orElseThrow(() -> {
 			throw new IllegalArgumentException("NOT FOUND COMMENT " + request.commentId());
 		});
@@ -106,4 +116,22 @@ public class CommentService {
 		comment.updateTime();
 		commentRepository.save(comment);
 	}
+
+	public void writeReplyOnComment(final Long memberId, final ReplyRequest request) throws SQLException {
+		final Post post = postRepository.findById(request.postId()).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
+		});
+		final MemberInfo memberInfo = memberInfoRepository.findById(memberId).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND MEMBER " + memberId);
+		});
+
+		final Reply reply = Reply.to(memberId, request);
+		memberInfo.commentIncreasing();
+		post.replyIncreasing();
+
+		replyRepository.save(reply);
+		postRepository.save(post);
+		memberInfoRepository.save(memberInfo);
+	}
+
 }

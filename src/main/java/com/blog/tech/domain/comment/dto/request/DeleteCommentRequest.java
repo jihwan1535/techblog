@@ -1,8 +1,7 @@
 package com.blog.tech.domain.comment.dto.request;
 
-public record CommentRequestBean(
+public record DeleteCommentRequest(
 	Long postId,
-	String content
+	Long commentId
 ) {
-
 }

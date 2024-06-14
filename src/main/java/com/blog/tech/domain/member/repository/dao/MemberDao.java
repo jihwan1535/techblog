@@ -25,7 +25,7 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public Member save(final Member data) throws SQLException {
-		if (findById(data.getId()).isPresent()) {
+		if (data.getId() > 0) {
 			update(data);
 			return data;
 		}

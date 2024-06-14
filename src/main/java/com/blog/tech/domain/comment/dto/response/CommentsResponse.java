@@ -2,16 +2,15 @@ package com.blog.tech.domain.comment.dto.response;
 
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.member.dto.response.MemberInfoResultBean;
-import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 
-public record CommentsResponseBean(
+public record CommentsResponse(
 	MemberInfoResultBean memberInfo,
-	CommentResultBean commentInfo
+	CommentResult commentInfo
 ) {
 
-	public static CommentsResponseBean of(final MemberInfo member, final Comment comment) {
-		return new CommentsResponseBean(
+	public static CommentsResponse of(final MemberInfo member, final Comment comment) {
+		return new CommentsResponse(
 			fromMemberInfo(member),
 			fromCommentInfo(comment)
 		);
@@ -21,8 +20,8 @@ public record CommentsResponseBean(
 		return MemberInfoResultBean.of(member);
 	}
 
-	private static CommentResultBean fromCommentInfo(final Comment comment) {
-		return CommentResultBean.of(comment);
+	private static CommentResult fromCommentInfo(final Comment comment) {
+		return CommentResult.of(comment);
 	}
 
 }

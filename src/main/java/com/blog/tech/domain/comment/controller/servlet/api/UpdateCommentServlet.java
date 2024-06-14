@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.comment.controller.CommentController;
-import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
-import com.blog.tech.domain.comment.dto.request.EditCommentRequestBean;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -34,8 +33,7 @@ public class UpdateCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final EditCommentRequestBean request
-			= objectMapper.readValue(req.getInputStream(), EditCommentRequestBean.class);
+		final EditCommentRequest request = objectMapper.readValue(req.getInputStream(), EditCommentRequest.class);
 		try {
 			commentController.updateComment(memberId, request);
 		} catch (SQLException e) {

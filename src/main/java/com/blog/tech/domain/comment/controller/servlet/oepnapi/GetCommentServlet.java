@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.blog.tech.domain.comment.controller.CommentController;
-import com.blog.tech.domain.comment.dto.response.CommentsResponseBean;
+import com.blog.tech.domain.comment.dto.response.CommentsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -35,7 +35,7 @@ public class GetCommentServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long postId = Long.valueOf(req.getParameter("post_id"));
 		try {
-			final List<CommentsResponseBean> comments = commentController.allCommentsOnPost(postId);
+			final List<CommentsResponse> comments = commentController.allCommentsOnPost(postId);
 			final String json = objectMapper.writeValueAsString(comments);
 
 			resp.setContentType("application/json");
