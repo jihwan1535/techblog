@@ -19,13 +19,14 @@ public class PostMapper {
 			.tile(rs.getString(5))
 			.content(rs.getString(6))
 			.commentCount(rs.getInt(7))
-			.viewCount(rs.getInt(8))
-			.reportCount(rs.getInt(9))
-			.scrapCount(rs.getInt(10))
-			.alarm(rs.getBoolean(11))
-			.status(Status.valueOf(rs.getString(12)))
-			.createdAt(rs.getTimestamp(13).toLocalDateTime())
-			.updatedAt(rs.getTimestamp(14).toLocalDateTime())
+			.replyCount(rs.getInt(8))
+			.viewCount(rs.getInt(9))
+			.reportCount(rs.getInt(10))
+			.scrapCount(rs.getInt(11))
+			.alarm(rs.getBoolean(12))
+			.status(Status.valueOf(rs.getString(13)))
+			.createdAt(rs.getTimestamp(14).toLocalDateTime())
+			.updatedAt(rs.getTimestamp(15).toLocalDateTime())
 			.build();
 	}
 

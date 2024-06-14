@@ -140,4 +140,11 @@ public class PostService {
 			.toList();
 	}
 
+	public List<TopicResponseBean> getAllTopicsByCategory(final Long categoryId) throws SQLException {
+		final List<Topic> topics = topicRepository.findAllByCategoryId(categoryId);
+		return topics.stream()
+			.map(TopicResponseBean::of)
+			.toList();
+	}
+
 }

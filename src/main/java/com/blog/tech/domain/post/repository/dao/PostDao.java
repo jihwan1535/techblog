@@ -32,7 +32,8 @@ public class PostDao implements PostRepository {
 	}
 	private void update(final Post data) throws SQLException {
 		final String sql = "UPDATE post SET topic_id = ?, category_id = ?, title = ?, content = ?, comment_count = ?, "
-			+ "view_count = ?, report_count = ?, scrap_count = ?, alarm = ?, status = ?, updated_at = ? WHERE id = ?";
+			+ "reply_count = ?, view_count = ?, report_count = ?, scrap_count = ?, alarm = ?, status = ?, "
+			+ "updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		setUpdatePstmt(pstmt, data);
 
@@ -47,13 +48,14 @@ public class PostDao implements PostRepository {
 		pstmt.setString(3, data.getTile());
 		pstmt.setString(4, data.getContent());
 		pstmt.setInt(5, data.getCommentCount());
-		pstmt.setInt(6, data.getViewCount());
-		pstmt.setInt(7, data.getReportCount());
-		pstmt.setInt(8, data.getScrapCount());
-		pstmt.setBoolean(9, data.getAlarm());
-		pstmt.setString(10, data.getStatus().toString());
-		pstmt.setTimestamp(11, Timestamp.valueOf(data.getUpdatedAt()));
-		pstmt.setLong(12, data.getId());
+		pstmt.setInt(6, data.getReplyCount());
+		pstmt.setInt(7, data.getViewCount());
+		pstmt.setInt(8, data.getReportCount());
+		pstmt.setInt(9, data.getScrapCount());
+		pstmt.setBoolean(10, data.getAlarm());
+		pstmt.setString(11, data.getStatus().toString());
+		pstmt.setTimestamp(12, Timestamp.valueOf(data.getUpdatedAt()));
+		pstmt.setLong(13, data.getId());
 	}
 
 	private Post create(final Post data) throws SQLException {
