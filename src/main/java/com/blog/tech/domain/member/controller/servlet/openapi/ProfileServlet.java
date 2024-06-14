@@ -65,6 +65,7 @@ public class ProfileServlet extends HttpServlet {
 		final String url
 	) throws ServletException, IOException {
 		final RequestDispatcher rd = req.getRequestDispatcher(url);
+		resp.setContentType("text/html;");
 		rd.include(req, resp);
 	}
 }

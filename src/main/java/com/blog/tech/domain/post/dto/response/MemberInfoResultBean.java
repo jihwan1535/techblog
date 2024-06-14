@@ -8,7 +8,7 @@ public record MemberInfoResultBean(
 	String image
 ) {
 
-	public static MemberInfoResultBean from(final MemberInfo member) {
+	public static MemberInfoResultBean of(final MemberInfo member) {
 		return new MemberInfoResultBean(member.getId(), member.getNickname(), member.getImage());
 	}
 

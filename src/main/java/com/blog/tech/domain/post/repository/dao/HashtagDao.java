@@ -5,13 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
 
 public class HashtagDao implements HashtagRepository {
 
@@ -26,7 +25,7 @@ public class HashtagDao implements HashtagRepository {
 		final String sql = "INSERT INTO hashtag (id, tag) VALUES (?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
-		pstmt.setString(2, data.getName());
+		pstmt.setString(2, data.getTag());
 
 		final int rows = pstmt.executeUpdate();
 		ResultSet rs = pstmt.getGeneratedKeys();
@@ -74,4 +73,25 @@ public class HashtagDao implements HashtagRepository {
 
 		return Optional.of(hashtag);
 	}
+
+	@Override
+	public List<Hashtag> findAllByPostId(final Long postId) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag h "
+			+ "JOIN connect_hashtag c ON h.id = c.hashtag_id WHERE post_id = ?;");
+		pstmt.setLong(1, postId);
+
+		final ResultSet rs = pstmt.executeQuery();
+		final List<Hashtag> hashtags = new ArrayList<>();
+
+		while (rs.next()) {
+			final Hashtag hashtag = new Hashtag(rs.getLong(1), rs.getString(2));
+			hashtags.add(hashtag);
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return hashtags;
+	}
+
 }

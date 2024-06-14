@@ -71,7 +71,7 @@ public class PostService {
 	private void connectHashtagWithPost(final Long postId, final List<Hashtag> request) {
 		request.stream().forEach(it -> {
 			try {
-				final Optional<Hashtag> hasTag = hashtagRepository.findByName(it.getName());
+				final Optional<Hashtag> hasTag = hashtagRepository.findByName(it.getTag());
 				if (hasTag.isEmpty()) {
 					final Hashtag hashtag = hashtagRepository.save(it);
 					connect(hashtag, postId);
@@ -129,7 +129,8 @@ public class PostService {
 		final Category category = categoryRepository.findById(topic.getCategoryId()).orElseThrow(() -> {
 			throw new RuntimeException("Not Found Category : " + topic.getCategoryId());
 		});
-		return PostResponseBean.of(memberInfo, post, category, topic);
+		final List<Hashtag> hashtags = hashtagRepository.findAllByPostId(postId);
+		return PostResponseBean.of(memberInfo, post, category, topic, hashtags);
 	}
 
 	public List<CategoryResponseBean> getAllCategories() throws SQLException {
