@@ -1,6 +1,8 @@
 package com.blog.tech.domain.comment.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
 import com.blog.tech.domain.comment.entity.vo.Status;

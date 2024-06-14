@@ -1,25 +1,22 @@
-package com.blog.tech.domain.comment.controller.servlet.openapi;
+package com.blog.tech.domain.comment.controller.servlet.oepnapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.blog.tech.domain.comment.controller.CommentController;
-import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
-import com.blog.tech.domain.member.dto.response.MemberResponseBean;
-import com.blog.tech.domain.post.dto.request.PostRequestBean;
+import com.blog.tech.domain.comment.dto.response.CommentsResponseBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/api/comment")
-public class WriteCommentServlet extends HttpServlet {
+@WebServlet("/comments")
+public class GetCommentServlet extends HttpServlet {
 
 	private CommentController commentController;
 	private ObjectMapper objectMapper;
@@ -32,14 +29,18 @@ public class WriteCommentServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(
+	protected void doGet(
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final CommentRequestBean request = objectMapper.readValue(req.getInputStream(), CommentRequestBean.class);
+		final Long postId = Long.valueOf(req.getParameter("post_id"));
 		try {
-			commentController.writeCommentOnPost(memberId, request);
+			final List<CommentsResponseBean> comments = commentController.allCommentsOnPost(postId);
+			final String json = objectMapper.writeValueAsString(comments);
+
+			resp.setContentType("application/json");
+			resp.setCharacterEncoding("UTF-8");
+			resp.getWriter().write(json);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

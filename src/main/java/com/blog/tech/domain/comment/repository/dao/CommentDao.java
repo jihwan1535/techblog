@@ -6,12 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
 import com.blog.tech.domain.post.entity.Category;
+import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.global.utility.db.mapper.CommentMapper;
+import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class CommentDao implements CommentRepository {
 	private final Connection conn;
@@ -82,5 +86,21 @@ public class CommentDao implements CommentRepository {
 	@Override
 	public void delete(final Long id) throws SQLException {
 
+	}
+
+	@Override
+	public List<Comment> findTop10ByPostIdDescId(final Long postId) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment WHERE post_id = ? ORDER BY id DESC LIMIT 10");
+		pstmt.setLong(1, postId);
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Comment> comments = new ArrayList<>();
+		while (rs.next()) {
+			comments.add(CommentMapper.from(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+		return comments;
 	}
 }
