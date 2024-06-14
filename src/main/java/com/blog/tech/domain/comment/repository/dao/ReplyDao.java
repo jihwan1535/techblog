@@ -15,12 +15,8 @@ import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.domain.post.entity.Category;
-import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
 import com.blog.tech.global.utility.db.mapper.CommentMapper;
 import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
-import com.blog.tech.global.utility.db.mapper.PostMapper;
 import com.blog.tech.global.utility.db.mapper.ReplyMapper;
 
 public class ReplyDao implements ReplyRepository {
@@ -81,7 +77,22 @@ public class ReplyDao implements ReplyRepository {
 
 	@Override
 	public Optional<Reply> findById(final Long id) throws SQLException {
-		return Optional.empty();
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM reply r join member_info m "
+			+ "on r.member_info_id = m.id join comment c on r.comment_id = c.id WHERE r.id = ?");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Reply reply = getReplyInfo(rs);
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(reply);
 	}
 
 	@Override
@@ -105,16 +116,20 @@ public class ReplyDao implements ReplyRepository {
 
 		final List<Reply> replies = new ArrayList<>();
 		while (rs.next()) {
-			final Reply reply = ReplyMapper.from(rs, 0);
-			final MemberInfo memberInfo = MemberInfoMapper.from(rs, 8);
-			final Comment comment = CommentMapper.from(rs, 20);
-			reply.setMember(memberInfo);
-			reply.setComment(comment);
-			replies.add(reply);
+			replies.add(getReplyInfo(rs));
 		}
 
 		rs.close();
 		pstmt.close();
 		return replies;
+	}
+
+	private Reply getReplyInfo(final ResultSet rs) throws SQLException {
+		final Reply reply = ReplyMapper.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 8);
+		final Comment comment = CommentMapper.from(rs, 20);
+		reply.setMember(memberInfo);
+		reply.setComment(comment);
+		return reply;
 	}
 }

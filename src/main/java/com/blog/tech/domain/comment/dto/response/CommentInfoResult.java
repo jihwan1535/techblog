@@ -13,7 +13,7 @@ public record CommentInfoResult(
 	String content,
 	Boolean alarm,
 	String createAt,
-	Boolean modified
+	Boolean notModified
 ) {
 
 	public static CommentInfoResult of(final Comment comment) {

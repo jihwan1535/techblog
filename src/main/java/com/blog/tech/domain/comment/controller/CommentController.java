@@ -6,6 +6,7 @@ import java.util.List;
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
 import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
+import com.blog.tech.domain.comment.dto.request.EditReplyRequest;
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
 import com.blog.tech.domain.comment.dto.response.CommentResponse;
 import com.blog.tech.domain.comment.service.CommentService;
@@ -38,4 +39,7 @@ public class CommentController {
 		commentService.writeReplyOnComment(memberId, request);
 	}
 
+	public void updateReply(final Long memberId, final EditReplyRequest request) throws SQLException {
+		commentService.updateReply(memberId, request);
+	}
 }

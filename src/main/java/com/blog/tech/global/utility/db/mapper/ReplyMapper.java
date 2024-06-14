@@ -2,9 +2,7 @@ package com.blog.tech.global.utility.db.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 

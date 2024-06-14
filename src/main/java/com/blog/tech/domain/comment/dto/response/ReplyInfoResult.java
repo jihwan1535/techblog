@@ -12,7 +12,7 @@ public record ReplyInfoResult(
 	Long replyId,
 	String content,
 	String createAt,
-	Boolean modified
+	Boolean notModified
 ) {
 
 	public static ReplyInfoResult of(final Reply reply) {
