@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.blog.tech.domain.comment.controller.CommentController;
 import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequestBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -14,8 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/comments")
-public class WriteCommentServlet extends HttpServlet {
+@WebServlet("/api/comments/edit")
+public class UpdateCommentServlet extends HttpServlet {
 
 	private CommentController commentController;
 	private ObjectMapper objectMapper;
@@ -33,9 +34,10 @@ public class WriteCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final CommentRequestBean request = objectMapper.readValue(req.getInputStream(), CommentRequestBean.class);
+		final EditCommentRequestBean request
+			= objectMapper.readValue(req.getInputStream(), EditCommentRequestBean.class);
 		try {
-			commentController.writeCommentOnPost(memberId, request);
+			commentController.updateComment(memberId, request);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

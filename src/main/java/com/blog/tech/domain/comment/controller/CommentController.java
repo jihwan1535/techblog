@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequestBean;
 import com.blog.tech.domain.comment.dto.response.CommentsResponseBean;
 import com.blog.tech.domain.comment.service.CommentService;
 
@@ -21,5 +22,13 @@ public class CommentController {
 
 	public List<CommentsResponseBean> allCommentsOnPost(final Long postId) throws SQLException {
 		return commentService.allCommentsAndReplies(postId);
+	}
+
+	public void unRegisterComment(final Long memberId, final Long commentId) throws SQLException {
+		commentService.unRegisterComment(memberId, commentId);
+	}
+
+	public void updateComment(final Long memberId, final EditCommentRequestBean request) throws SQLException {
+		commentService.updateComment(memberId, request);
 	}
 }

@@ -8,6 +8,6 @@ import com.blog.tech.domain.comment.entity.Comment;
 
 public interface CommentRepository extends CRUDIfs<Comment> {
 
-	List<Comment> findTop10ByPostIdDescId(final Long postId) throws SQLException;
+	List<Comment> findTop10ByPostIdAndStatusDescId(final Long postId) throws SQLException;
 
 }

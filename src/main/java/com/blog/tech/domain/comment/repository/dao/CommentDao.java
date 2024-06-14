@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.comment.entity.Comment;
+import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
@@ -75,7 +76,21 @@ public class CommentDao implements CommentRepository {
 
 	@Override
 	public Optional<Comment> findById(final Long id) throws SQLException {
-		return Optional.empty();
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment WHERE id = ?");
+		pstmt.setLong(1, id);
+		final ResultSet rs = pstmt.executeQuery();
+
+		if (!rs.next()) {
+			rs.close();
+			pstmt.close();
+			return Optional.empty();
+		}
+
+		final Comment comment = CommentMapper.from(rs);
+		rs.close();
+		pstmt.close();
+
+		return Optional.of(comment);
 	}
 
 	@Override
@@ -89,9 +104,11 @@ public class CommentDao implements CommentRepository {
 	}
 
 	@Override
-	public List<Comment> findTop10ByPostIdDescId(final Long postId) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment WHERE post_id = ? ORDER BY id DESC LIMIT 10");
+	public List<Comment> findTop10ByPostIdAndStatusDescId(final Long postId) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment "
+			+ "WHERE post_id = ? AND status = ? ORDER BY id DESC LIMIT 10");
 		pstmt.setLong(1, postId);
+		pstmt.setString(2, String.valueOf(Status.REGISTERED));
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Comment> comments = new ArrayList<>();

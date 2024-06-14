@@ -35,5 +35,8 @@ public class MemberInfo extends BaseEntity {
 	public void commentIncreasing() {
 		this.commentCount++;
 	}
+	public void commentDecreasing() {
+		this.commentCount--;
+	}
 
 }

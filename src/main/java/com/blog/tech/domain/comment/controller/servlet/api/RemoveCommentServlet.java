@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/comments")
-public class WriteCommentServlet extends HttpServlet {
+@WebServlet("/api/comments/unregister")
+public class RemoveCommentServlet extends HttpServlet {
 
 	private CommentController commentController;
 	private ObjectMapper objectMapper;
@@ -33,9 +33,9 @@ public class WriteCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final CommentRequestBean request = objectMapper.readValue(req.getInputStream(), CommentRequestBean.class);
+		final Long commentId = Long.parseLong(req.getParameter("comment_id"));
 		try {
-			commentController.writeCommentOnPost(memberId, request);
+			commentController.unRegisterComment(memberId, commentId);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
