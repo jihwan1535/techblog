@@ -3,7 +3,7 @@ package com.blog.tech.global.utility.db.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.blog.tech.domain.search.entity.Category;
+import com.blog.tech.domain.post.entity.Category;
 
 public class CategoryMapper {
 

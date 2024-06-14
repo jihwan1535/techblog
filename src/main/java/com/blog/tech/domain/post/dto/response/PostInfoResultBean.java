@@ -16,7 +16,7 @@ public record PostInfoResultBean (
 	Boolean modified
 ) {
 
-	public static PostInfoResultBean from(final Post post) {
+	public static PostInfoResultBean of(final Post post) {
 		return new PostInfoResultBean(
 			post.getId(),
 			post.getTile(),

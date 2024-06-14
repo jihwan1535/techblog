@@ -4,15 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
+    <link rel="stylesheet" href="http://localhost:8888/post/css/write.css?after" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <style>
-        .no-click {
-            pointer-events: none;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -34,14 +30,23 @@
     </div>
 
     <div id="content" class="form-group"></div>
+    <div class="editor_tag"></div>
     <button id="submitBtn" class="btn btn-primary">작성</button>
 
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
+        function getHashtags() {
+            let tags = [];
+            $('.editor_tag .txt_tag').each(function() {
+                var tagValue = $(this).data('tag');
+                tags.push(tagValue);
+            });
+            return tags;
+        }
+
         $(document).ready(function() {
             const { Editor } = toastui;
 
-            // 커스텀 렌더러 플러그인 작성
             function customHTMLRenderer() {
                 return {
                     htmlBlock: {
@@ -63,7 +68,6 @@
                 };
             }
 
-            // toast-ui Editor 초기화
             const editor = new Editor({
                 el: document.querySelector('#content'),
                 height: '500px',
@@ -71,6 +75,25 @@
                 placeholder: "내용을 입력해주세요.",
                 previewStyle: 'vertical',
                 hideModeSwitch: true,
+                hooks: {
+                    addImageBlobHook: function(blob, callback) {
+                        const formData = new FormData();
+                        formData.append('file', blob);
+                        fetch('/api/uploader/images/posts', {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        }).then(url => {
+                            callback(url, 'alt text');
+                        }).catch(error => {
+                            console.error('There has been a problem with your fetch operation:', error);
+                        });
+                    }
+                },
                 customHTMLRenderer: customHTMLRenderer()
             });
 
@@ -114,18 +137,22 @@
                 const category = $('#category').val();
                 const topic = $('#topic').val();
                 const content = editor.getMarkdown();
+                const hashtags = getHashtags();
+                console.log(hashtags);
 
                 const postData = {
                     title: title,
                     category_id: category,
                     topic_id: topic,
-                    content: content
+                    content: content,
+                    hashtags: hashtags
                 };
 
                 $.ajax({
                     url: '/api/post/write',
                     method: 'POST',
-                    data: postData,
+                    contentType: "application/json",
+                    data: JSON.stringify(postData),
                     success: function(data) {
                         alert('게시글이 성공적으로 작성되었습니다.');
                         window.location.href = "/main";
@@ -180,6 +207,7 @@
             }
         });
     </script>
+    <script src="http://localhost:8888/post/js/hashtag.js"></script>
 </div>
 </body>
 </html>

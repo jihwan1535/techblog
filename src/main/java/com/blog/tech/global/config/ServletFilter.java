@@ -28,10 +28,8 @@ public class ServletFilter implements Filter {
 	) throws IOException, ServletException {
 		final HttpServletRequest req = (HttpServletRequest) servletRequest;
 		final HttpServletResponse resp = (HttpServletResponse) servletResponse;
-
 		req.setCharacterEncoding("utf-8");
 		resp.setCharacterEncoding("utf-8");
-		resp.setContentType("text/html;charset=utf-8");
 
 		final HttpSession session = req.getSession(false);
 		String originalUrl = req.getContextPath() + "/main";

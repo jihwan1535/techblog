@@ -1,13 +1,11 @@
-package com.blog.tech.domain.post.controller.servlet.api;
+package com.blog.tech.domain.post.controller.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 
-import com.blog.tech.domain.member.dto.response.MemberResponseBean;
+import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
 import com.blog.tech.domain.post.controller.PostController;
-import com.blog.tech.domain.post.dto.request.PostRequestBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -16,10 +14,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/api/post/write")
-public class PostServlet extends HttpServlet {
+@WebServlet("/categories")
+public class GetCategoriesServlet extends HttpServlet {
 
 	private PostController postController;
 	private ObjectMapper objectMapper;
@@ -31,18 +28,19 @@ public class PostServlet extends HttpServlet {
 		this.objectMapper = (ObjectMapper)servletContext.getAttribute("objectMapper");
 	}
 
+
 	@Override
-	protected void doPost(
+	protected void doGet(
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final HttpSession session = req.getSession(false);
-		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-		final PostRequestBean request = objectMapper.readValue(req.getInputStream(), PostRequestBean.class);
-		System.out.println(request.toString());
 		try {
-			postController.writeOnPost(member.id(), request);
-			resp.setStatus(HttpServletResponse.SC_OK);
+			final List<CategoryResponseBean> categories = postController.getAllCategories();
+			final String json = objectMapper.writeValueAsString(categories);
+
+			resp.setContentType("application/json");
+			resp.setCharacterEncoding("UTF-8");
+			resp.getWriter().write(json);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

@@ -15,6 +15,23 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
+    <style>
+        .hashtag {
+            display: inline-block;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+            background-color: #6c757d;
+            margin-right: .6em;
+            margin-bottom: .6em;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -25,6 +42,7 @@
                     <img id="author-image" src="" alt="Author Image" class="rounded-circle" width="50" height="50">
                 </a>
                 <div class="ml-3">
+                    <h6 id="post-category"></h6>
                     <h2 id="post-title"></h2>
                     <small class="text-muted">작성자: <span id="author-name"></span> | 작성일: <span id="post-date"></span></small>
                 </div>
@@ -38,10 +56,8 @@
                 사용자 ID: <span id="user-id"></span> | 게시글 ID: <span id="post-id"></span>
                 <br>
                 조회수: <span id="view-count"></span> | 스크랩수: <span id="scrap-count"></span>
-            </div>
-            <div>
-                <button id="edit-button" class="btn btn-primary btn-sm">수정하기</button>
-                <button id="delete-button" class="btn btn-danger btn-sm">삭제하기</button>
+                <br>
+                태그: <div id="hashtags"></div>
             </div>
         </div>
     </div>
@@ -64,7 +80,10 @@
             },
             success: function(response) {
                 const jsonData = response;
+                const hashtags = jsonData.hashtags;
+                console.log("hashtag" + hashtags);
 
+                $('#post-category').text(jsonData.category + "/" + jsonData.topic);
                 $('#post-title').text(jsonData.post_info.title);
                 $('#post-date').text(jsonData.post_info.created_at);
                 $('#view-count').text(jsonData.post_info.view_count);
@@ -86,18 +105,22 @@
                     height: 'auto'
                 });
 
-                $('#edit-button').click(function() {
-                    alert('수정하기 버튼 클릭');
-                });
-
-                $('#delete-button').click(function() {
-                    alert('삭제하기 버튼 클릭');
+                hashtags.forEach(function(tag) {
+                    $('#hashtags').append('<span class="hashtag ' + tag.id + '">' + tag.tag + '</span> ');
                 });
             },
             error: function(error) {
                 console.error('Error fetching data', error);
             }
         });
+    });
+
+    $('#edit-button').click(function() {
+        alert('수정하기 버튼 클릭');
+    });
+
+    $('#delete-button').click(function() {
+        alert('삭제하기 버튼 클릭');
     });
 </script>
 </body>
