@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.comment.controller.CommentController;
-import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -14,8 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/api/comments/edit")
-public class UpdateCommentServlet extends HttpServlet {
+@WebServlet("/api/replies/unregister")
+public class RemoveReplyServlet extends HttpServlet {
 
 	private CommentController commentController;
 	private ObjectMapper objectMapper;
@@ -33,9 +34,9 @@ public class UpdateCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final EditCommentRequest request = objectMapper.readValue(req.getInputStream(), EditCommentRequest.class);
+		final DeleteReplyRequest request = objectMapper.readValue(req.getInputStream(), DeleteReplyRequest.class);
 		try {
-			commentController.updateComment(memberId, request);
+			commentController.unRegisterReply(memberId, request);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

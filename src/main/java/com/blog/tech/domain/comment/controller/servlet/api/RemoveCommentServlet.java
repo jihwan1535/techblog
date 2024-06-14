@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.blog.tech.domain.comment.controller.CommentController;
-import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
+import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -33,9 +34,9 @@ public class RemoveCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
-		final Long commentId = Long.parseLong(req.getParameter("comment_id"));
+		final DeleteCommentRequest request = objectMapper.readValue(req.getInputStream(), DeleteCommentRequest.class);
 		try {
-			commentController.unRegisterComment(memberId, commentId);
+			commentController.unRegisterComment(memberId, request);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

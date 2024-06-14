@@ -3,9 +3,13 @@ package com.blog.tech.domain.comment.controller;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
-import com.blog.tech.domain.comment.dto.request.EditCommentRequestBean;
-import com.blog.tech.domain.comment.dto.response.CommentsResponseBean;
+import com.blog.tech.domain.comment.dto.request.CommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
+import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
+import com.blog.tech.domain.comment.dto.request.EditReplyRequest;
+import com.blog.tech.domain.comment.dto.request.ReplyRequest;
+import com.blog.tech.domain.comment.dto.response.CommentResponse;
 import com.blog.tech.domain.comment.service.CommentService;
 
 public class CommentController {
@@ -16,19 +20,31 @@ public class CommentController {
 		this.commentService = commentService;
 	}
 
-	public void writeCommentOnPost(final Long memberId, final CommentRequestBean request) throws SQLException {
+	public void writeCommentOnPost(final Long memberId, final CommentRequest request) throws SQLException {
 		commentService.writeCommentOnPost(memberId, request);
 	}
 
-	public List<CommentsResponseBean> allCommentsOnPost(final Long postId) throws SQLException {
+	public List<CommentResponse> allCommentsOnPost(final Long postId) throws SQLException {
 		return commentService.allCommentsAndReplies(postId);
 	}
 
-	public void unRegisterComment(final Long memberId, final Long commentId) throws SQLException {
-		commentService.unRegisterComment(memberId, commentId);
+	public void unRegisterComment(final Long memberId, final DeleteCommentRequest request) throws SQLException {
+		commentService.unRegisterComment(memberId, request);
 	}
 
-	public void updateComment(final Long memberId, final EditCommentRequestBean request) throws SQLException {
+	public void updateComment(final Long memberId, final EditCommentRequest request) throws SQLException {
 		commentService.updateComment(memberId, request);
+	}
+
+	public void writeReplyOnComment(final Long memberId, final ReplyRequest request) throws SQLException {
+		commentService.writeReplyOnComment(memberId, request);
+	}
+
+	public void updateReply(final Long memberId, final EditReplyRequest request) throws SQLException {
+		commentService.updateReply(memberId, request);
+	}
+
+	public void unRegisterReply(final Long memberId, final DeleteReplyRequest request) throws SQLException {
+		commentService.unRegisterReply(memberId, request);
 	}
 }

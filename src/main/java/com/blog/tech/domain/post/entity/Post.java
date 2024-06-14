@@ -26,6 +26,7 @@ public class Post extends BaseEntity {
 	private String tile;
 	private String content;
 	private Integer commentCount;
+	private Integer replyCount;
 	private Integer viewCount;
 	private Integer reportCount;
 	private Integer scrapCount;
@@ -48,6 +49,16 @@ public class Post extends BaseEntity {
 
 	public void commentIncreasing() {
 		this.commentCount++;
+	}
+	public void commentDecreasing() {
+		this.commentCount--;
+	}
+
+	public void replyIncreasing() {
+		this.replyCount++;
+	}
+	public void replyDecreasing() {
+		this.replyCount--;
 	}
 
 }

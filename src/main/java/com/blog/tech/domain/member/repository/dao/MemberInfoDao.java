@@ -23,7 +23,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public MemberInfo save(final MemberInfo data) throws SQLException {
-		if (findById(data.getId()).isPresent()) {
+		if (data.getId() > 0) {
 			update(data);
 			return data;
 		}
@@ -70,7 +70,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs);
+		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 
@@ -99,7 +99,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs);
+		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
 
 		rs.close();
 		pstmt.close();
@@ -119,7 +119,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs);
+		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
 
 		rs.close();
 		pstmt.close();
