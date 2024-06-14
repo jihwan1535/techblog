@@ -1,10 +1,8 @@
 package com.blog.tech.domain.comment.controller;
 
 import java.sql.SQLException;
-import java.util.List;
 
-import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
-import com.blog.tech.domain.post.dto.response.TopicResponseBean;
+import com.blog.tech.domain.comment.dto.request.CommentRequestBean;
 import com.blog.tech.domain.comment.service.CommentService;
 
 public class CommentController {
@@ -13,6 +11,10 @@ public class CommentController {
 
 	public CommentController(CommentService commentService) {
 		this.commentService = commentService;
+	}
+
+	public void writeCommentOnPost(final Long memberId, final CommentRequestBean request) throws SQLException {
+		commentService.writeCommentOnPost(memberId, request);
 	}
 
 }

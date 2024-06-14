@@ -28,8 +28,12 @@ public class MemberInfo extends BaseEntity {
 	private int alarmCount;
 	private MemberStatus status;
 
-	public void writePost() {
+	public void postIncreasing() {
 		this.postCount++;
+	}
+
+	public void commentIncreasing() {
+		this.commentCount++;
 	}
 
 }
