@@ -1,0 +1,9 @@
+.modal .form-control{
+    margin-bottom: 1rem;
+    background-color: lightblue;
+}
+
+.modal span{
+    font-size: small;
+}
+

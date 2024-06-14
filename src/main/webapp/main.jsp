@@ -45,10 +45,10 @@
         <ul class="navbar-nav ms-auto mx-3">
             <% if (Objects.isNull(session.getAttribute("member"))) { %>
             <li class="nav-item active">
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">Login</a>
+                <a class="btn btn-outline-light login-btn">Login</a>
             </li>
             <li class="nav-item">
-                <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
+                <a class="btn btn-outline-light sign-btn">Sign-up</a>
             </li>
             <% } else { %>
             <%
@@ -111,93 +111,92 @@
                 </div>
             </div>
         </div>
-<div id="nav-bar">
-    <input id="nav-toggle" type="checkbox"/>
-    <div id="nav-header"><a id="nav-title" href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i>카테고리</a>
-        <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
-        <hr/>
-    </div>
-    <ul id="nav-content" class="list-group"></ul>
-</div>
-
-<div id="nav-bar-right">
-    <input id="nav-toggle-right" type="checkbox"/>
-    <div id="nav-header-right"><a id="nav-title-right" href="https://codepen.io" target="_blank">C<i class="fab fa-codepen"></i>DEPEN</a>
-        <label for="nav-toggle-right"><span id="nav-toggle-burger-right"></span></label>
-        <hr/>
-    </div>
-    <div id="nav-content-right">
-        <div class="nav-button-right"><i class="fas fa-palette"></i><span>Your Work</span></div>
-        <div class="nav-button-right"><i class="fas fa-images"></i><span>Assets</span></div>
-        <div class="nav-button-right"><i class="fas fa-thumbtack"></i><span>Pinned Items</span></div>
-        <hr/>
-        <div class="nav-button-right"><i class="fas fa-heart"></i><span>Following</span></div>
-        <div class="nav-button-right"><i class="fas fa-chart-line"></i><span>Trending</span></div>
-        <div class="nav-button-right"><i class="fas fa-fire"></i><span>Challenges</span></div>
-        <div class="nav-button-right"><i class="fas fa-magic"></i><span>Spark</span></div>
-        <hr/>
-        <div class="nav-button-right"><i class="fas fa-gem"></i><span>Codepen Pro</span></div>
-        <div id="nav-content-highlight-right"></div>
     </div>
 </div>
 
 <div id="topics"></div>
+<!-- 회원가입 모달 -->
+<div id="modalContainer"></div>
+<script src="/js/RegisterModal.js"></script>
+<!-- 로그인 모달 -->
+<div id="loginModalContainer"></div>
+<script src="/js/LoginModal.js"></script>
 
-<!-- 동적으로 모달을 불러오기 위한 빈 div -->
-<div id="dynamic-modal-container"></div>
+<script>
 
+    $(document).on('click', '#checkNickname', function () {
+        if (isCheckingNickname) return;
+        let nickname = $("#nickname").val();
+        isCheckingNickname = true;
+
+        if (validateRegisName(nickname)) {
+            $.ajax({
+                url: '/checkNickname',
+                data: {nickname: nickname},
+                type: 'GET',
+                success: function (response) {
+                    if (response == 'AVAILABLE') {
+                        $("#nickname").css("border", "2px solid green");
+                        alert("사용 가능한 닉네임입니다.");
+                        isNicknameAvailable = true;
+                        $('#registerBtn').attr('disabled', false);
+                    } else {
+                        alert("이미 사용중인 닉네임입니다.");
+                        isNicknameAvailable = false;
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+                complete: function () {
+                    isCheckingNickname = false;
+                }
+            });
+        } else {
+            $("#nickname").css("border", "2px solid red");
+        }
+    });
+
+    $(document).on('input', '#nickname', function () {
+        $("#nickname").css("border", "2px solid red");
+        isEmailAvailable = false;
+        $('#registerBtn').attr('disabled', true);
+    });
+
+    $(document).on("input", "#about_me", function () {
+        let text = $("#about_me").val();
+        let len = text.length;
+    });
+
+    $(document).on("click", "#registerBtn", function () {
+        let email = $("#email").val();
+        let password = $("#password").val();
+        let nickname = $("#nickname").val();
+        let aboutMe = $("#about_me").val();
+
+        $.ajax({
+            url: '/register',
+            data: {
+                email : email,
+                password : password,
+                nickname : nickname,
+                aboutMe : aboutMe
+            },
+            type: 'POST',
+            success: function (response){
+                console.log(response);
+                window.location.href = "/main";
+            }
+        });
+    });
+</script>
 <script>
     function profile() {
         var nickname = document.querySelector('.nickname').value;
         var url = "/profile/@" + nickname;
         window.location.href = url;
     }
-    $(document).ready(function() {
-        $.ajax({
-            url: '/categories',
-            type: 'GET',
-            success: function (categories) {
-                categories.forEach(function (category) {
-                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '">' +
-                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '">' +
-                        '<span>' + category.name + '</span>' +
-                        '<i class="fas fa-chevron-down"></i></a>' +
-                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '"></ul>' +
-                        '</li>');
-                    $('#nav-content').append(categoryElement);
-                });
-                $('#nav-content').append($('<div id="nav-content-highlight"></div>'));
-            }
-        });
-    });
-    $(document).on('click', '.category a', function() {
-        var categoryId = $(this).closest('.category').attr('id').split('-')[1];
-        var collapseElement = $('#collapse-' + categoryId);
-        var categoryElement = $(this).closest('.category');
 
-        if (collapseElement.hasClass('show')) {
-            collapseElement.collapse('hide');
-        } else {
-            $('.collapse').collapse('hide');
-            collapseElement.collapse('show');
-
-            $.ajax({
-                url: '/topics',
-                data: {category_id: categoryId},
-                type: 'GET',
-                success: function(topics) {
-                    collapseElement.empty();
-                    topics.forEach(function(topic) {
-                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '">' +
-                            topic.name + '</li>');
-                        collapseElement.append(topicElement);
-                    });
-                }
-            });
-        }
-    });
-</script>
-<script>
     // posts 불러오는 script
     let lastPostId = Number.MAX_SAFE_INTEGER;
     let isLoading = false;
@@ -267,22 +266,6 @@
         $('.login-btn').on('click', function(e) {
             e.preventDefault();
             $('#loginModal').modal('show');
-        });
-
-        // 회원가입 버튼 클릭 시 모달 동적 로드
-        $('.register-btn').on('click', function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: './member/test_register.jsp',  // 실제 경로로 변경
-                type: 'GET',
-                success: function(data) {
-                    $('#dynamic-modal-container').html(data);
-                    $('#signUpModal1').modal('show');
-                },
-                error: function() {
-                    alert('모달을 불러오는 데 실패했습니다.');
-                }
-            });
         });
 
         $.ajax({
