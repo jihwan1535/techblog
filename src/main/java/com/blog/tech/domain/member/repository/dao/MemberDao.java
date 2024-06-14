@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.member.entity.Member;
-import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
 import com.blog.tech.global.utility.db.mapper.MemberMapper;
 
 public class MemberDao implements MemberRepository {
@@ -71,7 +69,7 @@ public class MemberDao implements MemberRepository {
 			return Optional.empty();
 		}
 
-		final Member member = MemberMapper.from(rs);
+		final Member member = MemberMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 
@@ -111,7 +109,7 @@ public class MemberDao implements MemberRepository {
 			return Optional.empty();
 		}
 
-		final Member member = MemberMapper.from(rs);
+		final Member member = MemberMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 

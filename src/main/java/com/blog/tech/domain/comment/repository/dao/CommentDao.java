@@ -13,9 +13,12 @@ import java.util.Optional;
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
-import com.blog.tech.domain.post.entity.Category;
+import com.blog.tech.domain.member.entity.Member;
+import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.global.utility.db.mapper.CommentMapper;
+import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
+import com.blog.tech.global.utility.db.mapper.MemberMapper;
 import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class CommentDao implements CommentRepository {
@@ -86,7 +89,7 @@ public class CommentDao implements CommentRepository {
 			return Optional.empty();
 		}
 
-		final Comment comment = CommentMapper.from(rs);
+		final Comment comment = CommentMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 
@@ -104,16 +107,23 @@ public class CommentDao implements CommentRepository {
 	}
 
 	@Override
-	public List<Comment> findTop10ByPostIdAndStatusDescId(final Long postId) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment "
-			+ "WHERE post_id = ? AND status = ? ORDER BY id DESC LIMIT 10");
+	public List<Comment> findTop10ByPostIdAndStatusDescId(final Long postId, final Status status) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment c join member_info m "
+			+ "on c.member_info_id = m.id join post p on c.post_id = p.id "
+			+ "WHERE c.post_id = ? AND c.status = ? "
+			+ "ORDER BY c.id DESC LIMIT 10;");
 		pstmt.setLong(1, postId);
-		pstmt.setString(2, String.valueOf(Status.REGISTERED));
+		pstmt.setString(2, String.valueOf(status));
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Comment> comments = new ArrayList<>();
 		while (rs.next()) {
-			comments.add(CommentMapper.from(rs));
+			final Comment comment = CommentMapper.from(rs, 0);
+			final MemberInfo memberInfo = MemberInfoMapper.from(rs, 9);
+			final Post post = PostMapper.from(rs, 21);
+			comment.setMember(memberInfo);
+			comment.setPost(post);
+			comments.add(comment);
 		}
 
 		rs.close();

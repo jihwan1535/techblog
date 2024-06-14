@@ -3,8 +3,9 @@ package com.blog.tech.domain.comment.entity;
 import java.time.LocalDateTime;
 
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
+import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.common.BaseEntity;
-import com.blog.tech.domain.post.entity.vo.Status;
+import com.blog.tech.domain.member.entity.MemberInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,6 +26,8 @@ public class Reply extends BaseEntity {
 	private String content;
 	private Integer reportCount;
 	private Status status;
+	private MemberInfo member;
+	private Comment comment;
 
 	public static Reply to(final Long memberId, final ReplyRequest bean) {
 		return Reply.builder()

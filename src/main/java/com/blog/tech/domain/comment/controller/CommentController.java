@@ -7,7 +7,7 @@ import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
 import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
-import com.blog.tech.domain.comment.dto.response.CommentsResponse;
+import com.blog.tech.domain.comment.dto.response.CommentResponse;
 import com.blog.tech.domain.comment.service.CommentService;
 
 public class CommentController {
@@ -22,7 +22,7 @@ public class CommentController {
 		commentService.writeCommentOnPost(memberId, request);
 	}
 
-	public List<CommentsResponse> allCommentsOnPost(final Long postId) throws SQLException {
+	public List<CommentResponse> allCommentsOnPost(final Long postId) throws SQLException {
 		return commentService.allCommentsAndReplies(postId);
 	}
 

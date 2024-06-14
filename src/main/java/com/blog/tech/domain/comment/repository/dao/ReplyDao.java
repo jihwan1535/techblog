@@ -6,13 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.Reply;
+import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
+import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Category;
+import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
+import com.blog.tech.global.utility.db.mapper.CommentMapper;
+import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
+import com.blog.tech.global.utility.db.mapper.PostMapper;
+import com.blog.tech.global.utility.db.mapper.ReplyMapper;
 
 public class ReplyDao implements ReplyRepository {
 
@@ -83,5 +92,29 @@ public class ReplyDao implements ReplyRepository {
 	@Override
 	public void delete(final Long id) throws SQLException {
 
+	}
+
+	@Override
+	public List<Reply> findAllByCommentIdAndStatus(final Long commentId, final Status status) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM reply r join member_info m "
+			+ "on r.member_info_id = m.id join comment c on r.comment_id = c.id "
+			+ "WHERE r.comment_id = ? AND r.status = ? ORDER BY r.id;");
+		pstmt.setLong(1, commentId);
+		pstmt.setString(2, String.valueOf(status));
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Reply> replies = new ArrayList<>();
+		while (rs.next()) {
+			final Reply reply = ReplyMapper.from(rs, 0);
+			final MemberInfo memberInfo = MemberInfoMapper.from(rs, 8);
+			final Comment comment = CommentMapper.from(rs, 20);
+			reply.setMember(memberInfo);
+			reply.setComment(comment);
+			replies.add(reply);
+		}
+
+		rs.close();
+		pstmt.close();
+		return replies;
 	}
 }

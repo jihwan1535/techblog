@@ -2,13 +2,12 @@ package com.blog.tech.domain.comment.service;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
 import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
-import com.blog.tech.domain.comment.dto.response.CommentsResponse;
+import com.blog.tech.domain.comment.dto.response.CommentResponse;
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
@@ -55,26 +54,20 @@ public class CommentService {
 		memberInfoRepository.save(memberInfo);
 	}
 
-	public List<CommentsResponse> allCommentsAndReplies(final Long postId) throws SQLException {
-		final List<Comment> comments = commentRepository.findTop10ByPostIdAndStatusDescId(postId);
-		final List<MemberInfo> memberInfos = getMemberInfos(comments);
+	public List<CommentResponse> allCommentsAndReplies(final Long postId) throws SQLException {
+		final List<Comment> comments = commentRepository.findTop10ByPostIdAndStatusDescId(postId, Status.REGISTERED);
+		comments.forEach(it -> {
+			try {
+				final List<Reply> replies = replyRepository.findAllByCommentIdAndStatus(it.getId(), Status.REGISTERED);
+				it.setReplies(replies);
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+		});
 
-		return IntStream.range(0, comments.size())
-			.mapToObj(i -> CommentsResponse.of(memberInfos.get(i), comments.get(i)))
+		return comments.stream()
+			.map(CommentResponse::of)
 			.toList();
-	}
-
-	private List<MemberInfo> getMemberInfos(final List<Comment> comments) {
-		return comments.stream().
-			map(it -> {
-				try {
-					return memberInfoRepository.findById(it.getMemberInfoId()).orElseThrow(() -> {
-						throw new RuntimeException("notFound Member " + it.getMemberInfoId());
-					});
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-			}).toList();
 	}
 
 	public void unRegisterComment(final Long memberId, final DeleteCommentRequest request) throws SQLException {

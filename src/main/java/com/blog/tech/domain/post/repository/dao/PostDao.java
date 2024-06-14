@@ -100,7 +100,7 @@ public class PostDao implements PostRepository {
 			return Optional.empty();
 		}
 
-		final Post post = PostMapper.from(rs);
+		final Post post = PostMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 
@@ -125,7 +125,7 @@ public class PostDao implements PostRepository {
 
 		final List<Post> posts = new ArrayList<>();
 		while (rs.next()) {
-			posts.add(PostMapper.from(rs));
+			posts.add(PostMapper.from(rs, 0));
 		}
 
 		rs.close();
