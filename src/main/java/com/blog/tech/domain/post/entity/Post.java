@@ -57,4 +57,8 @@ public class Post extends BaseEntity {
 	public void replyIncreasing() {
 		this.replyCount++;
 	}
+	public void replyDecreasing() {
+		this.replyCount--;
+	}
+
 }

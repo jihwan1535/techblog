@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
 import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.blog.tech.domain.comment.dto.request.EditReplyRequest;
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
@@ -41,5 +42,9 @@ public class CommentController {
 
 	public void updateReply(final Long memberId, final EditReplyRequest request) throws SQLException {
 		commentService.updateReply(memberId, request);
+	}
+
+	public void unRegisterReply(final Long memberId, final DeleteReplyRequest request) throws SQLException {
+		commentService.unRegisterReply(memberId, request);
 	}
 }

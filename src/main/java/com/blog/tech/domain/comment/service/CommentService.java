@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
+import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
 import com.blog.tech.domain.comment.dto.request.EditCommentRequest;
 import com.blog.tech.domain.comment.dto.request.EditReplyRequest;
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
@@ -102,9 +103,6 @@ public class CommentService {
 		if (comment.getMemberInfoId() != memberId) {
 			throw new IllegalArgumentException("NOT SAME USER");
 		}
-		final MemberInfo memberInfo = memberInfoRepository.findById(memberId).orElseThrow(() -> {
-			throw new IllegalArgumentException("NOT FOUND MEMBER " + memberId);
-		});
 
 		comment.setContent(request.content());
 		comment.updateTime();
@@ -139,4 +137,27 @@ public class CommentService {
 		reply.updateTime();
 		replyRepository.save(reply);
 	}
+
+	public void unRegisterReply(final Long memberId, final DeleteReplyRequest request) throws SQLException {
+		final Reply reply = replyRepository.findById(request.replyId()).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND COMMENT " + request.replyId());
+		});
+		if (reply.getMember().getId() != memberId) {
+			throw new IllegalArgumentException("NOT SAME USER");
+		}
+		final Post post = postRepository.findById(request.postId()).orElseThrow(() -> {
+			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
+		});
+
+		final MemberInfo memberInfo = reply.getMember();
+		memberInfo.commentDecreasing();
+		post.replyDecreasing();
+		reply.setStatus(Status.UNREGISTERED);
+		reply.updateTime();
+
+		replyRepository.save(reply);
+		memberInfoRepository.save(memberInfo);
+		postRepository.save(post);
+	}
+
 }
