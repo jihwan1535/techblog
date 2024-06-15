@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
+import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.controller.PostController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,7 +35,7 @@ public class GetCategoriesServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		try {
-			final List<CategoryResponseBean> categories = postController.getAllCategories();
+			final List<CategoryResponse> categories = postController.getAllCategories();
 			final String json = objectMapper.writeValueAsString(categories);
 
 			resp.setContentType("application/json");

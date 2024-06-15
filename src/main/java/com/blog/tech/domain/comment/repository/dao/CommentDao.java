@@ -13,13 +13,8 @@ import java.util.Optional;
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
-import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.global.utility.db.mapper.CommentMapper;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
-import com.blog.tech.global.utility.db.mapper.MemberMapper;
-import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class CommentDao implements CommentRepository {
 	private final Connection conn;
@@ -79,7 +74,8 @@ public class CommentDao implements CommentRepository {
 
 	@Override
 	public Optional<Comment> findById(final Long id) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment WHERE id = ?");
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment c join member_info m "
+			+ "on c.member_info_id = m.id join post p on c.post_id = p.id WHERE c.id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
 
@@ -89,7 +85,7 @@ public class CommentDao implements CommentRepository {
 			return Optional.empty();
 		}
 
-		final Comment comment = CommentMapper.from(rs, 0);
+		final Comment comment = getJoinComment(rs);
 		rs.close();
 		pstmt.close();
 
@@ -118,16 +114,21 @@ public class CommentDao implements CommentRepository {
 
 		final List<Comment> comments = new ArrayList<>();
 		while (rs.next()) {
-			final Comment comment = CommentMapper.from(rs, 0);
-			final MemberInfo memberInfo = MemberInfoMapper.from(rs, 9);
-			final Post post = PostMapper.from(rs, 21);
-			comment.setMember(memberInfo);
-			comment.setPost(post);
-			comments.add(comment);
+			comments.add(getJoinComment(rs));
 		}
 
 		rs.close();
 		pstmt.close();
 		return comments;
 	}
+
+	private Comment getJoinComment(final ResultSet rs) throws SQLException {
+		final Comment comment = Comment.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 9);
+		final Post post = Post.from(rs, 21);
+		comment.setMember(memberInfo);
+		comment.setPost(post);
+		return comment;
+	}
+
 }

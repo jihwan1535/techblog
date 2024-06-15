@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.blog.tech.domain.post.dto.response.TopicResponseBean;
+import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.post.controller.PostController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,7 +35,7 @@ public class GetTopicsServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long categoryId = Long.parseLong(req.getParameter("category_id"));
 		try {
-			final List<TopicResponseBean> topics = postController.getAllTopicsByCategory(categoryId);
+			final List<TopicResponse> topics = postController.getAllTopicsByCategory(categoryId);
 			final String json = objectMapper.writeValueAsString(topics);
 
 			resp.setContentType("application/json");

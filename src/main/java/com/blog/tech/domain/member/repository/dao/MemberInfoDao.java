@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
 
 public class MemberInfoDao implements MemberInfoRepository {
 
@@ -70,7 +69,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 0);
 		rs.close();
 		pstmt.close();
 
@@ -99,7 +98,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 0);
 
 		rs.close();
 		pstmt.close();
@@ -119,7 +118,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 			return Optional.empty();
 		}
 
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 0);
 
 		rs.close();
 		pstmt.close();

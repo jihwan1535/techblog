@@ -3,12 +3,12 @@ package com.blog.tech.domain.comment.dto.response;
 import java.time.LocalDateTime;
 
 import com.blog.tech.domain.comment.entity.Reply;
-import com.blog.tech.domain.member.dto.response.MemberInfoResultBean;
+import com.blog.tech.domain.member.dto.response.MemberInfoResult;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.global.utility.DateFormatter;
 
 public record ReplyInfoResult(
-	MemberInfoResultBean memberInfo,
+	MemberInfoResult memberInfo,
 	Long replyId,
 	String content,
 	String createAt,
@@ -25,8 +25,8 @@ public record ReplyInfoResult(
 		);
 	}
 
-	private static MemberInfoResultBean fromMemberInfo(final MemberInfo member) {
-		return MemberInfoResultBean.of(member);
+	private static MemberInfoResult fromMemberInfo(final MemberInfo member) {
+		return MemberInfoResult.of(member);
 	}
 
 	private static String fromDateFormat(final LocalDateTime at) {

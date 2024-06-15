@@ -53,9 +53,9 @@
         </div>
         <div class="card-footer d-flex justify-content-between">
             <div>
-                사용자 ID: <span id="user-id"></span> | 게시글 ID: <span id="post-id"></span>
+                사용자 ID: <span id="user-id"></span> | 게시글 ID: <span id="post-id"></span> | 알람 <span id="alarm"></span>
                 <br>
-                조회수: <span id="view-count"></span> | 스크랩수: <span id="scrap-count"></span>
+                조회수: <span id="view-count"></span> | 스크랩수: <span id="scrap-count"></span> | 댓글수: <span id="comment-count"></span>
                 <br>
                 태그: <div id="hashtags"></div>
             </div>
@@ -73,30 +73,24 @@
         const postId = urlParams.get('post_id');
 
         $.ajax({
-            url: '/post',
+            url: '/view/posts',
             type: 'GET',
             data: {
                 post_id: postId
             },
             success: function(response) {
-                const jsonData = response;
-                const hashtags = jsonData.hashtags;
-                console.log("hashtag" + hashtags);
+                const memberInfo = response.member_info;
+                const postInfo = response.post_info;
+                const hashtags = response.hashtags;
+                let content = postInfo.content;
+                let alarm = "설정";
 
-                $('#post-category').text(jsonData.category + "/" + jsonData.topic);
-                $('#post-title').text(jsonData.post_info.title);
-                $('#post-date').text(jsonData.post_info.created_at);
-                $('#view-count').text(jsonData.post_info.view_count);
-                $('#scrap-count').text(jsonData.post_info.scrap_count);
-
-                $('#author-name').text(jsonData.member_info.name);
-                $('#author-image').attr('src', jsonData.member_info.image);
-                $('#author-profile-link').attr('href', '/profile/@' + jsonData.member_info.name);
-
-                $('#user-id').text(jsonData.member_info.id);
-                $('#post-id').text(jsonData.post_info.id);
-
-                var content = jsonData.post_info.content;
+                $('#post-category').text(postInfo.category + "/" + postInfo.topic);
+                $('#post-title').text(postInfo.title);
+                $('#author-image').attr('src', memberInfo.image);
+                $('#author-name').text(memberInfo.name);
+                $('#post-date').text(postInfo.created_at);
+                $('#author-profile-link').attr('href', '/profile/@' + memberInfo.name);
 
                 const editor = new tui.Editor.factory({
                     el: document.querySelector('#post-content'),
@@ -104,6 +98,18 @@
                     viewer: true,
                     height: 'auto'
                 });
+
+                $('#user-id').text(memberInfo.id);
+                $('#post-id').text(memberInfo.id);
+                if (memberInfo.alarm) {
+                    alarm = "끄기";
+                }
+                $('#alarm').text(alarm);
+
+                $('#view-count').text(postInfo.view_count);
+                $('#scrap-count').text(postInfo.scrap_count);
+                $('#comment-count').text(postInfo.comment_count + postInfo.reply_count);
+
 
                 hashtags.forEach(function(tag) {
                     $('#hashtags').append('<span class="hashtag ' + tag.id + '">' + tag.tag + '</span> ');
