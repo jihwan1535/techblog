@@ -7,7 +7,7 @@ import com.blog.tech.domain.post.entity.Category;
 
 public class CategoryMapper {
 
-	public static Category from(final ResultSet rs) throws SQLException {
+	public static Category from(final ResultSet rs, final int i) throws SQLException {
 		return Category.builder()
 			.id(rs.getLong("id"))
 			.name(rs.getString("name"))

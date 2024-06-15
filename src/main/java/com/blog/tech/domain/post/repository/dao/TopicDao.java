@@ -51,7 +51,7 @@ public class TopicDao implements TopicRepository {
 
 		final List<Topic> topics = new ArrayList<>();
 		while (rs.next()) {
-			topics.add(TopicMapper.from(rs));
+			topics.add(TopicMapper.from(rs, 0));
 		}
 
 		rs.close();
@@ -72,7 +72,7 @@ public class TopicDao implements TopicRepository {
 
 		final List<Topic> topics = new ArrayList<>();
 		while (rs.next()) {
-			topics.add(TopicMapper.from(rs));
+			topics.add(TopicMapper.from(rs, 0));
 		}
 
 		rs.close();

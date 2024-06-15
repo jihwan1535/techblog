@@ -2,7 +2,7 @@ package com.blog.tech.domain.post.dto.request;
 
 import java.util.List;
 
-public record PostRequestBean(
+public record PostRequest(
 	Long categoryId,
 	Long topicId,
 	String title,
@@ -10,14 +10,14 @@ public record PostRequestBean(
 	List<String> hashtags
 ) {
 
-	public static PostRequestBean of(
+	public static PostRequest of(
 		final Long categoryId,
 		final Long topicId,
 		final String title,
 		final String content,
 		final List<String> hashtags
 	) {
-		return new PostRequestBean(categoryId, topicId, title, content, hashtags);
+		return new PostRequest(categoryId, topicId, title, content, hashtags);
 	}
 
 }

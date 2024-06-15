@@ -11,6 +11,7 @@ import java.util.Optional;
 import com.blog.tech.domain.post.entity.ConnectHashtag;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
+import com.blog.tech.global.utility.db.mapper.ConnectHashTagMapper;
 
 public class ConnectHashtagDao implements ConnectHashtagRepository {
 
@@ -91,7 +92,7 @@ public class ConnectHashtagDao implements ConnectHashtagRepository {
 			return Optional.empty();
 		}
 
-		final ConnectHashtag connectHashtag = new ConnectHashtag(rs.getLong(1), rs.getLong(2), rs.getLong(3));
+		final ConnectHashtag connectHashtag = ConnectHashTagMapper.from(rs, 0);
 		rs.close();
 		pstmt.close();
 

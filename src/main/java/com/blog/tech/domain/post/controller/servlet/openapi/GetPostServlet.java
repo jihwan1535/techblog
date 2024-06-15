@@ -2,11 +2,9 @@ package com.blog.tech.domain.post.controller.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 import com.blog.tech.domain.post.controller.PostController;
-import com.blog.tech.domain.post.dto.response.PostResponseBean;
-import com.blog.tech.domain.post.dto.response.PostsResponseBean;
+import com.blog.tech.domain.post.dto.response.PostResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -16,7 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/post")
+@WebServlet("/view/posts")
 public class GetPostServlet extends HttpServlet {
 
 	private PostController postController;
@@ -36,7 +34,7 @@ public class GetPostServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
 		try {
-			final PostResponseBean post = postController.getPost(postId);
+			final PostResponse post = postController.getPost(postId);
 			final String json = objectMapper.writeValueAsString(post);
 
 			resp.setContentType("application/json");

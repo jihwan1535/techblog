@@ -51,7 +51,7 @@ public class CategoryDao implements CategoryRepository {
 
 		final List<Category> categories = new ArrayList<>();
 		while (rs.next()) {
-			categories.add(CategoryMapper.from(rs));
+			categories.add(CategoryMapper.from(rs, 0));
 		}
 
 		rs.close();

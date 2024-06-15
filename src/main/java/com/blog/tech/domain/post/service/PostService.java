@@ -4,15 +4,17 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
-import com.blog.tech.domain.post.dto.response.CategoryResponseBean;
-import com.blog.tech.domain.post.dto.response.TopicResponseBean;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
+import com.blog.tech.domain.post.dto.response.CategoryResponse;
+import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
-import com.blog.tech.domain.post.dto.request.PostRequestBean;
-import com.blog.tech.domain.post.dto.response.PostResponseBean;
-import com.blog.tech.domain.post.dto.response.PostsResponseBean;
+import com.blog.tech.domain.post.dto.request.PostRequest;
+import com.blog.tech.domain.post.dto.response.PostResponse;
+import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.blog.tech.domain.post.entity.ConnectHashtag;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;
@@ -49,11 +51,11 @@ public class PostService {
 		this.connectHashtagRepository = connectHashtagRepository;
 	}
 
-	public void writeOnPost(final Long memberId, final PostRequestBean request) throws SQLException {
+	public void writeOnPost(final Long memberId, final PostRequest request) throws SQLException {
 		final MemberInfo member = memberRepository.findById(memberId).orElseThrow(() -> {
 			throw new RuntimeException("Invalid Member, " + memberId);
 		});
-		final Post post = Post.to(memberId, request);
+		final Post post = postParseHtmlFromMarkdown(memberId, request);
 		postRepository.save(post);
 
 		final List<Hashtag> hashtags = Optional.ofNullable(request.hashtags())
@@ -66,6 +68,15 @@ public class PostService {
 
 		member.postIncreasing();
 		memberRepository.save(member);
+	}
+
+	private Post postParseHtmlFromMarkdown(final Long memberId, final PostRequest request) {
+		final Parser parser = Parser.builder().build();
+		final HtmlRenderer renderer = HtmlRenderer.builder().build();
+		final String htmlContent = renderer.render(parser.parse(request.content()));
+		final Post post = Post.to(memberId, request, htmlContent);
+
+		return post;
 	}
 
 	private void connectHashtagWithPost(final Long postId, final List<Hashtag> request) {
@@ -95,55 +106,36 @@ public class PostService {
 		}
 	}
 
-	public List<PostsResponseBean> getAllPosts(final Long postId) throws SQLException {
+	public List<AllPostResponse> getAllPosts(final Long postId) throws SQLException {
 		final List<Post> posts = postRepository.findTop10ByIdDescId(postId);
-		final List<MemberInfo> members = getMemberInfos(posts);
-		return IntStream.range(0, posts.size())
-			.mapToObj(i -> PostsResponseBean.of(posts.get(i), members.get(i)))
+
+		return posts.stream()
+			.map(AllPostResponse::of)
 			.toList();
 	}
 
-	private List<MemberInfo> getMemberInfos(final List<Post> posts) {
-		return posts.stream().
-			map(it -> {
-				try {
-					return memberRepository.findById(it.getMemberInfoId()).orElseThrow(() -> {
-						throw new RuntimeException("notFound Member " + it.getMemberInfoId());
-					});
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-			}).toList();
-	}
-
-	public PostResponseBean getPost(final Long postId) throws SQLException {
+	public PostResponse getPost(final Long postId) throws SQLException {
 		final Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new RuntimeException("Not Found post : " + postId);
 		});
-		final MemberInfo memberInfo = memberRepository.findById(post.getMemberInfoId()).orElseThrow(() -> {
-			throw new RuntimeException("Not Found member : " + post.getMemberInfoId());
-		});
-		final Topic topic = topicRepository.findById(post.getTopicId()).orElseThrow(() -> {
-			throw new RuntimeException("Not Found Topic : " + post.getTopicId());
-		});
-		final Category category = categoryRepository.findById(topic.getCategoryId()).orElseThrow(() -> {
-			throw new RuntimeException("Not Found Category : " + topic.getCategoryId());
-		});
 		final List<Hashtag> hashtags = hashtagRepository.findAllByPostId(postId);
-		return PostResponseBean.of(memberInfo, post, category, topic, hashtags);
+
+		return PostResponse.of(post, hashtags);
 	}
 
-	public List<CategoryResponseBean> getAllCategories() throws SQLException {
+	public List<CategoryResponse> getAllCategories() throws SQLException {
 		final List<Category> categories = categoryRepository.findAll();
+
 		return categories.stream()
-			.map(CategoryResponseBean::of)
+			.map(CategoryResponse::of)
 			.toList();
 	}
 
-	public List<TopicResponseBean> getAllTopicsByCategory(final Long categoryId) throws SQLException {
+	public List<TopicResponse> getAllTopicsByCategory(final Long categoryId) throws SQLException {
 		final List<Topic> topics = topicRepository.findAllByCategoryId(categoryId);
+
 		return topics.stream()
-			.map(TopicResponseBean::of)
+			.map(TopicResponse::of)
 			.toList();
 	}
 
