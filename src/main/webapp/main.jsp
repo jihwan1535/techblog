@@ -195,7 +195,6 @@
             url: '/posts',
             data: { post_id: lastPostId },
             success: function(data) {
-                console.log(data);
                 try {
                     const posts = data.map(item => ({
                         post_id: item.post_info.post_id,
@@ -260,7 +259,7 @@
 
         $('.post').click(function() {
             const postId = $(this).attr('id');
-            window.location.href = '/view/posts?post_id=' + postId;
+            window.location.href = '/post/getPost.jsp?post_id=' + postId;
         });
     }
 
