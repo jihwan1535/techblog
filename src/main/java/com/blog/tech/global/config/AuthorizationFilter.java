@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
 
@@ -31,11 +32,6 @@ public class AuthorizationFilter implements Filter {
 	private final String UNREGISTER_MESSAGE = "Invalid Access: 탈퇴 처리를 진행중인 회원입니다.";
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		// todo context 정보 가져오기 - controller, service, repository 등
-	}
-
-	@Override
 	public void doFilter(
 		final ServletRequest servletRequest,
 		final ServletResponse servletResponse,
@@ -57,6 +53,9 @@ public class AuthorizationFilter implements Filter {
 			} else if (member.status().equals(MemberStatus.UNREGISTERED)) {
 				forwardToAlert(session, req, resp, UNREGISTER_MESSAGE);
 			}
+
+			req.setAttribute("memberID", String.valueOf(member.id()));
+			System.out.println("memberID = "+ member.id());
 		}
 
 		filterChain.doFilter(req, resp);

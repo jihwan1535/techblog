@@ -64,7 +64,7 @@ public class PostService {
 
 		connectHashtagWithPost(post.getId(), hashtags);
 
-		member.writePost();
+		member.postIncreasing();
 		memberRepository.save(member);
 	}
 

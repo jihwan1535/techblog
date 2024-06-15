@@ -2,6 +2,7 @@ package com.blog.tech.domain.post.dto.response;
 
 import java.util.List;
 
+import com.blog.tech.domain.member.dto.response.MemberInfoResultBean;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;

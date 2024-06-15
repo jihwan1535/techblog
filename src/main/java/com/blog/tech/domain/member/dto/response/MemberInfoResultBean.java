@@ -1,4 +1,4 @@
-package com.blog.tech.domain.post.dto.response;
+package com.blog.tech.domain.member.dto.response;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
 

@@ -11,6 +11,7 @@ public record PostInfoResultBean (
 	String content,
 	Integer viewCount,
 	Integer scrapCount,
+	Integer commentCount,
 	Boolean alarm,
 	String createdAt,
 	Boolean modified
@@ -23,6 +24,7 @@ public record PostInfoResultBean (
 			post.getContent(),
 			post.getViewCount(),
 			post.getScrapCount(),
+			post.getCommentCount(),
 			post.getAlarm(),
 			DateFormatter.format(post.getCreatedAt()),
 			isModified(post.getCreatedAt(), post.getUpdatedAt())

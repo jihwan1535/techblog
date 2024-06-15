@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Setter
@@ -23,13 +24,20 @@ public class MemberInfo extends BaseEntity {
 	private String image;
 	private String aboutMe;
 	private MemberRole role;
-	private int postCount;
-	private int commentCount;
-	private int alarmCount;
+	private Integer postCount;
+	private Integer commentCount;
+	private Integer alarmCount;
 	private MemberStatus status;
 
-	public void writePost() {
+	public void postIncreasing() {
 		this.postCount++;
+	}
+
+	public void commentIncreasing() {
+		this.commentCount++;
+	}
+	public void commentDecreasing() {
+		this.commentCount--;
 	}
 
 }
