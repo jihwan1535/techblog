@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.TopicRepository;
-import com.blog.tech.global.utility.db.mapper.TopicMapper;
 
 public class TopicDao implements TopicRepository {
 
@@ -51,7 +50,7 @@ public class TopicDao implements TopicRepository {
 
 		final List<Topic> topics = new ArrayList<>();
 		while (rs.next()) {
-			topics.add(TopicMapper.from(rs, 0));
+			topics.add(Topic.from(rs, 0));
 		}
 
 		rs.close();
@@ -72,7 +71,7 @@ public class TopicDao implements TopicRepository {
 
 		final List<Topic> topics = new ArrayList<>();
 		while (rs.next()) {
-			topics.add(TopicMapper.from(rs, 0));
+			topics.add(Topic.from(rs, 0));
 		}
 
 		rs.close();

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
-import com.blog.tech.global.utility.db.mapper.CategoryMapper;
 
 public class CategoryDao implements CategoryRepository {
 
@@ -51,7 +50,7 @@ public class CategoryDao implements CategoryRepository {
 
 		final List<Category> categories = new ArrayList<>();
 		while (rs.next()) {
-			categories.add(CategoryMapper.from(rs, 0));
+			categories.add(Category.from(rs, 0));
 		}
 
 		rs.close();

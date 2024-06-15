@@ -15,10 +15,6 @@ import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
-import com.blog.tech.global.utility.db.mapper.CategoryMapper;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
-import com.blog.tech.global.utility.db.mapper.PostMapper;
-import com.blog.tech.global.utility.db.mapper.TopicMapper;
 
 public class PostDao implements PostRepository {
 
@@ -36,6 +32,7 @@ public class PostDao implements PostRepository {
 		}
 		return create(data);
 	}
+
 	private void update(final Post data) throws SQLException {
 		final String sql = "UPDATE post SET topic_id = ?, category_id = ?, title = ?, content = ?, comment_count = ?, "
 			+ "reply_count = ?, view_count = ?, report_count = ?, scrap_count = ?, alarm = ?, status = ?, "
@@ -144,13 +141,15 @@ public class PostDao implements PostRepository {
 	}
 
 	private Post getJoinPost(final ResultSet rs) throws SQLException {
-		final Post post = PostMapper.from(rs, 0);
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 15);
-		final Topic topic = TopicMapper.from(rs, 27);
-		final Category category = CategoryMapper.from(rs, 30);
+		final Post post = Post.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 15);
+		final Topic topic = Topic.from(rs, 27);
+		final Category category = Category.from(rs, 30);
+
 		post.setMemberInfo(memberInfo);
 		post.setTopic(topic);
 		post.setCategory(category);
+
 		return post;
 	}
 }

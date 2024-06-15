@@ -13,13 +13,8 @@ import java.util.Optional;
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
-import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.global.utility.db.mapper.CommentMapper;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
-import com.blog.tech.global.utility.db.mapper.MemberMapper;
-import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class CommentDao implements CommentRepository {
 	private final Connection conn;
@@ -128,9 +123,9 @@ public class CommentDao implements CommentRepository {
 	}
 
 	private Comment getJoinComment(final ResultSet rs) throws SQLException {
-		final Comment comment = CommentMapper.from(rs, 0);
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 9);
-		final Post post = PostMapper.from(rs, 21);
+		final Comment comment = Comment.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 9);
+		final Post post = Post.from(rs, 21);
 		comment.setMember(memberInfo);
 		comment.setPost(post);
 		return comment;

@@ -15,9 +15,6 @@ import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.global.utility.db.mapper.CommentMapper;
-import com.blog.tech.global.utility.db.mapper.MemberInfoMapper;
-import com.blog.tech.global.utility.db.mapper.ReplyMapper;
 
 public class ReplyDao implements ReplyRepository {
 
@@ -37,8 +34,9 @@ public class ReplyDao implements ReplyRepository {
 	}
 
 	private Reply create(final Reply data) throws SQLException {
-		final String sql = "INSERT INTO reply (id, member_info_id, comment_id, content, status, created_at, updated_at) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+		final String sql =
+			"INSERT INTO reply (id, member_info_id, comment_id, content, status, created_at, updated_at) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 		pstmt.setLong(1, data.getId());
@@ -125,11 +123,13 @@ public class ReplyDao implements ReplyRepository {
 	}
 
 	private Reply getReplyInfo(final ResultSet rs) throws SQLException {
-		final Reply reply = ReplyMapper.from(rs, 0);
-		final MemberInfo memberInfo = MemberInfoMapper.from(rs, 8);
-		final Comment comment = CommentMapper.from(rs, 20);
+		final Reply reply = Reply.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 8);
+		final Comment comment = Comment.from(rs, 20);
+
 		reply.setMember(memberInfo);
 		reply.setComment(comment);
+
 		return reply;
 	}
 }
