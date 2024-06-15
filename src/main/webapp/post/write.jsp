@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="container">
-    <h2 class="text-center mt-4">Hello, TOAST UI Editor!</h2>
+    <h3 class="text-start mt-4 ms-2">Tech Blog</h3>
 
     <div class="form-group">
         <label for="title">제목</label>
