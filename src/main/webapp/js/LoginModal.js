@@ -6,7 +6,8 @@ $(".login-btn").click(function () {
     isLoginModalOpen = true;
 
     $.ajax({
-        url: "/member/login.jsp",
+        url: "/login",
+        type: 'GET',
         success: function (data) {
             console.log("click");
             $("#loginModalContainer").html(data); // 모달 콘텐츠 삽입
@@ -20,8 +21,3 @@ $(".login-btn").click(function () {
         }
     });
 });
-
-$(document).on("click", '.modal-content', function (event) {
-    event.stopPropagation(); // 이벤트 버블링 방지
-});
-

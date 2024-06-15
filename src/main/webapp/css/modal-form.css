@@ -1,9 +1,20 @@
+.modal-content{
+    background-color: whitesmoke;
+}
+
 .modal .form-control{
-    margin-bottom: 1rem;
-    background-color: lightblue;
+    border-color: #18283b;
 }
 
 .modal span{
     font-size: small;
 }
 
+.modal-header{
+    background-color: #18283b;
+}
+
+.modal-title{
+    color: #ffffff;
+    font-family: "Sans Serif";
+}

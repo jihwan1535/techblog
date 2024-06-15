@@ -47,7 +47,7 @@
             <li class="nav-item active">
                 <a class="btn btn-outline-light login-btn">Login</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="btn btn-outline-light sign-btn">Sign-up</a>
             </li>
             <% } else { %>
@@ -121,7 +121,7 @@
 <!-- 로그인 모달 -->
 <div id="loginModalContainer"></div>
 <script src="/js/LoginModal.js"></script>
-
+<!--
 <script>
 
     $(document).on('click', '#checkNickname', function () {
@@ -190,6 +190,7 @@
         });
     });
 </script>
+-->
 <script>
     function profile() {
         var nickname = document.querySelector('.nickname').value;
@@ -262,12 +263,6 @@
 
     $(document).ready(function() {
         $('#defaultImageButton').click();
-        // 로그인 버튼 클릭 시 모달 표시
-        $('.login-btn').on('click', function(e) {
-            e.preventDefault();
-            $('#loginModal').modal('show');
-        });
-
         $.ajax({
             url: '/categories',
             type: 'GET',
