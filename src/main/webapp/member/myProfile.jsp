@@ -15,16 +15,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .login-btn {
-            background-color: white !important;
-            color: black !important;
-        }
         .form-container-left {
             width: 49%;
             float: left;
             padding: 20px;
             border: 1px solid #ced4da;
             border-radius: 5px;
+            background-color: #FFFFFF;
         }
         .form-container-right {
             width: 49%;
@@ -33,6 +30,7 @@
             border: 1px solid #ced4da;
             border-radius: 5px;
             margin-bottom: 20px;
+            background-color: #FFFFFF;
         }
         textarea {
             width: 100%;
@@ -45,52 +43,14 @@
 
 </head>
 
-<body>
+<body style="background-color: #F5F5F7;">
 <%
     if (session.getAttribute("profile") == null) {
         response.sendRedirect("/login");
     }
 %>
-<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
-    <a class="navbar-brand ms-3" href="#">Tech Blog</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <form class="d-flex my-2 my-lg-0">
-        <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
-        <button class="btn btn-light button" type="button" onclick="profile();">Search</button>
-    </form>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mx-3">
-            <% if (Objects.isNull(session.getAttribute("member"))) { %>
-            <li class="nav-item active">
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
-            </li>
-            <% } else { %>
-            <%
-                final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
-                final String image = member.image();
-            %>
-            <li class="nav-item">
-                <a class="btn btn-light button" href="/Posting">포스팅</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/settings">설정</a></li>
-                    <li><a class="dropdown-item" href="/notifications">알림</a></li>
-                    <li><a class="dropdown-item" href="/api/logout">로그아웃</a></li>
-                </ul>
-            </li>
-            <% } %>
-        </ul>
-    </div>
-</nav>
+
+<jsp:include page="/css/navbar.jsp" />
 
 <%
     final ProfileResponseBean profile = (ProfileResponseBean)request.getAttribute("profile");
