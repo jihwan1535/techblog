@@ -2,7 +2,6 @@ var isSignUpModalOpen = false;
 var isCheckingEmail = false;
 var isEmailAvailable = false;
 // password 검증
-var isPasswordValid = false;
 var isPasswordConfirm = false;
 var isCheckingNickname = false;
 var isNicknameAvailable = false;
@@ -14,9 +13,25 @@ const validateRegisEmail = (email) => {
 };
 
 // password 정규식 검증
-const validatePassword = (password) => {
+const validatePassword = (password, passwordConfirm) => {
     const regex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,12}$/;
-    return regex.test(password);
+    if (regex.test(password)) {
+        $("#password").css("border", "2px solid green");
+        $("#pw-span").text("사용가능한 비밀번호입니다.").css("color", "green");
+    } else {
+        $("#password").css("border", "2px solid red");
+        $("#pw-span").text("알파벳과 숫자를 포함한 4자리 이상 12자리 이하로 입력하세요.").css("color", "red");
+    }
+
+    if (password === passwordConfirm) {
+        $("#password-confirm").css("border", "2px solid green");
+        $("#pw-confirm-span").text("비밀번호가 일치합니다.").css("color", "green");
+        isPasswordConfirm = true;
+    } else {
+        $("#password-confirm").css("border", "2px solid red");
+        $("#pw-confirm-span").text("비밀번호가 일치하지 않습니다.").css("color", "red");
+        isPasswordConfirm = false;
+    }
 };
 
 // 닉네임 정규식 검증
@@ -29,6 +44,8 @@ function updateNextBtn() {
     console.log(isEmailAvailable + ", " + isPasswordConfirm);
     if (isEmailAvailable && isPasswordConfirm) {
         $('#nextBtn').attr('disabled', false);
+    } else {
+        $('#nextBtn').attr('disabled', true);
     }
 }
 
@@ -39,7 +56,7 @@ $(".sign-btn").click(function () {
     isSignUpModalOpen = true;
 
     $.ajax({
-        url: "/member/test_register.jsp",
+        url: "/member/register.jsp",
         success: function (data) {
             console.log("click");
             $("#modalContainer").html(data); // 모달 콘텐츠 삽입
@@ -105,6 +122,7 @@ $(document).on('click', '#checkEmail', function () {
                 console.log(error);
             },
             complete: function () {
+                updateNextBtn();
                 isCheckingEmail = false;
             }
         });
@@ -113,63 +131,38 @@ $(document).on('click', '#checkEmail', function () {
         $("#email").css("border", "2px solid red");
         alert("올바른 이메일 주소 형식이 아닙니다.");
     }
-    updateNextBtn();
 });
 
 // 이메일 검사 후 변경되었을 시,
 $(document).on('input', '#email', function () {
-    let email = $("#email").val();
-    if(validateRegisEmail(email)){
-        isEmailAvailable = true;
-    }else{
-        isEmailAvailable = false;
-    }
-    if(isEmailAvailable){
+    isEmailAvailable = false;
+
+    if(validateRegisEmail($("#email").val())){
         $("#email").css("border", "2px solid green")
         $("#email-span").text("올바른 이메일 형식입니다.").css("color", "green");
     }else{
         $("#email").css("border", "2px solid red");
         $("#email-span").text("이메일 형식이 올바르지 않습니다.").css("color", "red");
     }
+
     updateNextBtn();
 });
 
 // password 검증
 $(document).on('input', '#password', function () {
     let password = $("#password").val();
-    let passwordConfirm = $("#password_confirm").val();
-    console.log(passwordConfirm);
-    /* password 가 형식에 맞을 경우 */
-    if (validatePassword(password)) {
-        $("#password").css("border", "2px solid green");
-        $("#pw-span").text("사용가능한 비밀번호입니다.").css("color", "green");
-        isPasswordValid = true;
-    }
-    /* 형식에 안 맞을 경우 */
-    else {
-        $("#password").css("border", "2px solid red");
-        $("#pw-span").text("알파벳과 숫자를 포함한 4자리 이상 12자리 이하로 입력하세요.").css("color", "red");
-        isPasswordValid = false;
-    }
+    let passwordConfirm = $("#password-confirm").val();
+
+    validatePassword(password, passwordConfirm);
     updateNextBtn();
 });
 
 // password 확인 검증
 $(document).on('input', '#password-confirm', function () {
-    let password = $("#password-confirm").val();
-    if (!isPasswordValid) {
-        $("#password-confirm").css("border", "2px solid red");
-        $("#pw-confirm-span").text("비밀번호를 한번 더 입력해주세요.")
-        isPasswordConfirm = false;
-    } else if (password === $("#password").val()) {
-        $("#password-confirm").css("border", "2px solid green");
-        $("#pw-confirm-span").text("비밀번호가 일치합니다.").css("color", "green");
-        isPasswordConfirm = true;
-    } else {
-        $("#password-confirm").css("border", "2px solid red");
-        $("#pw-confirm-span").text("비밀번호가 일치하지 않습니다.").css("color", "red");
-        isPasswordConfirm = false;
-    }
+    let password = $("#password").val();
+    let passwordConfirm = $("#password-confirm").val();
+
+    validatePassword(password, passwordConfirm);
     updateNextBtn();
 });
 
@@ -247,7 +240,7 @@ $(document).on("click", "#registerBtn", function () {
         },
         type: 'POST',
         success: function (response){
-            console.log(response);
+            alert("회원가입이 완료되었습니다.")
             window.location.href = "/main";
         }
     });

@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.member.entity.MemberInfo;
+import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
-import com.blog.tech.global.utility.db.mapper.PostMapper;
 
 public class PostDao implements PostRepository {
 
@@ -30,6 +32,7 @@ public class PostDao implements PostRepository {
 		}
 		return create(data);
 	}
+
 	private void update(final Post data) throws SQLException {
 		final String sql = "UPDATE post SET topic_id = ?, category_id = ?, title = ?, content = ?, comment_count = ?, "
 			+ "reply_count = ?, view_count = ?, report_count = ?, scrap_count = ?, alarm = ?, status = ?, "
@@ -90,7 +93,9 @@ public class PostDao implements PostRepository {
 
 	@Override
 	public Optional<Post> findById(final Long id) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post WHERE id = ?");
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
+			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
+			+ "WHERE p.id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
 
@@ -100,7 +105,7 @@ public class PostDao implements PostRepository {
 			return Optional.empty();
 		}
 
-		final Post post = PostMapper.from(rs, 0);
+		final Post post = getJoinPost(rs);
 		rs.close();
 		pstmt.close();
 
@@ -119,17 +124,32 @@ public class PostDao implements PostRepository {
 
 	@Override
 	public List<Post> findTop10ByIdDescId(final Long id) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post WHERE id < ? ORDER BY id DESC LIMIT 10");
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
+			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
+			+ "WHERE p.id < ? ORDER BY p.id DESC LIMIT 10;");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Post> posts = new ArrayList<>();
 		while (rs.next()) {
-			posts.add(PostMapper.from(rs, 0));
+			posts.add(getJoinPost(rs));
 		}
 
 		rs.close();
 		pstmt.close();
 		return posts;
+	}
+
+	private Post getJoinPost(final ResultSet rs) throws SQLException {
+		final Post post = Post.from(rs, 0);
+		final MemberInfo memberInfo = MemberInfo.from(rs, 15);
+		final Topic topic = Topic.from(rs, 27);
+		final Category category = Category.from(rs, 30);
+
+		post.setMemberInfo(memberInfo);
+		post.setTopic(topic);
+		post.setCategory(category);
+
+		return post;
 	}
 }

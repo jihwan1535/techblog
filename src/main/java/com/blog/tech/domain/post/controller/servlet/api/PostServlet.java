@@ -2,12 +2,10 @@ package com.blog.tech.domain.post.controller.servlet.api;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.post.controller.PostController;
-import com.blog.tech.domain.post.dto.request.PostRequestBean;
+import com.blog.tech.domain.post.dto.request.PostRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -38,7 +36,7 @@ public class PostServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final HttpSession session = req.getSession(false);
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-		final PostRequestBean request = objectMapper.readValue(req.getInputStream(), PostRequestBean.class);
+		final PostRequest request = objectMapper.readValue(req.getInputStream(), PostRequest.class);
 
 		try {
 			postController.writeOnPost(member.id(), request);

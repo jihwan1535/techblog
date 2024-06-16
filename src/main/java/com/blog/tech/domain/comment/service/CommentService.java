@@ -79,21 +79,15 @@ public class CommentService {
 		if (comment.getMemberInfoId() != memberId) {
 			throw new IllegalArgumentException("NOT SAME USER");
 		}
-		final MemberInfo memberInfo = memberInfoRepository.findById(memberId).orElseThrow(() -> {
-			throw new IllegalArgumentException("NOT FOUND MEMBER " + memberId);
-		});
-		final Post post = postRepository.findById(request.postId()).orElseThrow(() -> {
-			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
-		});
 
-		memberInfo.commentDecreasing();
-		post.commentDecreasing();
+		comment.getMember().commentDecreasing();
+		comment.getPost().commentDecreasing();
 		comment.setStatus(Status.UNREGISTERED);
 		comment.updateTime();
 
 		commentRepository.save(comment);
-		memberInfoRepository.save(memberInfo);
-		postRepository.save(post);
+		memberInfoRepository.save(comment.getMember());
+		postRepository.save(comment.getPost());
 	}
 
 	public void updateComment(final Long memberId, final EditCommentRequest request) throws SQLException {
@@ -149,14 +143,13 @@ public class CommentService {
 			throw new IllegalArgumentException("NOT FOUND POST " + request.postId());
 		});
 
-		final MemberInfo memberInfo = reply.getMember();
-		memberInfo.commentDecreasing();
+		reply.getMember().commentDecreasing();
 		post.replyDecreasing();
 		reply.setStatus(Status.UNREGISTERED);
 		reply.updateTime();
 
 		replyRepository.save(reply);
-		memberInfoRepository.save(memberInfo);
+		memberInfoRepository.save(reply.getMember());
 		postRepository.save(post);
 	}
 

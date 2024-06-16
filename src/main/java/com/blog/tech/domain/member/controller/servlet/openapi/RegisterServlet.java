@@ -46,12 +46,7 @@ public class RegisterServlet extends HttpServlet {
 		final String aboutMe = req.getParameter("about_me");
 
 		try {
-			final RegisterResponseBean register =
-				memberController.register(RegisterRequestBean.of(email, password, nickname, aboutMe));
-			req.setAttribute("register", register);
-
-			resp.setContentType("text/plain");
-			resp.getWriter().write("/member/registerResult.jsp");
+			memberController.register(RegisterRequestBean.of(email, password, nickname, aboutMe));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

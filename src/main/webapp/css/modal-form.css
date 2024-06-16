@@ -10,11 +10,8 @@
     font-size: small;
 }
 
-.modal-header{
-    background-color: #18283b;
-}
 
 .modal-title{
-    color: #ffffff;
+    color: black;
     font-family: "Sans Serif";
 }

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.post.entity.ConnectHashtag;
-import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 
 public class ConnectHashtagDao implements ConnectHashtagRepository {
@@ -80,7 +79,8 @@ public class ConnectHashtagDao implements ConnectHashtagRepository {
 		final Long hashtagId,
 		final Long postId
 	) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM connect_hashtag WHERE hashtag_id = ? AND post_id = ?");
+		final PreparedStatement pstmt = conn.prepareStatement(
+			"SELECT * FROM connect_hashtag WHERE hashtag_id = ? AND post_id = ?");
 		pstmt.setLong(1, hashtagId);
 		pstmt.setLong(2, postId);
 		final ResultSet rs = pstmt.executeQuery();
@@ -91,7 +91,7 @@ public class ConnectHashtagDao implements ConnectHashtagRepository {
 			return Optional.empty();
 		}
 
-		final ConnectHashtag connectHashtag = new ConnectHashtag(rs.getLong(1), rs.getLong(2), rs.getLong(3));
+		final ConnectHashtag connectHashtag = ConnectHashtag.from(rs, 0);
 		rs.close();
 		pstmt.close();
 

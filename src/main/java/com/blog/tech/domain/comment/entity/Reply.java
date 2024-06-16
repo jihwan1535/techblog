@@ -1,5 +1,7 @@
 package com.blog.tech.domain.comment.entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import com.blog.tech.domain.comment.dto.request.ReplyRequest;
@@ -38,6 +40,19 @@ public class Reply extends BaseEntity {
 			.status(Status.REGISTERED)
 			.createdAt(LocalDateTime.now())
 			.updatedAt(LocalDateTime.now())
+			.build();
+	}
+
+	public static Reply from(final ResultSet rs, final int i) throws SQLException {
+		return Reply.builder()
+			.id(rs.getLong(i + 1))
+			.memberInfoId(rs.getLong(i + 2))
+			.commentId(rs.getLong(i + 3))
+			.content(rs.getString(i + 4))
+			.reportCount(rs.getInt(i + 5))
+			.status(Status.valueOf(rs.getString(i + 6)))
+			.createdAt(rs.getTimestamp(i + 7).toLocalDateTime())
+			.updatedAt(rs.getTimestamp(i + 8).toLocalDateTime())
 			.build();
 	}
 

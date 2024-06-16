@@ -30,6 +30,28 @@
             overflow-y: auto;
         }
     </style>
+    <style>
+        .post { margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: box-shadow 0.3s; }
+        .post:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .post .profile { display: flex; align-items: center; margin-bottom: 10px; }
+        .post .profile img { border-radius: 50%; width: 50px; height: 50px; margin-right: 10px; }
+        .post .profile .name { font-weight: bold; }
+        .post .profile .date { color: #777; font-size: 0.9em; margin-left: 10px; }
+        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 200px; position: relative; }
+        .post .content:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, white);
+            display: block;
+        }
+        .post .stats { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9em; color: #555; }
+        .post .stats .left { flex: 1; text-align: left; }
+        .post .stats .right { flex: 1; text-align: right; }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
@@ -86,7 +108,7 @@
                 <ul id="nav-content" class="list-group"></ul>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-6 container">
             <div id="posts-container" class="mt-5"></div>
         </div>
         <div class="col-lg-3">
@@ -114,91 +136,11 @@
     </div>
 </div>
 
-<div id="topics"></div>
-<!-- 회원가입 모달 -->
 <div id="modalContainer"></div>
-<script src="/js/RegisterModal.js"></script>
-<!-- 로그인 모달 -->
 <div id="loginModalContainer"></div>
+<script src="/js/RegisterModal.js"></script>
 <script src="/js/LoginModal.js"></script>
-<!--
 <script>
-
-    $(document).on('click', '#checkNickname', function () {
-        if (isCheckingNickname) return;
-        let nickname = $("#nickname").val();
-        isCheckingNickname = true;
-
-        if (validateRegisName(nickname)) {
-            $.ajax({
-                url: '/checkNickname',
-                data: {nickname: nickname},
-                type: 'GET',
-                success: function (response) {
-                    if (response == 'AVAILABLE') {
-                        $("#nickname").css("border", "2px solid green");
-                        alert("사용 가능한 닉네임입니다.");
-                        isNicknameAvailable = true;
-                        $('#registerBtn').attr('disabled', false);
-                    } else {
-                        alert("이미 사용중인 닉네임입니다.");
-                        isNicknameAvailable = false;
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                },
-                complete: function () {
-                    isCheckingNickname = false;
-                }
-            });
-        } else {
-            $("#nickname").css("border", "2px solid red");
-        }
-    });
-
-    $(document).on('input', '#nickname', function () {
-        $("#nickname").css("border", "2px solid red");
-        isEmailAvailable = false;
-        $('#registerBtn').attr('disabled', true);
-    });
-
-    $(document).on("input", "#about_me", function () {
-        let text = $("#about_me").val();
-        let len = text.length;
-    });
-
-    $(document).on("click", "#registerBtn", function () {
-        let email = $("#email").val();
-        let password = $("#password").val();
-        let nickname = $("#nickname").val();
-        let aboutMe = $("#about_me").val();
-
-        $.ajax({
-            url: '/register',
-            data: {
-                email : email,
-                password : password,
-                nickname : nickname,
-                aboutMe : aboutMe
-            },
-            type: 'POST',
-            success: function (response){
-                console.log(response);
-                window.location.href = "/main";
-            }
-        });
-    });
-</script>
--->
-<script>
-    function profile() {
-        var nickname = document.querySelector('.nickname').value;
-        var url = "/profile/@" + nickname;
-        window.location.href = url;
-    }
-
-    // posts 불러오는 script
     let lastPostId = Number.MAX_SAFE_INTEGER;
     let isLoading = false;
 
@@ -208,13 +150,23 @@
 
         $.ajax({
             url: '/posts',
-            data: {
-                post_id: lastPostId
-            },
+            data: { post_id: lastPostId },
             success: function(data) {
                 try {
-                    let cleanedData = JSON.stringify(data);
-                    const posts = JSON.parse(cleanedData);
+                    const posts = data.map(item => ({
+                        post_id: item.post_info.post_id,
+                        title: item.post_info.title,
+                        content: item.post_info.content,
+                        view_count: item.post_info.view_count,
+                        scrap_count: item.post_info.scrap_count,
+                        comment_count: item.post_info.comment_count,
+                        reply_count: item.post_info.reply_count,
+                        created_at: item.post_info.created_at,
+                        member_id: item.member_info.id,
+                        member_name: item.member_info.name,
+                        member_image: item.member_info.image
+                    }));
+                    console.log(posts);
 
                     if (posts.length > 0) {
                         lastPostId = posts[posts.length - 1].post_id;
@@ -236,13 +188,30 @@
     function renderPosts(posts) {
         const container = $('#posts-container');
         posts.forEach(post => {
-            const postHtml = `<div class="post" id=` + post.post_id + `>
-                    <h3>` + post.post_title + `</h3>
-                    <p>작성일:` + post.post_created_at + `</p>
-                    <p>작성자:` + post.member_name + `</p>
-                    <img src=` + post.member_image + ` id=` + post.member_id + ` alt=` + post.member_name + ` class="img-thumbnail" style="width: 50px; height: 50px;">
-                </div>`;
+            const postHtml = `
+                    <div class="post" id="\${post.post_id}">
+                        <div class="profile">
+                            <a id="author-profile-link" href="/profile/@\${post.member_name}">
+                                <img src="\${post.member_image}" alt="\${post.member_name}"/>
+                            </a>
+                            <div>
+                                <div class="name">@\${post.member_name}님의 포스트</div>
+                                <div class="date">\${post.created_at}</div>
+                            </div>
+                        </div>
+                        <h3>\${post.title}</h3>
+                        <div class="content">\${post.content}</div>
+                        <div class="stats">
+                            <div class="left">댓글: \${post.comment_count + post.reply_count}</div>
+                            <div class="right">조회수: \${post.view_count} | 스크랩수: \${post.scrap_count}</div>
+                        </div>
+                    </div>
+                `;
             container.append(postHtml);
+        });
+
+        $('.post .content a').click(function(event) {
+            event.preventDefault();
         });
 
         $('.post').click(function() {
@@ -254,8 +223,8 @@
     $(document).ready(function() {
         loadPosts();
 
-        $('#posts-container').scroll(function() {
-            if ($(this).scrollTop() + $(this).height() >= this.scrollHeight - 10) {
+        $(window).scroll(function() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
                 loadPosts();
             }
         });
