@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: Administrator
+  Date: 2024-06-03
+  Time: 오후 12:30
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page import="java.util.Objects" %>
 <%@ page import="com.blog.tech.domain.member.dto.response.MemberResponseBean" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
@@ -60,10 +67,10 @@
         <ul class="navbar-nav ms-auto mx-3">
             <% if (Objects.isNull(session.getAttribute("member"))) { %>
             <li class="nav-item active">
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">Login</a>
+                <a class="btn btn-outline-light login-btn">Login</a>
             </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
+            <li class="nav-item active">
+                <a class="btn btn-outline-light sign-btn">Sign-up</a>
             </li>
             <% } else { %>
             <%
@@ -129,60 +136,10 @@
     </div>
 </div>
 
-
-<div id="topics"></div>
-
-<script>
-    function profile() {
-        var nickname = document.querySelector('.nickname').value;
-        var url = "/profile/@" + nickname;
-        window.location.href = url;
-    }
-    $(document).ready(function() {
-        $.ajax({
-            url: '/categories',
-            type: 'GET',
-            success: function (categories) {
-                categories.forEach(function (category) {
-                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '">' +
-                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '">' +
-                        '<span>' + category.name + '</span>' +
-                        '<i class="fas fa-chevron-down"></i></a>' +
-                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '"></ul>' +
-                        '</li>');
-                    $('#nav-content').append(categoryElement);
-                });
-                $('#nav-content').append($('<div id="nav-content-highlight"></div>'));
-            }
-        });
-    });
-    $(document).on('click', '.category a', function() {
-        var categoryId = $(this).closest('.category').attr('id').split('-')[1];
-        var collapseElement = $('#collapse-' + categoryId);
-        var categoryElement = $(this).closest('.category');
-
-        if (collapseElement.hasClass('show')) {
-            collapseElement.collapse('hide');
-        } else {
-            $('.collapse').collapse('hide');
-            collapseElement.collapse('show');
-
-            $.ajax({
-                url: '/topics',
-                data: {category_id: categoryId},
-                type: 'GET',
-                success: function(topics) {
-                    collapseElement.empty();
-                    topics.forEach(function(topic) {
-                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '">' +
-                            topic.name + '</li>');
-                        collapseElement.append(topicElement);
-                    });
-                }
-            });
-        }
-    });
-</script>
+<div id="modalContainer"></div>
+<div id="loginModalContainer"></div>
+<script src="/js/RegisterModal.js"></script>
+<script src="/js/LoginModal.js"></script>
 <script>
     let lastPostId = Number.MAX_SAFE_INTEGER;
     let isLoading = false;
@@ -271,6 +228,53 @@
                 loadPosts();
             }
         });
+    });
+
+    $(document).ready(function() {
+        $('#defaultImageButton').click();
+        $.ajax({
+            url: '/categories',
+            type: 'GET',
+            success: function (categories) {
+                categories.forEach(function (category) {
+                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '">' +
+                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '">' +
+                        '<span>' + category.name + '</span>' +
+                        '<i class="fas fa-chevron-down"></i></a>' +
+                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '"></ul>' +
+                        '</li>');
+                    $('#nav-content').append(categoryElement);
+                });
+                $('#nav-content').append($('<div id="nav-content-highlight"></div>'));
+            }
+        });
+    });
+
+    $(document).on('click', '.category a', function() {
+        var categoryId = $(this).closest('.category').attr('id').split('-')[1];
+        var collapseElement = $('#collapse-' + categoryId);
+        var categoryElement = $(this).closest('.category');
+
+        if (collapseElement.hasClass('show')) {
+            collapseElement.collapse('hide');
+        } else {
+            $('.collapse').collapse('hide');
+            collapseElement.collapse('show');
+
+            $.ajax({
+                url: '/topics',
+                data: {category_id: categoryId},
+                type: 'GET',
+                success: function(topics) {
+                    collapseElement.empty();
+                    topics.forEach(function(topic) {
+                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '">' +
+                            topic.name + '</li>');
+                        collapseElement.append(topicElement);
+                    });
+                }
+            });
+        }
     });
 </script>
 </body>
