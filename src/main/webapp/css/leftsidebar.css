@@ -13,6 +13,10 @@ html, body {
     background: var(--background);
 }
 
+body {
+    padding-top: calc(1vw + 56px);
+}
+
 #nav-toggle:checked ~ #nav-header {
     width: calc(var(--navbar-width-min) - 16px);
 }
@@ -55,7 +59,7 @@ html, body {
 }
 
 #nav-bar{
-    position: absolute;
+    position: fixed;
     left: 1vw;
     top: calc(1vw + 56px); /* 네비게이션 바 높이를 고려하여 위치 조정 */
     height: calc(100% - 8vw - 56px); /* 네비게이션 바 높이를 빼줌 */
