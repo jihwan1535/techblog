@@ -6,23 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <title>Tech Blog</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/leftsidebar.css">
     <link rel="stylesheet" href="/css/rightsidebar.css">
-    <style>
-        #posts-container {
-            height: 500px; /* 필요한 높이로 설정 */
-            overflow-y: auto;
-        }
-    </style>
+        <style>
+            #posts-container {
+                height: 500px; /* 필요한 높이로 설정 */
+            }
+        </style>
     <style>
         .post { margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: box-shadow 0.3s; }
         .post:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
@@ -30,7 +25,7 @@
         .post .profile img { border-radius: 50%; width: 50px; height: 50px; margin-right: 10px; }
         .post .profile .name { font-weight: bold; }
         .post .profile .date { color: #777; font-size: 0.9em; margin-left: 10px; }
-        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 200px; position: relative; }
+        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 300px; position: relative; }
         .post .content:after {
             content: '';
             position: absolute;
@@ -47,51 +42,12 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
-    <a class="navbar-brand ms-3" href="#">Tech Blog</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <form class="d-flex my-2 my-lg-0">
-        <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
-        <button class="btn btn-light button" type="button" onclick="profile();">Search</button>
-    </form>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mx-3">
-            <% if (Objects.isNull(session.getAttribute("member"))) { %>
-            <li class="nav-item active">
-                <a class="nav-link btn btn-outline-light me-2 login-btn" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-outline-light login-btn" href="/register">Sign-up</a>
-            </li>
-            <% } else { %>
-            <%
-                final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
-                final Long id = member.id();
-                final String nickname = member.nickname();
-                final String image = member.image();
-            %>
-            <li class="nav-item">
-                <a class="btn btn-light button" href="/api/posting">포스팅</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/settings">설정</a></li>
-                    <li><a class="dropdown-item" href="/notifications">알림</a></li>
-                    <li><a class="dropdown-item" href="/api/logout">로그아웃</a></li>
-                </ul>
-            </li>
-            <% } %>
-        </ul>
-    </div>
-</nav>
+
+<jsp:include page="/css/navbar.jsp" />
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div id="nav-bar">
                 <input id="nav-toggle" type="checkbox"/>
                 <div id="nav-header"><a id="nav-title" href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i>카테고리</a>
@@ -101,10 +57,28 @@
                 <ul id="nav-content" class="list-group"></ul>
             </div>
         </div>
-        <div class="col-lg-6 container">
-            <div id="posts-container" class="mt-5"></div>
+        <div class="col-lg-4">
+            <div class="d-flex justify-content-center mt-3">
+                <% if (Objects.isNull(session.getAttribute("member"))) { %>
+                <img src="http://localhost:8888/upload/images/profile/profile.png" alt="Profile Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                <% } else { %>
+                <%
+                    final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
+                    final String image = member.image();
+                %>
+                <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 40px; height: 40px;">
+                <% } %>
+                <div style="margin-left: 15px;"></div>
+                <a class="btn btn-outline-dark nav-btn btn-lg w-100" style="height: 40px; font-size: 14px; line-height: 1.5; padding: 8px 12px; text-align: left; color: gray; border: 1px solid #ced4da;" href="/api/posting">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
+                    </svg>&nbsp;&nbsp;어떤 이야기를 나누고 싶나요?</a>
+            </div><br>
+            <hr style="background-color:#EAEAEC;">
+            <div id="posts-container" class="mt-5"> </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div id="nav-bar-right">
                 <input id="nav-toggle-right" type="checkbox"/>
                 <div id="nav-header-right"><a id="nav-title-right" href="https://codepen.io" target="_blank">C<i class="fab fa-codepen"></i>DEPEN</a>
@@ -250,6 +224,7 @@
                         </div>
                     </div>
                 `;
+
             container.append(postHtml);
         });
 
