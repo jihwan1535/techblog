@@ -15,6 +15,9 @@
       width: 100%;
       z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
     }
+    .no-caret::after {
+      display: none
+    }
     body {
       padding-top: 56px; /* 네비게이션 바 높이만큼 패딩 추가 */
     }
