@@ -14,18 +14,64 @@
     <link rel="stylesheet" href="/css/leftsidebar.css">
     <link rel="stylesheet" href="/css/rightsidebar.css">
         <style>
+            html, body {
+                background-color: #F5F5F7; /* 배경색 설정 */
+            }
             #posts-container {
-                height: 500px; /* 필요한 높이로 설정 */
+                height: 500px;
             }
         </style>
     <style>
-        .post { margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: box-shadow 0.3s; }
-        .post:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-        .post .profile { display: flex; align-items: center; margin-bottom: 10px; }
-        .post .profile img { border-radius: 50%; width: 50px; height: 50px; margin-right: 10px; }
-        .post .profile .name { font-weight: bold; }
-        .post .profile .date { color: #777; font-size: 0.9em; margin-left: 10px; }
-        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 300px; position: relative; }
+        .post {
+            background-color: #FFFFFF;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative; /* 추가: 포스트 내의 절대 위치 요소들과 충돌을 방지하기 위해 상대 위치 설정 */
+            overflow: hidden; /* 추가: 포스트 내의 내용이 넘치는 경우를 방지하기 위해 추가 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .post:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .post .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post .profile img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            object-fit: cover; /* 추가: 이미지가 자연스럽게 보이도록 오브젝트 적합 설정 */
+        }
+
+        .post .profile .name {
+            font-weight: bold;
+            color: #333; /* 수정: 이름 텍스트의 색상 변경 */
+        }
+
+        .post .profile .date {
+            color: #777;
+            font-size: 0.9em;
+            margin-left: auto; /* 수정: 날짜를 오른쪽으로 정렬 */
+        }
+
+        .post .content {
+            margin-top: 10px;
+            word-wrap: break-word;
+            overflow: hidden;
+            max-height: 300px;
+            position: relative;
+        }
+
         .post .content:after {
             content: '';
             position: absolute;
@@ -36,9 +82,24 @@
             background: linear-gradient(to bottom, transparent, white);
             display: block;
         }
-        .post .stats { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9em; color: #555; }
-        .post .stats .left { flex: 1; text-align: left; }
-        .post .stats .right { flex: 1; text-align: right; }
+
+        .post .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .post .stats .left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .post .stats .right {
+            flex: 1;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -50,8 +111,8 @@
         <div class="col-lg-4">
             <div id="nav-bar">
                 <input id="nav-toggle" type="checkbox"/>
-                <div id="nav-header"><a id="nav-title" href="https://codepen.io" target="_blank"><i class="fab fa-codepen"></i>카테고리</a>
-                    <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
+                <div id="nav-header"><a id="nav-title" href="#" target="_blank" style="padding-left: 10px">카테고리</a>
+                    <label for="nav-toggle"><span id="nav-toggle-burger" style="padding-right: 20px"></span></label>
                     <hr/>
                 </div>
                 <ul id="nav-content" class="list-group"></ul>
@@ -112,44 +173,53 @@
         var url = "/profile/@" + nickname;
         window.location.href = url;
     }
+
     $(document).ready(function() {
         $.ajax({
             url: '/categories',
             type: 'GET',
             success: function (categories) {
                 categories.forEach(function (category) {
-                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '">' +
-                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '">' +
-                        '<span>' + category.name + '</span>' +
-                        '<i class="fas fa-chevron-down"></i></a>' +
-                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '"></ul>' +
+                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '" style="border: none; color: #575757;">' +
+                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '" style="border: none; width: 100%;">' +
+                        '<span style="margin-right: auto; margin-left: 10px;">' + category.name + '</span>' +
+                        '<i class="fas fa-chevron-down"></i>' +
+                        '</a>' +
+                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '" style="border: none;"></ul>' +
                         '</li>');
                     $('#nav-content').append(categoryElement);
                 });
-                $('#nav-content').append($('<div id="nav-content-highlight"></div>'));
+                $('#nav-content').append($('<div id="nav-content-highlight" style="border: none;"></div>'));
             }
         });
     });
+
     $(document).on('click', '.category a', function() {
         var categoryId = $(this).closest('.category').attr('id').split('-')[1];
         var collapseElement = $('#collapse-' + categoryId);
         var categoryElement = $(this).closest('.category');
 
         if (collapseElement.hasClass('show')) {
-            collapseElement.collapse('hide');
+            collapseElement.slideUp('fast', function() {
+                collapseElement.empty();
+            });
         } else {
-            $('.collapse').collapse('hide');
-            collapseElement.collapse('show');
+            $('.collapse').slideUp('fast');
+            collapseElement.slideDown('fast');
 
             $.ajax({
                 url: '/topics',
-                data: {category_id: categoryId},
+                data: { category_id: categoryId },
                 type: 'GET',
                 success: function(topics) {
                     collapseElement.empty();
                     topics.forEach(function(topic) {
-                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '">' +
-                            topic.name + '</li>');
+                        var dot = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">' +
+                            '<path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>' +
+                            '</svg>';
+                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '" style="border: none; color: #575757; display: flex; align-items: center;">' +
+                            '<span style="margin-right: auto;">' + topic.name + '&nbsp;' + dot + '</span>' +
+                            '</li>');
                         collapseElement.append(topicElement);
                     });
                 }
