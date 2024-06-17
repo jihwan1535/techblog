@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="/css/leftsidebar.css">
     <link rel="stylesheet" href="/css/rightsidebar.css">
         <style>
+            html, body {
+                background-color: #F5F5F7; /* 배경색 설정 */
+            }
             #posts-container {
                 height: 500px; /* 필요한 높이로 설정 */
             }
@@ -25,7 +28,7 @@
         .post .profile img { border-radius: 50%; width: 50px; height: 50px; margin-right: 10px; }
         .post .profile .name { font-weight: bold; }
         .post .profile .date { color: #777; font-size: 0.9em; margin-left: 10px; }
-        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 300px; position: relative; }
+        .post .content { margin-top: 10px; word-wrap: break-word; overflow: hidden; max-height: 400px; position: relative; }
         .post .content:after {
             content: '';
             position: absolute;
@@ -206,18 +209,18 @@
         const container = $('#posts-container');
         posts.forEach(post => {
             const postHtml = `
-                    <div class="post" id="\${post.post_id}">
+                    <div class="post" id="\${post.post_id}" style="background-color: #FFFFFF;">
                         <div class="profile">
                             <a id="author-profile-link" href="/profile/@\${post.member_name}">
                                 <img src="\${post.member_image}" alt="\${post.member_name}"/>
                             </a>
                             <div>
-                                <div class="name">@\${post.member_name}님의 포스트</div>
+                                <div class="name">&ensp;@\${post.member_name}님의 포스트</div>
                                 <div class="date">\${post.created_at}</div>
                             </div>
-                        </div>
-                        <h3>\${post.title}</h3>
-                        <div class="content">\${post.content}</div>
+                        </div><br>
+                        <h4 style="margin-left: 10px; margin-bottom: 20px;">\${post.title}</h4>
+                        <div class="content" style="margin-left: 10px; margin-bottom: 20px;">\${post.content}</div>
                         <div class="stats">
                             <div class="left">댓글: \${post.comment_count + post.reply_count}</div>
                             <div class="right">조회수: \${post.view_count} | 스크랩수: \${post.scrap_count}</div>
