@@ -1,7 +1,6 @@
 var isLoginModalOpen = false;
 
 $(".login-btn").click(function () {
-    console.log(isLoginModalOpen)
     if (isLoginModalOpen) return;
     isLoginModalOpen = true;
 
@@ -9,7 +8,6 @@ $(".login-btn").click(function () {
         url: "/login",
         type: 'GET',
         success: function (data) {
-            console.log("click");
             $("#loginModalContainer").html(data); // 모달 콘텐츠 삽입
             $("#loginModal").modal("show");
         },
