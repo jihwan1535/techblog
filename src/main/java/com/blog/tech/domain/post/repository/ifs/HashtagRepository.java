@@ -13,4 +13,5 @@ public interface HashtagRepository extends CRUDIfs<Hashtag> {
 
 	List<Hashtag> findAllByPostId(Long postId) throws SQLException;
 
+	List<Hashtag> findTop20DescRandom() throws SQLException;
 }

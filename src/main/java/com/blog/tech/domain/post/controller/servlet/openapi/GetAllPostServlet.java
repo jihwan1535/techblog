@@ -3,9 +3,10 @@ package com.blog.tech.domain.post.controller.servlet.openapi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
-import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.post.controller.PostController;
+import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -15,8 +16,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/topics")
-public class GetTopicsServlet extends HttpServlet {
+@WebServlet("/posts")
+public class GetAllPostServlet extends HttpServlet {
 
 	private PostController postController;
 	private ObjectMapper objectMapper;
@@ -33,10 +34,9 @@ public class GetTopicsServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final Long categoryId = Long.parseLong(req.getParameter("category_id"));
 		try {
-			final List<TopicResponse> topics = postController.getAllTopicsByCategory(categoryId);
-			final String json = objectMapper.writeValueAsString(topics);
+			final List<AllPostResponse> posts = getPostsResponse(req);
+			final String json = objectMapper.writeValueAsString(posts);
 
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
@@ -44,6 +44,22 @@ public class GetTopicsServlet extends HttpServlet {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private List<AllPostResponse> getPostsResponse(final HttpServletRequest req) throws SQLException {
+		final Long postId = Long.parseLong(req.getParameter("post_id"));
+		final Long topicId = Long.parseLong(req.getParameter("topic_id"));
+		final Long categoryId = Long.parseLong(req.getParameter("category_id"));
+
+		if (topicId > 0) {
+			return postController.getAllPostsByTopic(postId, topicId);
+		}
+
+		if (categoryId > 0) {
+			return postController.getAllPostsByCategory(postId, categoryId);
+		}
+
+		return postController.getAllPosts(postId);
 	}
 
 }

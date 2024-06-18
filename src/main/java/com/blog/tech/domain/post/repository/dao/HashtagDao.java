@@ -94,4 +94,22 @@ public class HashtagDao implements HashtagRepository {
 		return hashtags;
 	}
 
+	@Override
+	public List<Hashtag> findTop20DescRandom() throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag ORDER BY RAND() LIMIT 20");
+
+		final ResultSet rs = pstmt.executeQuery();
+		final List<Hashtag> hashtags = new ArrayList<>();
+
+		while (rs.next()) {
+			final Hashtag hashtag = new Hashtag(rs.getLong(1), rs.getString(2));
+			hashtags.add(hashtag);
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return hashtags;
+	}
+
 }
