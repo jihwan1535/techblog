@@ -148,7 +148,7 @@ public class PostDao implements PostRepository {
 	) throws SQLException {
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
-			+ "WHERE p.id < ? AND p.topic_id = ?ORDER BY p.id DESC LIMIT 10;");
+			+ "WHERE p.id < ? AND p.topic_id = ? ORDER BY p.id DESC LIMIT 10;");
 		pstmt.setLong(1, postId);
 		pstmt.setLong(2, topicId);
 

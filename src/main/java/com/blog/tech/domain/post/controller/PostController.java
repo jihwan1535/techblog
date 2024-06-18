@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
+import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
 import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.post.dto.request.PostRequest;
 import com.blog.tech.domain.post.dto.response.PostResponse;
@@ -42,4 +43,7 @@ public class PostController {
 		return postService.getAllTopicsByCategory(categoryId);
 	}
 
+	public List<HashtagInfoResult> getRandomHashtags() throws SQLException {
+		return postService.getRandomHashtags();
+	}
 }

@@ -9,6 +9,7 @@ import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
+import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
 import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
@@ -144,6 +145,14 @@ public class PostService {
 
 		return posts.stream()
 			.map(AllPostResponse::of)
+			.toList();
+	}
+
+	public List<HashtagInfoResult> getRandomHashtags() throws SQLException {
+		final List<Hashtag> hashtags = hashtagRepository.findTop20DescRandom();
+
+		return hashtags.stream()
+			.map(HashtagInfoResult::of)
 			.toList();
 	}
 }
