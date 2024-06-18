@@ -142,21 +142,21 @@
         <div class="col-lg-4">
             <div id="nav-bar-right">
                 <input id="nav-toggle-right" type="checkbox"/>
-                <div id="nav-header-right"><a id="nav-title-right" href="https://codepen.io" target="_blank">C<i class="fab fa-codepen"></i>DEPEN</a>
+                <div id="nav-header-right"><a id="nav-title-right" href="#" target="_blank">해시태그</a>
                     <label for="nav-toggle-right"><span id="nav-toggle-burger-right"></span></label>
                     <hr/>
                 </div>
                 <div id="nav-content-right">
-                    <div class="nav-button-right"><i class="fas fa-palette"></i><span>Your Work</span></div>
-                    <div class="nav-button-right"><i class="fas fa-images"></i><span>Assets</span></div>
-                    <div class="nav-button-right"><i class="fas fa-thumbtack"></i><span>Pinned Items</span></div>
+                    <div class="nav-button-right"><span>Your Work</span></div>
+                    <div class="nav-button-right"><span>Assets</span></div>
+                    <div class="nav-button-right"><span>Pinned Items</span></div>
                     <hr/>
-                    <div class="nav-button-right"><i class="fas fa-heart"></i><span>Following</span></div>
-                    <div class="nav-button-right"><i class="fas fa-chart-line"></i><span>Trending</span></div>
-                    <div class="nav-button-right"><i class="fas fa-fire"></i><span>Challenges</span></div>
-                    <div class="nav-button-right"><i class="fas fa-magic"></i><span>Spark</span></div>
+                    <div class="nav-button-right"><span>Following</span></div>
+                    <div class="nav-button-right"><span>Trending</span></div>
+                    <div class="nav-button-right"><span>Challenges</span></div>
+                    <div class="nav-button-right"><span>Spark</span></div>
                     <hr/>
-                    <div class="nav-button-right"><i class="fas fa-gem"></i><span>Codepen Pro</span></div>
+                    <div class="nav-button-right"><span>Codepen Pro</span></div>
                     <div id="nav-content-highlight-right"></div>
                 </div>
             </div>
