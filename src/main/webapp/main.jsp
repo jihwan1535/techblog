@@ -164,6 +164,10 @@
     </div>
 </div>
 
+<div id="modalContainer"></div>
+<div id="loginModalContainer"></div>
+<script src="/js/RegisterModal.js"></script>
+<script src="/js/LoginModal.js"></script>
 
 <div id="topics"></div>
 

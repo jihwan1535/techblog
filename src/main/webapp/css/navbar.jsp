@@ -37,10 +37,10 @@
     <ul class="navbar-nav ms-auto mx-3">
       <% if (Objects.isNull(session.getAttribute("member"))) { %>
       <li class="nav-item active">
-        <a class="btn btn-outline-dark me-2 nav-btn rounded-pill" href="/login">Login</a>
+        <button class="btn btn-outline-dark me-2 nav-btn rounded-pill login-btn">Login</button>
       </li>
       <li class="nav-item">
-        <a class="btn btn-outline-dark nav-btn rounded-pill" href="/register">Sign-up</a>
+        <button class="btn btn-outline-dark nav-btn rounded-pill sign-btn">Sign-up</button>
       </li>
       <% } else { %>
       <%
