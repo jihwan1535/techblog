@@ -97,48 +97,12 @@
                 customHTMLRenderer: customHTMLRenderer()
             });
 
-            function fetchCategories() {
-                $.get('/categories', function(data) {
-                    const categorySelect = $('#category');
-                    data.forEach(function(item, index) {
-                        categorySelect.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
-                        if (index === 0) {
-                            fetchTopics(item.id);
-                        }
-                    });
-                });
-            }
-
-            function fetchTopics(categoryId) {
-                $.get('/topics?category_id=' + categoryId, function(data) {
-                    const topicSelect = $('#topic');
-                    topicSelect.empty();
-                    data.forEach(function(item) {
-                        topicSelect.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
-                    });
-                });
-            }
-
-            $('#category').change(function() {
-                const categoryId = $(this).val();
-                if (categoryId) {
-                    fetchTopics(categoryId);
-                }
-            });
-
             $('#submitBtn').click(function() {
                 const title = $('#title').val();
                 const category = $('#category').val();
                 const topic = $('#topic').val();
                 const content = editor.getMarkdown();
                 const hashtags = getHashtags();
-                console.log(hashtags);
 
                 const postData = {
                     title: title,
@@ -162,8 +126,6 @@
                     }
                 });
             });
-
-            fetchCategories();
 
             $('#content').on('dragover', function(event) {
                 event.preventDefault();
@@ -205,6 +167,47 @@
                     console.error('파일 업로드 중 문제가 발생했습니다:', error);
                 });
             }
+        });
+    </script>
+    <script>
+        let categoryMap = new Map();
+
+        $(document).ready(function() {
+            $.ajax({
+                url: '/categories',
+                type: 'GET',
+                success: function (categories) {
+                    categories.forEach(function (category) {
+                        const categorySelect = $('#category');
+                        const categoryId = category.id;
+                        const categoryName = category.name;
+                        categorySelect.append($('<option>', {value: categoryId, text: categoryName}));
+
+                        let topics = [];
+                        category.topics.forEach(function(topic) {
+                            topics.push({id: topic.id, name: topic.name});
+                            categoryMap.set(categoryId, topics);
+                        });
+                    });
+                }, complete: function () {
+                    fetchTopics(1);
+                }
+            });
+        });
+
+        function fetchTopics(categoryId) {
+            const topicSelect = $('#topic');
+            topicSelect.empty();
+
+            let topics = categoryMap.get(categoryId);
+            topics.forEach(function(topic) {
+                topicSelect.append($('<option>', {value: topic.id, text: topic.name}));
+            });
+        }
+
+        $('#category').change(function() {
+            let selectedCategoryId = parseInt($(this).val());
+            fetchTopics(selectedCategoryId);
         });
     </script>
     <script src="http://localhost:8888/post/js/hashtag.js"></script>
