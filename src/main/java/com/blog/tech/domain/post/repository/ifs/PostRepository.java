@@ -11,5 +11,6 @@ public interface PostRepository extends CRUDIfs<Post> {
 
 	List<Post> findTop10ByLessThanIdDescId(final Long id) throws SQLException;
 	List<Post> findTop10ByLessThanIdAndTopicIdDescId(Long postId, Long topicId) throws SQLException;
+	List<Post> findTop10ByLessThanIdAndCategoryIdDescId(Long postId, Long categoryId) throws SQLException;
 
 }

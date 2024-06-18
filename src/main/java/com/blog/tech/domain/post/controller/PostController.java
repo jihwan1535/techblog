@@ -39,11 +39,12 @@ public class PostController {
 		return postService.getAllCategories();
 	}
 
-	public List<TopicResponse> getAllTopicsByCategory(final Long categoryId) throws SQLException {
-		return postService.getAllTopicsByCategory(categoryId);
-	}
-
 	public List<HashtagInfoResult> getRandomHashtags() throws SQLException {
 		return postService.getRandomHashtags();
 	}
+
+	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) throws SQLException {
+		return postService.getAllPostsByCategory(postId, categoryId);
+	}
+
 }

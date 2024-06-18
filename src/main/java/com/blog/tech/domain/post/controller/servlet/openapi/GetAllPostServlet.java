@@ -48,13 +48,18 @@ public class GetAllPostServlet extends HttpServlet {
 
 	private List<AllPostResponse> getPostsResponse(final HttpServletRequest req) throws SQLException {
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
-		final String topicId = req.getParameter("topic_id");
-		if (Objects.isNull(topicId)) {
-			return postController.getAllPosts(postId);
+		final Long topicId = Long.parseLong(req.getParameter("topic_id"));
+		final Long categoryId = Long.parseLong(req.getParameter("category_id"));
+
+		if (topicId > 0) {
+			return postController.getAllPostsByTopic(postId, topicId);
 		}
 
-		final Long parseTopicId = Long.parseLong(req.getParameter("topic_id"));
-		return postController.getAllPostsByTopic(postId, parseTopicId);
+		if (categoryId > 0) {
+			return postController.getAllPostsByCategory(postId, categoryId);
+		}
+
+		return postController.getAllPosts(postId);
 	}
 
 }

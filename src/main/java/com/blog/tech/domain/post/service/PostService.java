@@ -10,7 +10,6 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
-import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.dto.request.PostRequest;
@@ -126,18 +125,24 @@ public class PostService {
 
 	public List<CategoryResponse> getAllCategories() throws SQLException {
 		final List<Category> categories = categoryRepository.findAll();
+		getAllTopicsByCategory(categories);
 
 		return categories.stream()
 			.map(CategoryResponse::of)
 			.toList();
 	}
 
-	public List<TopicResponse> getAllTopicsByCategory(final Long categoryId) throws SQLException {
-		final List<Topic> topics = topicRepository.findAllByCategoryId(categoryId);
-
-		return topics.stream()
-			.map(TopicResponse::of)
-			.toList();
+	private void getAllTopicsByCategory(final List<Category> categories) throws SQLException {
+		categories.stream().forEach(
+			category -> {
+				try {
+					final List<Topic> topics = topicRepository.findAllByCategoryId(category.getId());
+					category.setTopics(topics);
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		);
 	}
 
 	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) throws SQLException {
@@ -154,5 +159,14 @@ public class PostService {
 		return hashtags.stream()
 			.map(HashtagInfoResult::of)
 			.toList();
+	}
+
+	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) throws SQLException {
+		final List<Post> posts = postRepository.findTop10ByLessThanIdAndCategoryIdDescId(postId, categoryId);
+
+		return posts.stream()
+			.map(AllPostResponse::of)
+			.toList();
+
 	}
 }

@@ -165,6 +165,30 @@ public class PostDao implements PostRepository {
 		return posts;
 	}
 
+	@Override
+	public List<Post> findTop10ByLessThanIdAndCategoryIdDescId(
+		final Long postId,
+		final Long categoryId
+	) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
+			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
+			+ "WHERE p.id < ? AND p.category_id = ? ORDER BY p.id DESC LIMIT 10;");
+		pstmt.setLong(1, postId);
+		pstmt.setLong(2, categoryId);
+
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Post> posts = new ArrayList<>();
+		while (rs.next()) {
+			posts.add(getJoinPost(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return posts;
+	}
+
 	private Post getJoinPost(final ResultSet rs) throws SQLException {
 		final Post post = Post.from(rs, 0);
 		final MemberInfo memberInfo = MemberInfo.from(rs, 15);

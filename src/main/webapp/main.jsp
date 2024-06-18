@@ -11,96 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="/css/leftsidebar.css">
-    <link rel="stylesheet" href="/css/rightsidebar.css">
-    <style>
-        html, body {
-            background-color: #F5F5F7; /* 배경색 설정 */
-        }
-        #posts-container {
-            height: 500px;
-        }
-    </style>
-    <style>
-        .post {
-            background-color: #FFFFFF;
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            position: relative; /* 추가: 포스트 내의 절대 위치 요소들과 충돌을 방지하기 위해 상대 위치 설정 */
-            overflow: hidden; /* 추가: 포스트 내의 내용이 넘치는 경우를 방지하기 위해 추가 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-        .post:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .post .profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .post .profile img {
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            object-fit: cover; /* 추가: 이미지가 자연스럽게 보이도록 오브젝트 적합 설정 */
-        }
-
-        .post .profile .name {
-            font-weight: bold;
-            color: #333; /* 수정: 이름 텍스트의 색상 변경 */
-        }
-
-        .post .profile .date {
-            color: #777;
-            font-size: 0.9em;
-            margin-left: auto; /* 수정: 날짜를 오른쪽으로 정렬 */
-        }
-
-        .post .content {
-            margin-top: 10px;
-            word-wrap: break-word;
-            overflow: hidden;
-            max-height: 300px;
-            position: relative;
-        }
-
-        .post .content:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to bottom, transparent, white);
-            display: block;
-        }
-
-        .post .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #555;
-        }
-
-        .post .stats .left {
-            flex: 1;
-            text-align: left;
-        }
-
-        .post .stats .right {
-            flex: 1;
-            text-align: right;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/mainLoad.css">
 </head>
 <body>
 
@@ -110,11 +21,6 @@
     <div class="row">
         <div class="col-lg-4">
             <div id="nav-bar">
-                <input id="nav-toggle" type="checkbox"/>
-                <div id="nav-header"><a id="nav-title" href="#" target="_blank" style="padding-left: 10px">카테고리</a>
-                    <label for="nav-toggle"><span id="nav-toggle-burger" style="padding-right: 20px"></span></label>
-                    <hr/>
-                </div>
                 <ul id="nav-content" class="list-group"></ul>
             </div>
         </div>
@@ -147,17 +53,7 @@
                     <hr/>
                 </div>
                 <div id="nav-content-right">
-                    <div class="nav-button-right"><span>Your Work</span></div>
-                    <div class="nav-button-right"><span>Assets</span></div>
-                    <div class="nav-button-right"><span>Pinned Items</span></div>
-                    <hr/>
-                    <div class="nav-button-right"><span>Following</span></div>
-                    <div class="nav-button-right"><span>Trending</span></div>
-                    <div class="nav-button-right"><span>Challenges</span></div>
-                    <div class="nav-button-right"><span>Spark</span></div>
-                    <hr/>
-                    <div class="nav-button-right"><span>Codepen Pro</span></div>
-                    <div id="nav-content-highlight-right"></div>
+                    <div id="hashtag-container" class="mt-3"></div>
                 </div>
             </div>
         </div>
@@ -166,162 +62,11 @@
 
 <div id="modalContainer"></div>
 <div id="loginModalContainer"></div>
+
 <script src="/js/RegisterModal.js"></script>
 <script src="/js/LoginModal.js"></script>
+<script src="/js/mainLoad.js"></script>
+<script src="/js/post.js"></script>
 
-<div id="topics"></div>
-
-<script>
-    function profile() {
-        var nickname = document.querySelector('.nickname').value;
-        var url = "/profile/@" + nickname;
-        window.location.href = url;
-    }
-
-    $(document).ready(function() {
-        $.ajax({
-            url: '/categories',
-            type: 'GET',
-            success: function (categories) {
-                categories.forEach(function (category) {
-                    var categoryElement = $('<li class="list-group-item category" id="category-' + category.id + '" style="border: none; color: #575757;">' +
-                        '<a class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapse-' + category.id + '" role="button" aria-expanded="false" aria-controls="collapse-' + category.id + '" style="border: none; width: 100%;">' +
-                        '<span style="margin-right: auto; margin-left: 10px;">' + category.name + '</span>' +
-                        '<i class="fas fa-chevron-down"></i>' +
-                        '</a>' +
-                        '<ul class="collapse list-group list-group-flush" id="collapse-' + category.id + '" style="border: none;"></ul>' +
-                        '</li>');
-                    $('#nav-content').append(categoryElement);
-                });
-                $('#nav-content').append($('<div id="nav-content-highlight" style="border: none;"></div>'));
-            }
-        });
-    });
-
-    $(document).on('click', '.category a', function() {
-        var categoryId = $(this).closest('.category').attr('id').split('-')[1];
-        var collapseElement = $('#collapse-' + categoryId);
-        var categoryElement = $(this).closest('.category');
-
-        if (collapseElement.hasClass('show')) {
-            collapseElement.slideUp('fast', function() {
-                collapseElement.empty();
-            });
-        } else {
-            $('.collapse').slideUp('fast');
-            collapseElement.slideDown('fast');
-
-            $.ajax({
-                url: '/topics',
-                data: { category_id: categoryId },
-                type: 'GET',
-                success: function(topics) {
-                    collapseElement.empty();
-                    topics.forEach(function(topic) {
-                        var dot = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">' +
-                            '<path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>' +
-                            '</svg>';
-                        var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '" style="border: none; color: #575757; display: flex; align-items: center;">' +
-                            '<span style="margin-right: auto;">' + topic.name + '&nbsp;' + dot + '</span>' +
-                            '</li>');
-                        collapseElement.append(topicElement);
-                    });
-                }
-            });
-        }
-    });
-</script>
-<script>
-    let lastPostId = Number.MAX_SAFE_INTEGER;
-    let isLoading = false;
-
-    function loadPosts() {
-        if (isLoading) return;
-        isLoading = true;
-
-        $.ajax({
-            url: '/posts',
-            data: { post_id: lastPostId },
-            success: function(data) {
-                try {
-                    const posts = data.map(item => ({
-                        post_id: item.post_info.post_id,
-                        title: item.post_info.title,
-                        content: item.post_info.content,
-                        view_count: item.post_info.view_count,
-                        scrap_count: item.post_info.scrap_count,
-                        comment_count: item.post_info.comment_count,
-                        reply_count: item.post_info.reply_count,
-                        created_at: item.post_info.created_at,
-                        member_id: item.member_info.id,
-                        member_name: item.member_info.name,
-                        member_image: item.member_info.image
-                    }));
-                    console.log(posts);
-
-                    if (posts.length > 0) {
-                        lastPostId = posts[posts.length - 1].post_id;
-                        console.log(lastPostId);
-                        renderPosts(posts);
-                    }
-                } catch (e) {
-                    console.error('JSON parsing error:', e);
-                } finally {
-                    isLoading = false;
-                }
-            },
-            error: function() {
-                alert('Failed to load posts');
-                isLoading = false;
-            }
-        });
-    }
-
-    function renderPosts(posts) {
-        const container = $('#posts-container');
-        posts.forEach(post => {
-            const postHtml = `
-                    <div class="post" id="\${post.post_id}">
-                        <div class="profile">
-                            <a id="author-profile-link" href="/profile/@\${post.member_name}">
-                                <img src="\${post.member_image}" alt="\${post.member_name}"/>
-                            </a>
-                            <div>
-                                <div class="name">@\${post.member_name}님의 포스트</div>
-                                <div class="date">\${post.created_at}</div>
-                            </div>
-                        </div>
-                        <h3>\${post.title}</h3>
-                        <div class="content">\${post.content}</div>
-                        <div class="stats">
-                            <div class="left">댓글: \${post.comment_count + post.reply_count}</div>
-                            <div class="right">조회수: \${post.view_count} | 스크랩수: \${post.scrap_count}</div>
-                        </div>
-                    </div>
-                `;
-
-            container.append(postHtml);
-        });
-
-        $('.post .content a').click(function(event) {
-            event.preventDefault();
-        });
-
-        $('.post').click(function() {
-            const postId = $(this).attr('id');
-            window.location.href = '/post/getPost.jsp?post_id=' + postId;
-        });
-    }
-
-    $(document).ready(function() {
-        loadPosts();
-
-        $(window).scroll(function() {
-            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
-                loadPosts();
-            }
-        });
-    });
-</script>
 </body>
 </html>
