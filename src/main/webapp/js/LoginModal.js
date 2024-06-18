@@ -1,7 +1,6 @@
 var isLoginModalOpen = false;
 
 $(".login-btn").click(function () {
-    console.log(isLoginModalOpen)
     if (isLoginModalOpen) return;
     isLoginModalOpen = true;
 
