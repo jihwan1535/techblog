@@ -1,4 +1,3 @@
-
 var inputValueForFocus = "";
 const maxTags = 5;
 
@@ -10,7 +9,7 @@ function makeInputTag(val) {
 }
 
 function makeTextTag(val) {
-    let tag = '<span class="txt_tag" data-tag="' + val + '">#' + val + '<i class="fas fa-times delete-tag"></i></span>';
+    let tag = '<span class="txt_tag" data-tag="' + val + '"># ' + val + '<i class="fas fa-times delete-tag"></i></span>';
     return tag;
 }
 

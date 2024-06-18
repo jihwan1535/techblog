@@ -29,6 +29,11 @@
             height: 500px; /* 필요한 높이로 설정 */
             overflow-y: auto;
         }
+        img{
+            width: 50%;
+            height: 40%;
+            object-fit: fill;
+        }
     </style>
     <style>
         .post { margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: box-shadow 0.3s; }
@@ -54,48 +59,8 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #686D76;">
-    <a class="navbar-brand ms-3" href="#">Tech Blog</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <form class="d-flex my-2 my-lg-0">
-        <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
-        <button class="btn btn-light button" type="button" onclick="profile();">Search</button>
-    </form>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mx-3">
-            <% if (Objects.isNull(session.getAttribute("member"))) { %>
-            <li class="nav-item active">
-                <a class="btn btn-outline-light login-btn">Login</a>
-            </li>
-            <li class="nav-item active">
-                <a class="btn btn-outline-light sign-btn">Sign-up</a>
-            </li>
-            <% } else { %>
-            <%
-                final MemberResponseBean member = (MemberResponseBean) session.getAttribute("member");
-                final Long id = member.id();
-                final String nickname = member.nickname();
-                final String image = member.image();
-            %>
-            <li class="nav-item">
-                <a class="btn btn-light button" href="/api/posting">포스팅</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/settings">설정</a></li>
-                    <li><a class="dropdown-item" href="/notifications">알림</a></li>
-                    <li><a class="dropdown-item" href="/api/logout">로그아웃</a></li>
-                </ul>
-            </li>
-            <% } %>
-        </ul>
-    </div>
-</nav>
+<jsp:include page="/global/navbar.jsp"/>
+<!-- <div class="container" id="navContainer"></div> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-3">
@@ -140,6 +105,7 @@
 <div id="loginModalContainer"></div>
 <script src="/js/RegisterModal.js"></script>
 <script src="/js/LoginModal.js"></script>
+<script src="./global/navbar.js"></script>
 <script>
     let lastPostId = Number.MAX_SAFE_INTEGER;
     let isLoading = false;
@@ -150,8 +116,8 @@
 
         $.ajax({
             url: '/posts',
-            data: { post_id: lastPostId },
-            success: function(data) {
+            data: {post_id: lastPostId},
+            success: function (data) {
                 try {
                     const posts = data.map(item => ({
                         post_id: item.post_info.post_id,
@@ -178,7 +144,7 @@
                     isLoading = false;
                 }
             },
-            error: function() {
+            error: function () {
                 alert('Failed to load posts');
                 isLoading = false;
             }
@@ -210,27 +176,27 @@
             container.append(postHtml);
         });
 
-        $('.post .content a').click(function(event) {
+        $('.post .content a').click(function (event) {
             event.preventDefault();
         });
 
-        $('.post').click(function() {
+        $('.post').click(function () {
             const postId = $(this).attr('id');
             window.location.href = '/post/getPost.jsp?post_id=' + postId;
         });
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadPosts();
 
-        $(window).scroll(function() {
+        $(window).scroll(function () {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
                 loadPosts();
             }
         });
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#defaultImageButton').click();
         $.ajax({
             url: '/categories',
@@ -250,7 +216,7 @@
         });
     });
 
-    $(document).on('click', '.category a', function() {
+    $(document).on('click', '.category a', function () {
         var categoryId = $(this).closest('.category').attr('id').split('-')[1];
         var collapseElement = $('#collapse-' + categoryId);
         var categoryElement = $(this).closest('.category');
@@ -265,9 +231,9 @@
                 url: '/topics',
                 data: {category_id: categoryId},
                 type: 'GET',
-                success: function(topics) {
+                success: function (topics) {
                     collapseElement.empty();
-                    topics.forEach(function(topic) {
+                    topics.forEach(function (topic) {
                         var topicElement = $('<li class="list-group-item topic" id="topic-' + topic.id + '">' +
                             topic.name + '</li>');
                         collapseElement.append(topicElement);
@@ -277,5 +243,6 @@
         }
     });
 </script>
+<script src="./global/navbar.js"></script>
 </body>
 </html>

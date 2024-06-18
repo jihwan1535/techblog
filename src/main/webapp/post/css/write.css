@@ -20,7 +20,7 @@
 }
 .inp_tag span {
     color: lightgray;
-    font-size: 14px;
+    font-size: 15px;
     font-family: sans-serif;
 }
 
@@ -30,3 +30,28 @@
 .tf_g {
     font-size: 12px;
 }
+.txt_tag{
+    font-size:12px;
+    color : white;
+    font-weight: bold;
+    background-color: black;
+    border-radius: 100rem;
+    text-align: center;
+}
+
+.delete-tag{
+    color : white;
+    font-weight: bold;
+    font-size: 12px;
+    padding-right: 0.2rem;
+    text-align: center;
+}
+
+#title{
+    border: none;
+    border-bottom: solid black 2px;
+    font-size:1.5rem;
+}
+
+
+
