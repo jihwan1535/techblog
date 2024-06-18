@@ -107,7 +107,7 @@ public class PostService {
 	}
 
 	public List<AllPostResponse> getAllPosts(final Long postId) throws SQLException {
-		final List<Post> posts = postRepository.findTop10ByIdDescId(postId);
+		final List<Post> posts = postRepository.findTop10ByLessThanIdDescId(postId);
 
 		return posts.stream()
 			.map(AllPostResponse::of)
@@ -139,4 +139,11 @@ public class PostService {
 			.toList();
 	}
 
+	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) throws SQLException {
+		final List<Post> posts = postRepository.findTop10ByLessThanIdAndTopicIdDescId(postId, topicId);
+
+		return posts.stream()
+			.map(AllPostResponse::of)
+			.toList();
+	}
 }

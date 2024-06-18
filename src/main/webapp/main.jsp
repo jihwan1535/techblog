@@ -19,8 +19,7 @@
     <link rel="stylesheet" href="/css/rightsidebar.css">
     <style>
         #posts-container {
-            height: 500px; /* 필요한 높이로 설정 */
-            overflow-y: auto;
+            height: 500px;
         }
     </style>
     <style>
@@ -213,6 +212,7 @@
 
                     if (posts.length > 0) {
                         lastPostId = posts[posts.length - 1].post_id;
+                        console.log(lastPostId);
                         renderPosts(posts);
                     }
                 } catch (e) {

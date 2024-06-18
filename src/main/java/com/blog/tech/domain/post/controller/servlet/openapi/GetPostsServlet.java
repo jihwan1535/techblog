@@ -3,6 +3,8 @@ package com.blog.tech.domain.post.controller.servlet.openapi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.blog.tech.domain.post.controller.PostController;
 import com.blog.tech.domain.post.dto.response.AllPostResponse;
@@ -33,9 +35,8 @@ public class GetPostsServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		final Long postId = Long.parseLong(req.getParameter("post_id"));
 		try {
-			final List<AllPostResponse> posts = postController.getAllPosts(postId);
+			final List<AllPostResponse> posts =getPostsResponse(req);
 			final String json = objectMapper.writeValueAsString(posts);
 
 			resp.setContentType("application/json");
@@ -44,6 +45,17 @@ public class GetPostsServlet extends HttpServlet {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private List<AllPostResponse> getPostsResponse(final HttpServletRequest req) throws SQLException {
+		final Long postId = Long.parseLong(req.getParameter("post_id"));
+		final String topicId = req.getParameter("topic_id");
+		if (Objects.isNull(topicId)) {
+			return postController.getAllPosts(postId);
+		}
+
+		final Long parseTopicId = Long.parseLong(req.getParameter("topic_id"));
+		return postController.getAllPostsByTopic(postId, parseTopicId);
 	}
 
 }

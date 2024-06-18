@@ -18,6 +18,10 @@ public class PostController {
 		this.postService = postService;
 	}
 
+	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) throws SQLException {
+		return postService.getAllPostsByTopic(postId, topicId);
+	}
+
 	public void writeOnPost(final Long memberId, final PostRequest request) throws SQLException {
 		postService.writeOnPost(memberId, request);
 	}

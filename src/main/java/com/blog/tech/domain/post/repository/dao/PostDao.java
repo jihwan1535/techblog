@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
+import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.entity.Topic;
@@ -123,7 +124,7 @@ public class PostDao implements PostRepository {
 	}
 
 	@Override
-	public List<Post> findTop10ByIdDescId(final Long id) throws SQLException {
+	public List<Post> findTop10ByLessThanIdDescId(final Long id) throws SQLException {
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
 			+ "WHERE p.id < ? ORDER BY p.id DESC LIMIT 10;");
@@ -140,6 +141,30 @@ public class PostDao implements PostRepository {
 		return posts;
 	}
 
+	@Override
+	public List<Post> findTop10ByLessThanIdAndTopicIdDescId(
+		final Long postId,
+		final Long topicId
+	) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post p JOIN member_info m "
+			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
+			+ "WHERE p.id < ? AND p.topic_id = ?ORDER BY p.id DESC LIMIT 10;");
+		pstmt.setLong(1, postId);
+		pstmt.setLong(2, topicId);
+
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Post> posts = new ArrayList<>();
+		while (rs.next()) {
+			posts.add(getJoinPost(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return posts;
+	}
+
 	private Post getJoinPost(final ResultSet rs) throws SQLException {
 		final Post post = Post.from(rs, 0);
 		final MemberInfo memberInfo = MemberInfo.from(rs, 15);
@@ -152,4 +177,5 @@ public class PostDao implements PostRepository {
 
 		return post;
 	}
+
 }
