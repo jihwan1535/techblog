@@ -15,6 +15,7 @@ import com.blog.tech.domain.post.repository.dao.CategoryDao;
 import com.blog.tech.domain.post.repository.dao.ConnectHashtagDao;
 import com.blog.tech.domain.post.repository.dao.HashtagDao;
 import com.blog.tech.domain.post.repository.dao.PostDao;
+import com.blog.tech.domain.post.repository.dao.PostViewDao;
 import com.blog.tech.domain.post.repository.dao.TopicDao;
 import com.blog.tech.domain.post.service.PostService;
 
@@ -28,6 +29,7 @@ public class ControllerLoaderListener implements ServletContextListener {
 	private CategoryDao category;
 	private TopicDao topic;
 	private PostDao post;
+	private PostViewDao postView;
 	private CommentDao comment;
 	private ReplyDao reply;
 	private HashtagDao hashtag;
@@ -53,10 +55,11 @@ public class ControllerLoaderListener implements ServletContextListener {
 		this.reply = new ReplyDao(conn);
 		this.hashtag = new HashtagDao(conn);
 		this.connectHash = new ConnectHashtagDao(conn);
+		this.postView = new PostViewDao(conn);
 	}
 
 	private void setPostController(final ServletContextEvent sce) {
-		final PostService postService = new PostService(post, memberInfo, category, topic, hashtag, connectHash);
+		final PostService postService = new PostService(post, postView, memberInfo, category, topic, hashtag, connectHash);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}

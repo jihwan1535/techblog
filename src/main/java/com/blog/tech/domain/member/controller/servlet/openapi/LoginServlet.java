@@ -4,6 +4,8 @@ import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
+import com.blog.tech.global.utility.HashEncoder;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -40,10 +42,10 @@ public class LoginServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
 		final String password = req.getParameter("password");
+		final String encodedPassword = HashEncoder.generateHash(password);
 
-		// todo resp.sendRedirect 로 보완하기
 		try {
-			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, password));
+			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, encodedPassword));
 			req.setAttribute("member", member);
 			final RequestDispatcher rd = switch (member.status()) {
 				case MemberStatus.REGISTERED -> setCookie(req, resp, member);

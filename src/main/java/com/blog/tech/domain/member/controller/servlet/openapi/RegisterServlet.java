@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.dto.request.RegisterRequestBean;
+import com.blog.tech.global.utility.HashEncoder;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
@@ -44,9 +45,9 @@ public class RegisterServlet extends HttpServlet {
 		final String password = req.getParameter("password");
 		final String nickname = req.getParameter("nickname");
 		final String aboutMe = req.getParameter("about_me");
-
+		final String encodedPassword = HashEncoder.generateHash(password);
 		try {
-			memberController.register(RegisterRequestBean.of(email, password, nickname, aboutMe));
+			memberController.register(RegisterRequestBean.of(email, encodedPassword, nickname, aboutMe));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

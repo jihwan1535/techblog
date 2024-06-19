@@ -27,7 +27,7 @@ public class PostDao implements PostRepository {
 
 	@Override
 	public Post save(final Post data) throws SQLException {
-		if (findById(data.getId()).isPresent()) {
+		if (data.getId() > 0) {
 			update(data);
 			return data;
 		}

@@ -45,7 +45,7 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAll() throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM TOPIC");
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic");
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Topic> topics = new ArrayList<>();
@@ -65,7 +65,7 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAllByCategoryId(final Long categoryId) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM TOPIC WHERE category_id = ?");
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic WHERE category_id = ?");
 		pstmt.setLong(1, categoryId);
 		final ResultSet rs = pstmt.executeQuery();
 

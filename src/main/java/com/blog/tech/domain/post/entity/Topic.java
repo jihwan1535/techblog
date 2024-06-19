@@ -18,7 +18,7 @@ public class Topic {
 	private Long categoryId;
 	private String name;
 
-	public static Topic from(final ResultSet rs, final int i) throws SQLException {
+	public static Topic from(final ResultSet rs, final Integer i) throws SQLException {
 		return Topic.builder()
 			.id(rs.getLong(i + 1))
 			.categoryId(rs.getLong(i + 2))

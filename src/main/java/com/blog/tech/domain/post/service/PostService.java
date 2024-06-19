@@ -1,6 +1,7 @@
 package com.blog.tech.domain.post.service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +19,20 @@ import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.blog.tech.domain.post.entity.ConnectHashtag;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.domain.post.entity.PostView;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
+import com.blog.tech.domain.post.repository.ifs.PostViewRepository;
 import com.blog.tech.domain.post.repository.ifs.TopicRepository;
 
 public class PostService {
 
 	private final PostRepository postRepository;
+	private final PostViewRepository postViewRepository;
 	private final MemberInfoRepository memberRepository;
 	private final CategoryRepository categoryRepository;
 	private final TopicRepository topicRepository;
@@ -37,6 +41,7 @@ public class PostService {
 
 	public PostService(
 		final PostRepository postRepository,
+		final PostViewRepository postViewRepository,
 		final MemberInfoRepository memberRepository,
 		final CategoryRepository categoryRepository,
 		final TopicRepository topicRepository,
@@ -44,6 +49,7 @@ public class PostService {
 		final ConnectHashtagRepository connectHashtagRepository
 	) {
 		this.postRepository = postRepository;
+		this.postViewRepository = postViewRepository;
 		this.memberRepository = memberRepository;
 		this.categoryRepository = categoryRepository;
 		this.topicRepository = topicRepository;
@@ -114,13 +120,37 @@ public class PostService {
 			.toList();
 	}
 
-	public PostResponse getPost(final Long postId) throws SQLException {
+	public PostResponse getPost(final Long postId, final String ip) throws SQLException {
 		final Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new RuntimeException("Not Found post : " + postId);
 		});
 		final List<Hashtag> hashtags = hashtagRepository.findAllByPostId(postId);
+		final Optional<PostView> postViewInfo = postViewRepository.findByPostIdAndIP(postId, ip);
+
+		if (postViewInfo.isPresent()) {
+			alreadyVisitor(post, postViewInfo.get());
+		} else {
+			firstGetPost(post, ip);
+		}
 
 		return PostResponse.of(post, hashtags);
+	}
+
+	private void firstGetPost(final Post post, final String ip) throws SQLException {
+		final PostView postView = PostView.to(post.getId(), ip);
+		post.viewIncreasing();
+		postViewRepository.save(postView);
+		postRepository.save(post);
+	}
+
+	private void alreadyVisitor(final Post post, final PostView postView) throws SQLException {
+		final LocalDate today = LocalDate.now();
+
+		if (postView.getViewAt().isBefore(today)) {
+			post.viewIncreasing();
+			postView.setViewAt(today);
+			postViewRepository.save(postView);
+		}
 	}
 
 	public List<CategoryResponse> getAllCategories() throws SQLException {
