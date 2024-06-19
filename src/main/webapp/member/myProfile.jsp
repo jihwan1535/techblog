@@ -13,10 +13,11 @@
           crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .form-container-left {
-            width: 49%;
+            width: 20%;
+            height: auto;
             float: left;
             padding: 20px;
             border: 1px solid #ced4da;
@@ -24,7 +25,7 @@
             background-color: #FFFFFF;
         }
         .form-container-right {
-            width: 49%;
+            width: 74%;
             float: right;
             padding: 20px;
             border: 1px solid #ced4da;
@@ -38,6 +39,22 @@
             margin-bottom: 10px;
             border: 1px solid #ced4da;
             border-radius: 5px;
+        }
+        #imageButton{
+            width: 100%;
+        }
+        .dropdown-menu{
+            background-color: #ffffff;
+            border: 1px solid black;
+        }
+        .container-right{
+            width: 70%;
+            float: right;
+            padding-right: 8%;
+        }
+        .btn-outline-dark{
+            font-size: 12px;
+            font-weight: bold;
         }
     </style>
 
@@ -61,26 +78,25 @@
 
 <div class="container mt-5">
     <form id="profileForm" action="/api/members/profile" method="post">
-        <div class="form-container-left">
+        <div class="form-container-left container-sm">
             <fieldset>
-                <div style="text-align: center;"><h2><label id="memberNickname"><%= nickname %></label>의 프로필</h2></div>
+                <div style="text-align: center;" class="mb-3"><h5>Profile Image</h5></div>
                 <div class="mb-3">
-                    <label for="nickname">닉네임</label><br>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>">
-                        <button type="button" id="checkNickname" class="btn btn-outline-secondary">닉네임 중복검사</button>
+                    <div class="imagePreview" id="imagePreview">
+                        <input type="file" id="imageUploader" style="display:none;"><br>
+                        <div style="text-align: center;" class="row justify-content-center"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;"></div>
+                        <input type="hidden" id="image" name="image" value="<%= image %>">
+                    </div><br>
+                    <div class="dropdown mb-3 row">
+                        <button class="btn btn-outline-dark dropdown-toggle container-fluid" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Edit Image </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" type="button" id="imageButton">이미지 선택</a></li>
+                            <li><a class="dropdown-item" type="button" id="defaultImageButton">기본 이미지로 변경</a></li>
+                        </ul>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="about_me">자기소개</label><br>
-                    <textarea class="form-control" id="about_me" name="about_me"><%= aboutMe %></textarea>
-                </div>
-                <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 20px;">
-                    <div style="border: 1px solid #000; padding: 20px 140px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px; background-color: #f9f9f9;">
-                        <p><%= aboutMe %> - 자기소개</p>
-                        <p><%= profile.postCount() %> 작성한 게시글 수</p>
-                        <p><%= profile.commentCount() %> 작성한 댓글 수</p>
-                        <p><%= profile.updateAt() %> 마지막 프로필 수정일</p>
+                    <div class="row">
+                        <input class="btn btn-outline-dark" type="submit" value="프로필 수정하기">
                     </div>
                 </div>
             </fieldset>
@@ -88,27 +104,65 @@
 
         <div class="form-container-right">
             <fieldset>
-                <div style="text-align: center;"><h2>프로필 사진</h2></div>
+                <div style="text-align: center;"><h2><label id="memberNickname"><%= nickname %></label>의 프로필</h2></div>
                 <div class="mb-3">
-                    <div class="imagePreview" id="imagePreview">
-                        <input type="file" id="imageUploader" style="display:none;"><br>
-                        <div style="text-align: center;"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;"></div>
-                        <input type="hidden" id="image" name="image" value="<%= image %>">
-                    </div><br>
-                    <div style="text-align: center; margin-top: 10px;"><button type="button" id="imageButton">이미지 선택</button></div>
-                    <div style="text-align: center; margin-top: 5px;"><button type="button" id="defaultImageButton">기본 이미지로 변경</button></div>
+                    <div class="row">
+                        <div class="col-6"><label for="nickname">닉네임</label><br></div>
+                        <div class="col-6"><label for="about_me">자기소개</label><br></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3"><input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>"></div>
+                        <div class="col-3"><button type="button" id="checkNickname" class="btn btn-outline-secondary">닉네임 중복검사</button></div>
+                        <div class="col-6"><textarea class="form-control" id="about_me" name="about_me"><%= aboutMe %></textarea></div>
+                    </div>
                 </div>
             </fieldset>
-        </div>
-        <div style="text-align: right;">
-            <input type="submit" value="프로필 수정하기" class="btn btn-primary">
-        </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="/main">메인으로 돌아가기</a>
         </div>
     </form>
 </div>
 
+<div class="container-right">
+    <div class="row row-cols-md-2 mb-3">
+        <div class="col">
+            <div class="card w-100" style="width: 10rem;">
+                <div class="card-header"><h5 class="card-title">자기소개</h5></div>
+                <div class="card-body">
+                    <p class="card-text"><%= aboutMe %></p>
+                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card w-100" style="width: 10rem;">
+                <div class="card-header"><h5 class="card-title">작성 게시글 수</h5></div>
+                <div class="card-body">
+                    <p class="card-text"><%= profile.postCount() %></p>
+                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-md-2 mb-3">
+        <div class="col">
+            <div class="card w-100" style="width: 10rem;">
+                <div class="card-header"><h5 class="card-title">작성한 댓글 수</h5></div>
+                <div class="card-body">
+                    <p class="card-text"><%= profile.commentCount() %></p>
+                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card w-100" style="width: 10rem;">
+                <div class="card-header"><h5 class="card-title">마지막 프로필 수정일</h5></div>
+                <div class="card-body">
+                    <p class="card-text"><%= profile.updateAt() %></p>
+                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var isNicknameAvailable = true;
     var nickName = $("#memberNickname").val();
