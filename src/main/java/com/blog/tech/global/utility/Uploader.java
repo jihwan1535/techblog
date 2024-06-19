@@ -22,10 +22,10 @@ public class Uploader {
 	public static final String POST_URL = "/upload/images/posts/";
 	public static final String POST_FILE_URL = "/upload/files/posts/";
 	private static final String URL = "http://localhost:8888";
-	public static final String DEFAULT_IMAGE = "http://localhost:8888/" + PROFILE_URL + "profile.png";
+	public static final String DEFAULT_IMAGE = URL + PROFILE_URL + "profile.png";
 
 	public static String profileImageUpload(final Part image, final String nickname) {
-		final String hashPath = generateHash(nickname);
+		final String hashPath = HashEncoder.generateHash(nickname);
 		final String imageSavePath = SYSTEM_PATH + PROFILE_IMAGE_PATH + hashPath + SLASH;
 		makeDirectory(imageSavePath);
 
@@ -37,7 +37,7 @@ public class Uploader {
 	}
 
 	public static String postImageUpload(final Part image, final String nickname) {
-		final String hashPath = generateHash(nickname);
+		final String hashPath = HashEncoder.generateHash(nickname);
 		final String imageSavePath = SYSTEM_PATH + POST_IMAGE_PATH + hashPath + SLASH;
 		makeDirectory(imageSavePath);
 
@@ -49,7 +49,7 @@ public class Uploader {
 	}
 
 	public static String postFileUpload(final Part file, final String nickname) {
-		final String hashPath = generateHash(nickname);
+		final String hashPath = HashEncoder.generateHash(nickname);
 		final String fileSavePath = SYSTEM_PATH + POST_FILE_PATH + hashPath + SLASH;
 		makeDirectory(fileSavePath);
 
@@ -58,30 +58,6 @@ public class Uploader {
 		transferFile(file, uploadPath);
 
 		return URL + POST_FILE_URL + hashPath + "/" + saveImageName;
-	}
-
-	private static String generateHash(String nickname) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] encodedhash = digest.digest(nickname.getBytes(StandardCharsets.UTF_8));
-			return bytesToHex(encodedhash);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	// 바이트 배열을 16진수 문자열로 변환
-	private static String bytesToHex(byte[] hash) {
-		StringBuilder hexString = new StringBuilder(2 * hash.length);
-		for (int i = 0; i < hash.length; i++) {
-			String hex = Integer.toHexString(0xff & hash[i]);
-			if (hex.length() == 1) {
-				hexString.append('0');
-			}
-			hexString.append(hex);
-		}
-		return hexString.toString();
 	}
 
 	private static void makeDirectory(final String fileSavePath) {

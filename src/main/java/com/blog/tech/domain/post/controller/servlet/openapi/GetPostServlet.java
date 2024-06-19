@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.blog.tech.domain.post.controller.PostController;
 import com.blog.tech.domain.post.dto.response.PostResponse;
+import com.blog.tech.global.utility.HashEncoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -33,8 +34,11 @@ public class GetPostServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
+		final String ip = getIpAddress(req);
+		final String encodingIp = HashEncoder.generateHash(ip);
+
 		try {
-			final PostResponse post = postController.getPost(postId);
+			final PostResponse post = postController.getPost(postId, encodingIp);
 			final String json = objectMapper.writeValueAsString(post);
 
 			resp.setContentType("application/json");
@@ -43,6 +47,16 @@ public class GetPostServlet extends HttpServlet {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String getIpAddress(final HttpServletRequest req) {
+		final String ipAddress = req.getHeader("X-FORWARDED-FOR");
+
+		if (ipAddress != null) {
+			return ipAddress.split(",")[0];
+		}
+
+		return req.getRemoteAddr();
 	}
 
 }

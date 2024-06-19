@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
-import com.blog.tech.domain.post.dto.response.TopicResponse;
 import com.blog.tech.domain.post.dto.request.PostRequest;
 import com.blog.tech.domain.post.dto.response.PostResponse;
 import com.blog.tech.domain.post.dto.response.AllPostResponse;
@@ -31,8 +30,8 @@ public class PostController {
 		return postService.getAllPosts(postId);
 	}
 
-	public PostResponse getPost(final Long postId) throws SQLException {
-		return postService.getPost(postId);
+	public PostResponse getPost(final Long postId, final String ip) throws SQLException {
+		return postService.getPost(postId, ip);
 	}
 
 	public List<CategoryResponse> getAllCategories() throws SQLException {

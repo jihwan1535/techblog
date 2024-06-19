@@ -86,5 +86,8 @@ public class Post extends BaseEntity {
 	public void replyDecreasing() {
 		this.replyCount--;
 	}
+	public void viewIncreasing() {
+		this.viewCount++;
+	}
 
 }
