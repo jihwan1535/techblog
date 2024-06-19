@@ -19,15 +19,33 @@
         .no-click {
             pointer-events: none;
         }
-        img{
-            width: 50%;
-            height: auto;
+
+        .form-group.img{
+            resize: both;
+            overflow: auto;
         }
+
+        .resize-able {
+            display: inline-block;
+            position: relative;
+        }
+
+        .resize-handle {
+            width: 10px;
+            height: 10px;
+            background-color: gray;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: se-resize;
+            z-index: 10; /* 핸들이 이미지 위에 위치하도록 합니다 */
+        }
+
     </style>
 </head>
 <body>
 
-<jsp:include page="/global/navbar.jsp"/>
+<jsp:include page="../global/navbar.jsp"/>
 <div class="container mt-3"></div>
 
 <div class="container">
@@ -59,6 +77,41 @@
 </html>
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script>
+    function addResizeHandle(img) {
+        if (img.parentElement.classList.contains('resize-able')) return;
+
+        /* 1. resize 할 수 있는 div 태그를 생성 */
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('resize-able');
+        wrapper.style.display = 'inline-block';
+        wrapper.style.position = 'relative';
+
+        /* 2. img 부모 요소에 wrapper 삽입하여 img wrapper 안에 추가 */
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+
+        /* 3. resize 핸들 생성 후 추가 */
+        const handle = document.createElement('div');
+        handle.classList.add('resize-handle');
+        wrapper.appendChild(handle);
+
+        /* 4. 리사이즈 핸들에 이벤트 리스너 추가 */
+        handle.addEventListener('mousedown', startResize);
+
+
+        function startResize(event) {
+            event.preventDefault();
+            window.addEventListener('mousemove', resizeImage);
+            window.addEventListener('mouseup', stopResize);
+
+            function resizeImage(e) {
+                const rect = wrapper.getBoundingClientRect();
+                img.style.width = (e.clientX - rect.left) + 'px';
+                img.style.height = (e.clientY - rect.top) + 'px';
+            }
+        }
+    }
+
     function getHashtags() {
         let tags = [];
         $('.editor_tag .txt_tag').each(function() {
@@ -92,27 +145,7 @@
                 }
             };
         }
-/*
-        function resizeImg(file, maxWidth, maxHeight, callback){
-            const reader = new FileReader();
-            reader.onload = function (e){
-                const img = new Image();
-                img.onload = function (){
-                    let width = img.width;
-                    let height = img.height;
 
-                    if (width > maxWidth || height > maxHeight){
-                        const ratio = Math.min(maxWidth / width, maxHeight / height);
-                        width = width * ratio;
-                        height = height * ratio;
-                    }
-
-                    var canvas = $('<canvas>')[0];
-
-                }
-            }
-        }
-*/
         const editor = new Editor({
             el: document.querySelector('#content'),
             height: '500px',
@@ -122,21 +155,26 @@
             hideModeSwitch: true,
             hooks: {
                 addImageBlobHook: function(blob, callback) {
-                    const formData = new FormData();
-                    formData.append('file', blob);
-                    fetch('/api/uploader/images/posts', {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.text();
-                    }).then(data => {
-                        callback(data.url);
-                    }).catch(error => {
-                        console.error('There has been a problem with your fetch operation:', error);
-                    });
+                        const formData = new FormData();
+                        formData.append('file', blob);
+                        fetch('/api/uploader/images/posts', {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        }).then(url => {
+                            callback(url, 'alt text');
+                            // 삽입 후 적용
+                            const imgElements = document.querySelectorAll(url);
+                            if (imgElements.length > 0){
+                                addResizeHandle(imgElements[0]);
+                            }
+                        }).catch(error => {
+                            console.error('There has been a problem with your fetch operation:', error);
+                        });
                 }
             },
             customHTMLRenderer: customHTMLRenderer()
@@ -238,11 +276,11 @@
                 }
                 return response.text();
             }).then(url => {
-                let html = '<div class="upload-file container">' +
+                let html = '<div class="upload-file container-fluid">' +
                     '<a href="' + url + '" class="list-group-item list-group-item-action flex-column align-items-start border rounded mt-3 no-click" style="text-decoration: none; color: inherit; width: 40%">' +
-                    '<div class="d-flex w-100 justify-content-start">' +
-                    '<i class="fas fa-file fa-3x mr-3" style="margin-top: 13px;"></i>' +
-                    '<div> <h5 class="mb-1">' + file.name + '</h5>' +
+                    '<div class="d-flex justify-content-start">' +
+                    '<i class="fas fa-file fa-3x mr-3" style="margin-top: 0.5rem;"></i>' +
+                    '<div> <a class="mb-1">' + file.name + '</a>' +
                     '<small>' + (file.size / 1024).toFixed(2) + 'KB </small> </div> </div> </a> </div>';
                 const currentHtml = editor.getHTML();
                 editor.setHTML(currentHtml + html);
@@ -252,5 +290,4 @@
         }
     });
 </script>
-<script src="js/editorToolbar.js"></script>
 <script src="http://localhost:8888/post/js/hashtag.js"></script>

@@ -100,11 +100,39 @@
             flex: 1;
             text-align: right;
         }
+
+        .post img{
+            width: 50%;
+            height: 30%;
+            object-fit: fill;
+        }
+
+        .upload-file {
+            display: none;
+        }
+
+        .ProseMirror-separator{
+            resize: both;
+            overflow: auto;
+        }
+
+        .posting-img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            cursor: pointer; /* 커서를 마우스 커서로 변경하여 사용자에게 크기 조정이 가능하다는 힌트 제공 */
+        }
+
+        .resizable {
+            resize: both;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
 
-<jsp:include page="/css/navbar.jsp" />
+<jsp:include page="/global/navbar.jsp"/>
 
 <div class="container-fluid">
     <div class="row">

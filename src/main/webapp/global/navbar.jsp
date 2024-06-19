@@ -9,20 +9,30 @@
             color: black;
             border-color: gray;
         }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000; /* 다른 요소들 위에 표시되도록 z-index 설정 */
+        }
+        .no-caret::after {
+            display: none
+        }
+        body {
+            padding-top: 56px; /* 네비게이션 바 높이만큼 패딩 추가 */
+        }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #ffffff; border-bottom: 1px solid #ced4da;">
-    <div class="nav justify-content-start">
-        <a class="navbar-brand ms-3" href="/main">Tech Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <form class="d-flex ms-2 my-lg-0">
-            <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
-            <button class="btn btn-outline-dark nav-btn rounded-pill" type="button" onclick="profile();">Search</button>
-        </form>
-    </div>
+    <a class="navbar-brand ms-3" href="main">Tech Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <form class="d-flex ms-2 my-lg-0">
+        <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
+        <button class="btn btn-outline-dark nav-btn rounded-pill" type="button" onclick="profile();">Search</button>
+    </form>
     <div class="collapse navbar-collapse ms-auto justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mx-3">
             <% if (Objects.isNull(session.getAttribute("member"))) { %>
