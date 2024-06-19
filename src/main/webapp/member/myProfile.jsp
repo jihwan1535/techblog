@@ -18,23 +18,26 @@
         .form-container-left {
             width: 20%;
             height: auto;
-            float: left;
             padding: 20px;
             border: 1px solid #ced4da;
             border-radius: 5px;
             background-color: #FFFFFF;
+            float: left;
         }
-        .form-container-right {
-            width: 74%;
-            float: right;
+        .form-container-center {
+            width: 30%;
+            height: 65%;
             padding: 20px;
             border: 1px solid #ced4da;
             border-radius: 5px;
             margin-bottom: 20px;
             background-color: #FFFFFF;
+            position: absolute;
+            right: 43%;
         }
         textarea {
             width: 100%;
+            height: 200%;
             padding: 20px;
             margin-bottom: 10px;
             border: 1px solid #ced4da;
@@ -48,13 +51,17 @@
             border: 1px solid black;
         }
         .container-right{
-            width: 70%;
+            width: 40%;
             float: right;
-            padding-right: 8%;
         }
         .btn-outline-dark{
             font-size: 12px;
             font-weight: bold;
+        }
+        .profileImage{
+            width: 200px;
+            height: 180px;
+            object-fit: fill;
         }
     </style>
 
@@ -75,18 +82,17 @@
     final String image = profile.member().image();
     final String aboutMe = profile.aboutMe();
 %>
-
 <div class="container mt-5">
     <form id="profileForm" action="/api/members/profile" method="post">
         <div class="form-container-left container-sm">
             <fieldset>
                 <div style="text-align: center;" class="mb-3"><h5>Profile Image</h5></div>
                 <div class="mb-3">
-                    <div class="imagePreview" id="imagePreview">
+                    <div class="imagePreview mb-3" id="imagePreview">
                         <input type="file" id="imageUploader" style="display:none;"><br>
-                        <div style="text-align: center;" class="row justify-content-center"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;"></div>
+                        <div style="text-align: center;" class="row justify-content-center"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image"></div>
                         <input type="hidden" id="image" name="image" value="<%= image %>">
-                    </div><br>
+                    </div>
                     <div class="dropdown mb-3 row">
                         <button class="btn btn-outline-dark dropdown-toggle container-fluid" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Edit Image </button>
@@ -102,71 +108,59 @@
             </fieldset>
         </div>
 
-        <div class="form-container-right">
+        <div class="form-container-center">
             <fieldset>
                 <div style="text-align: center;"><h2><label id="memberNickname"><%= nickname %></label>의 프로필</h2></div>
-                <div class="mb-3">
+                <div class="mb-4">
                     <div class="row">
-                        <div class="col-6"><label for="nickname">닉네임</label><br></div>
-                        <div class="col-6"><label for="about_me">자기소개</label><br></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3"><input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>"></div>
-                        <div class="col-3"><button type="button" id="checkNickname" class="btn btn-outline-secondary">닉네임 중복검사</button></div>
-                        <div class="col-6"><textarea class="form-control" id="about_me" name="about_me"><%= aboutMe %></textarea></div>
+                        <div class="col-12 mb-3"><label for="nickname">닉네임</label><br></div>
+                        <div class="col-12 mb-3"><input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>"></div>
+                        <div class="col-12 mb-3"><button type="button" id="checkNickname" class="container-fluid btn btn-outline-secondary">닉네임 중복검사</button></div>
+                        <div class="col-12 mb-3"><label for="about_me">자기소개</label><br></div>
+                        <div class="col-12 mb-5"><textarea class="form-control" id="about_me" name="about_me" maxlength="100"><%= aboutMe %></textarea></div>
                     </div>
                 </div>
+                <div class="float-end"><span id="text-limit">0</span><span>/100</span></div>
             </fieldset>
         </div>
     </form>
+    <div class="container-right">
+        <div class="card w-100 mb-3" style="width: 10rem;">
+            <div class="card-header"><h5 class="card-title">자기소개</h5></div>
+            <div class="card-body">
+                <p class="card-text"><%= aboutMe %></p>
+            </div>
+        </div>
+        <div class="card w-100 mb-3" style="width: 10rem;">
+            <div class="card-header"><h5 class="card-title">작성 게시글 수</h5></div>
+            <div class="card-body">
+                <p class="card-text"><%= profile.postCount() %></p>
+            </div>
+        </div>
+        <div class="card w-100 mb-3" style="width: 10rem;">
+            <div class="card-header"><h5 class="card-title">작성한 댓글 수</h5></div>
+            <div class="card-body">
+                <p class="card-text"><%= profile.commentCount() %></p>
+            </div>
+        </div>
+        <div class="card w-100" style="width: 10rem;">
+            <div class="card-header"><h5 class="card-title">마지막 프로필 수정일</h5></div>
+            <div class="card-body">
+                <p class="card-text"><%= profile.updateAt() %></p>
+            </div>
+        </div>
+    </div>
 </div>
+<!--
 
-<div class="container-right">
-    <div class="row row-cols-md-2 mb-3">
-        <div class="col">
-            <div class="card w-100" style="width: 10rem;">
-                <div class="card-header"><h5 class="card-title">자기소개</h5></div>
-                <div class="card-body">
-                    <p class="card-text"><%= aboutMe %></p>
-                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card w-100" style="width: 10rem;">
-                <div class="card-header"><h5 class="card-title">작성 게시글 수</h5></div>
-                <div class="card-body">
-                    <p class="card-text"><%= profile.postCount() %></p>
-                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row row-cols-md-2 mb-3">
-        <div class="col">
-            <div class="card w-100" style="width: 10rem;">
-                <div class="card-header"><h5 class="card-title">작성한 댓글 수</h5></div>
-                <div class="card-body">
-                    <p class="card-text"><%= profile.commentCount() %></p>
-                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card w-100" style="width: 10rem;">
-                <div class="card-header"><h5 class="card-title">마지막 프로필 수정일</h5></div>
-                <div class="card-body">
-                    <p class="card-text"><%= profile.updateAt() %></p>
-                    <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+-->
 <script>
     var isNicknameAvailable = true;
     var nickName = $("#memberNickname").val();
     const defaultImageUrl = 'http://localhost:8888/upload/images/profile/profile.png'
+    var originalChar = $("#about_me").val().length;
+
+    $("#text-limit").text(originalChar);
 
     $("#checkNickname").click(function(){
         var changeNickname = $("#nickname").val();
@@ -237,6 +231,72 @@
         $("#profileImage").attr("src", defaultImageUrl);
         $("#image").val(defaultImageUrl);
     });
+
+    $(document).on('keydown', '#about_me', function (){
+        var limitChar = $("#about_me").val().length;
+        $("#text-limit").text(limitChar);
+    });
 </script>
 </body>
 </html>
+
+<!--
+
+
+<div class="form-container-right">
+<fieldset>
+<div style="text-align: center;"><h5><label class="mb-3" id="memberNickname"><%= nickname %></label>의 프로필</h5></div>
+<div class="mb-3">
+<div class="row mb-2">
+<div class="col-6"><label for="nickname">닉네임</label><br></div>
+<div class="col-6"><label for="about_me">자기소개</label><br></div>
+</div>
+<div class="row">
+<div class="col-3"><input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>"></div>
+<div class="col-3"><button type="button" id="checkNickname" class="btn btn-outline-secondary">닉네임 중복검사</button></div>
+<div class="col-6"><textarea class="form-control" id="about_me" name="about_me"><%= aboutMe %></textarea></div>
+</div>
+</div>
+</fieldset>
+</div>
+</form>
+</div>
+
+<div class="container-right">
+<div class="row row-cols-md-2 mb-3">
+<div class="col">
+<div class="card w-100" style="width: 10rem;">
+<div class="card-header"><p class="card-title">자기소개</p></div>
+<div class="card-body">
+<p class="card-text"><%= aboutMe %></p>
+</div>
+</div>
+</div>
+<div class="col">
+<div class="card w-100" style="width: 10rem;">
+<div class="card-header"><p class="card-title">작성 게시글 수</p></div>
+<div class="card-body">
+<p class="card-text"><%= profile.postCount() %></p>
+</div>
+</div>
+</div>
+</div>
+<div class="row row-cols-md-2 mb-3">
+<div class="col">
+<div class="card w-100" style="width: 10rem;">
+<div class="card-header"><p class="card-title">작성한 댓글 수</p></div>
+<div class="card-body">
+<p class="card-text"><%= profile.commentCount() %></p>
+</div>
+</div>
+</div>
+<div class="col">
+<div class="card w-100" style="width: 10rem;">
+<div class="card-header"><p class="card-title">마지막 프로필 수정일</p></div>
+<div class="card-body">
+<p class="card-text"><%= profile.updateAt() %></p>
+</div>
+</div>
+</div>
+</div>
+-->
