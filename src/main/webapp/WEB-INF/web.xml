@@ -45,5 +45,14 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>viewPage</servlet-name>
+        <jsp-file>/post/getPost.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>viewPage</servlet-name>
+        <url-pattern>/posts/view</url-pattern>
+    </servlet-mapping>
+
 </web-app>
 

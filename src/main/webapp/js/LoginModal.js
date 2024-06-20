@@ -33,7 +33,9 @@ $(".login-btn").click(function (event) {
             type: 'POST',
             success: function (){
                 alert("로그인이 완료되었습니다.");
-                window.location.href = "/main";
+                let currentPath = window.location.pathname;
+                let currentSearch = window.location.search;
+                window.location.href = currentPath + currentSearch;
             }, error: function () {
                 $("#login_email").css("border", "2px solid red");
                 $("#login_password").css("border", "2px solid red");

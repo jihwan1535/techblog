@@ -78,7 +78,7 @@ function renderPosts(posts) {
 
     $('.post').click(function () {
         const postId = $(this).attr('id');
-        window.location.href = '/post/getPost.jsp?post_id=' + postId;
+        window.location.href = '/posts/view?post_id=' + postId;
     });
 
 }

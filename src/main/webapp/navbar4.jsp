@@ -36,13 +36,17 @@
     </button>
     <form class="d-flex my-2 my-lg-0">
         <input class="form-control me-2 nickname" type="text" placeholder="Nickname"/>
-        <button class="btn btn-outline-dark nav-btn rounded-pill" type="button" onclick="profile();">Search</button>
+        <button class="btn btn-outline-dark nav-btn rounded-pill" type="button" style="margin-left: 10px"
+                onclick="profile();">Search
+        </button>
     </form>
-    <div class="collapse navbar-collapse ms-auto" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mx-3">
+    <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mx-3">
             <% if (Objects.isNull(session.getAttribute("member"))) { %>
             <li class="nav-item active">
-                <button class="btn btn-outline-dark me-2 nav-btn rounded-pill login-btn">Login</button>
+                <button class="btn btn-outline-dark me-2 nav-btn rounded-pill login-btn" style="margin-right: 10px">
+                    Login
+                </button>
             </li>
             <li class="nav-item" style="padding-right: 190px;">
                 <button class="btn btn-outline-dark nav-btn rounded-pill sign-btn">Sign-up</button>
@@ -60,7 +64,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle no-caret" href="#" id="Notification" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false" style=" margin-top: 2px;">
+                   data-toggle="dropdown" aria-expanded="false" style=" margin-top: 2px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="gray" class="bi bi-bell-fill"
                          viewBox="0 0 16 16">
                         <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
@@ -73,7 +77,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle no-caret" href="#" id="profileDropdown" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false" style="padding-right: 190px">
+                   data-toggle="dropdown" aria-expanded="false" style="padding-right: 190px">
                     <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown"
