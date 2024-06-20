@@ -14,4 +14,6 @@ public interface PostRepository extends CRUDIfs<Post> {
 	List<Post> findTop10ByLessThanIdAndCategoryIdDescId(Long postId, Long categoryId) throws SQLException;
 
 	PostText saveText(final PostText postText) throws SQLException;
+
+	List<Post> searchPostsContainKeyword(final Long postId, final String keyword) throws SQLException;
 }

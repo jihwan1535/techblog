@@ -240,4 +240,40 @@ public class PostDao implements PostRepository {
 		return data;
 	}
 
+	@Override
+	public List<Post> searchPostsContainKeyword(final Long postId, final String keyword) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("""
+			SELECT p.*, m.*, t.*, c.* FROM post p
+			JOIN member_info m ON p.member_info_id = m.id
+			JOIN topic t ON p.topic_id = t.id
+			JOIN category c ON p.category_id = c.id
+			JOIN (
+				SELECT id FROM (
+					SELECT id FROM post_text WHERE MATCH(content) AGAINST(? IN BOOLEAN MODE) AND id < ?
+					UNION
+					SELECT id FROM post WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE) AND id < ?
+				) AS combined_results
+			) pt ON p.id = pt.id
+			ORDER BY p.id DESC
+			LIMIT 10;
+		""");
+
+		pstmt.setString(1, keyword);
+		pstmt.setLong(2, postId);
+		pstmt.setString(3, keyword);
+		pstmt.setLong(4, postId);
+
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Post> posts = new ArrayList<>();
+		while (rs.next()) {
+			posts.add(getJoinPost(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return posts;
+	}
+
 }

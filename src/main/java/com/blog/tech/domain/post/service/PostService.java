@@ -207,7 +207,14 @@ public class PostService {
 		return posts.stream()
 			.map(AllPostResponse::of)
 			.toList();
-
 	}
 
+	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) throws SQLException {
+		final String keywordQuery = "*" + keyword + "*";
+		final List<Post> posts = postRepository.searchPostsContainKeyword(postId, keywordQuery);
+
+		return posts.stream()
+			.map(AllPostResponse::of)
+			.toList();
+	}
 }
