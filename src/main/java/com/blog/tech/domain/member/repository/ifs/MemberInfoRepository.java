@@ -14,5 +14,5 @@ public interface MemberInfoRepository extends CRUDIfs<MemberInfo> {
 
 	Optional<MemberInfo> findByNickname(final String nickname) throws SQLException;
 
-	List<MemberInfo> searchMember(final String nickName) throws SQLException;
+	List<MemberInfo> searchMember(final String nickName, final Long memberId) throws SQLException;
 }

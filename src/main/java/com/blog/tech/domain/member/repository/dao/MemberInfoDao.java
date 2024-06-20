@@ -155,10 +155,11 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	@Override
-	public List<MemberInfo> searchMember(final String nickName) throws SQLException {
+	public List<MemberInfo> searchMember(final String nickName, final Long memberId) throws SQLException {
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE MATCH(nickname) "
-			+ "AGAINST(? IN BOOLEAN MODE)");
+			+ "AGAINST(? IN BOOLEAN MODE) AND id < ? ORDER BY id DESC LIMIT 10");
 		pstmt.setString(1, nickName);
+		pstmt.setLong(2, memberId);
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<MemberInfo> members = new ArrayList<>();

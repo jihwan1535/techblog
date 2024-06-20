@@ -130,9 +130,9 @@ public class MemberService {
 		return AvailableResponseBean.of(available);
 	}
 
-	public List<SearchMemberResponse> searchMember(final String nickName) throws SQLException {
+	public List<SearchMemberResponse> searchMember(final String nickName, final Long memberId) throws SQLException {
 		final String keyword = nickName + "*";
-		final List<MemberInfo> memberInfos = memberInfoRepository.searchMember(keyword);
+		final List<MemberInfo> memberInfos = memberInfoRepository.searchMember(keyword, memberId);
 
 		return memberInfos.stream()
 			.map(SearchMemberResponse::of)

@@ -35,8 +35,9 @@ public class SearchMemberServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String nickname = req.getParameter("nickname");
+		final Long memberId = Long.parseLong(req.getParameter("member_id"));
 		try {
-			final List<SearchMemberResponse> members = memberController.searchMember(nickname);
+			final List<SearchMemberResponse> members = memberController.searchMember(nickname, memberId);
 			final String json = objectMapper.writeValueAsString(members);
 
 			resp.setContentType("application/json");

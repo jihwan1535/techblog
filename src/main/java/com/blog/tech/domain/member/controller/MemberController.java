@@ -45,8 +45,8 @@ public class MemberController {
 		return memberService.isValidEmail(email);
 	}
 
-	public List<SearchMemberResponse> searchMember(final String nickname) throws SQLException {
-		return memberService.searchMember(nickname);
+	public List<SearchMemberResponse> searchMember(final String nickname, final Long memberId) throws SQLException {
+		return memberService.searchMember(nickname, memberId);
 	}
 
 }
