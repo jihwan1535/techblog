@@ -1,6 +1,7 @@
 package com.blog.tech.domain.member.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.request.ProfileRequestBean;
@@ -9,6 +10,7 @@ import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.dto.response.AvailableResponseBean;
+import com.blog.tech.domain.member.dto.response.SearchMemberResponse;
 import com.blog.tech.domain.member.service.MemberService;
 
 public class MemberController {
@@ -42,4 +44,9 @@ public class MemberController {
 	public AvailableResponseBean checkEmail(final String email) throws SQLException {
 		return memberService.isValidEmail(email);
 	}
+
+	public List<SearchMemberResponse> searchMember(final String nickname) throws SQLException {
+		return memberService.searchMember(nickname);
+	}
+
 }

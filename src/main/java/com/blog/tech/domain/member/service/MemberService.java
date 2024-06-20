@@ -2,6 +2,7 @@ package com.blog.tech.domain.member.service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.blog.tech.domain.member.dto.request.LoginRequestBean;
 import com.blog.tech.domain.member.dto.request.ProfileRequestBean;
@@ -10,6 +11,7 @@ import com.blog.tech.domain.member.dto.response.MemberResponseBean;
 import com.blog.tech.domain.member.dto.response.ProfileResponseBean;
 import com.blog.tech.domain.member.dto.response.RegisterResponseBean;
 import com.blog.tech.domain.member.dto.response.AvailableResponseBean;
+import com.blog.tech.domain.member.dto.response.SearchMemberResponse;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.entity.vo.MemberRole;
@@ -127,4 +129,14 @@ public class MemberService {
 		}
 		return AvailableResponseBean.of(available);
 	}
+
+	public List<SearchMemberResponse> searchMember(final String nickName) throws SQLException {
+		final String keyword = nickName + "*";
+		final List<MemberInfo> memberInfos = memberInfoRepository.searchMember(keyword);
+
+		return memberInfos.stream()
+			.map(SearchMemberResponse::of)
+			.toList();
+	}
+
 }

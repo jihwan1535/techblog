@@ -210,11 +210,12 @@ public class PostService {
 	}
 
 	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) throws SQLException {
-		final String keywordQuery = "*" + keyword + "*";
+		final String keywordQuery = keyword + "*";
 		final List<Post> posts = postRepository.searchPostsContainKeyword(postId, keywordQuery);
 
 		return posts.stream()
 			.map(AllPostResponse::of)
 			.toList();
 	}
+
 }

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,4 +154,23 @@ public class MemberInfoDao implements MemberInfoRepository {
 		pstmt.setLong(12, data.getId());
 	}
 
+	@Override
+	public List<MemberInfo> searchMember(final String nickName) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE MATCH(nickname) "
+			+ "AGAINST(? IN BOOLEAN MODE)");
+		pstmt.setString(1, nickName);
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<MemberInfo> members = new ArrayList<>();
+		while (rs.next()) {
+			final MemberInfo memberInfo = MemberInfo.from(rs, 0);
+			members.add(memberInfo);
+		}
+
+
+		rs.close();
+		pstmt.close();
+
+		return members;
+	}
 }
