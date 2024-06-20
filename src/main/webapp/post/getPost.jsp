@@ -6,19 +6,19 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
     <style>
         /*html, body {*/
         /*    background-color: #F5F5F7; !* 배경색 설정 *!*/
         /*}*/
+
         .hashtag {
             display: inline-block;
             padding: .2em .6em .3em;
@@ -137,12 +137,18 @@
     </div>
 </div><br><br>
 
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script>
     let isLoading = false;
     let postId;
+
     function loadAll(postId) {
         if (isLoading) return;
         isLoading = true;
+
         $.ajax({
             url: '/comments',
             data: {post_id: postId},
@@ -178,6 +184,7 @@
             }
         });
     }
+
     function renderComments(comments) {
         const container = $('#comments');
         comments.forEach(comment => {
@@ -206,23 +213,31 @@
                     </div>
                 </div>
             </div>`;
+
             container.append(commentHtml);
         });
+
         $(document).on('click', '.notificationButton', function() {
             const commentId = $(this).data('comment-id');
+
             $(this).find('.active-icon, .inactive-icon').toggle();
+
         });
+
         $('.update_btn').click(function() {
             alert('개발중인 기능입니다.');
         });
+
         $(document).on('click', '.delete_btn', function() {
             const commentId = $(this).data('comment-id');
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('post_id');
+
             const postData = {
                 post_id: postId,
                 comment_id: commentId
             };
+
             $.ajax({
                 url: '/api/comments/unregister',
                 method: 'POST',
@@ -293,12 +308,15 @@
             }
         });
 
+
         $('#submitBtn').click(function() {
             const content = $('#memo').val();
+
             const postData = {
                 post_id: postId,
                 content: content
             };
+
             $.ajax({
                 url: '/api/comments',
                 method: 'POST',
@@ -326,10 +344,12 @@
     $(document).on('click', '.content', function() {
         const clickedComment = $(this).closest('.comment');
         const replyContainer = clickedComment.find('.reply_container');
+
         // Check if the reply form is already open in the clicked comment
         if (replyContainer.length === 0) {
             // Close any other open forms
             $('.reply_container').remove();
+
             // Add the reply form to the clicked comment
             addCommentForm(clickedComment);
         } else {
@@ -337,6 +357,7 @@
             replyContainer.remove();
         }
     });
+
     function addCommentForm(commentElement) {
         const commentId = commentElement.data('comment-id');
         const replyContainerHtml = `
@@ -413,15 +434,18 @@
     </div>`;
         $(replyContainerHtml).insertAfter(commentElement);
     }
+
     $(document).on('click', '.wrt_btn', function() {
         const replyContainer = $(this).closest('.reply_container');
         const commentId = $(this).data('comment-id');
         const reply_content = $('#reply').val();
+
         const postData = {
             post_id: postId,
             comment_id: commentId,
             content: reply_content
         };
+
         $.ajax({
             url: '/api/replies',
             method: 'POST',
@@ -435,10 +459,13 @@
                 console.error('Error commenting data:', error);
             }
         });
+
         // AJAX request to submit the comment reply can be added here
+
         // Close the reply form
         replyContainer.remove();
     });
+
     $(document).on('click', '.close_btn', function() {
         $(this).closest('.reply_container').remove();
     });

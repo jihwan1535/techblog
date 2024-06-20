@@ -24,7 +24,7 @@
   </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #ffffff; border-bottom: 1px solid #ced4da; padding-left: 230px">
+<nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #ffffff; border-bottom: 1px solid #ced4da; padding-left: 190px">
   <a class="navbar-brand ms-3" href="/main">Tech Blog</a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -39,7 +39,7 @@
       <li class="nav-item active">
         <button class="btn btn-outline-dark me-2 nav-btn rounded-pill login-btn">Login</button>
       </li>
-      <li class="nav-item" style="padding-right: 230px;">
+      <li class="nav-item" style="padding-right: 190px;">
         <button class="btn btn-outline-dark nav-btn rounded-pill sign-btn">Sign-up</button>
       </li>
       <% } else { %>
@@ -64,7 +64,7 @@
         </ul>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle no-caret" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-right: 230px">
+        <a class="nav-link dropdown-toggle no-caret" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-right: 190px">
           <img src="<%=image%>" alt="Profile Image" class="rounded-circle" style="width: 30px; height: 30px;">
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown" style="margin-right: 190px">
