@@ -11,7 +11,7 @@ public record ReplyInfoResult(
 	MemberInfoResult memberInfo,
 	Long replyId,
 	String content,
-	String createAt,
+	String createdAt,
 	Boolean notModified
 ) {
 

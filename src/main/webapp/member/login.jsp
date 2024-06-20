@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" session="false" %>
-<link rel="stylesheet" href="/css/modal-form.css">
+<link rel="stylesheet" href="/css/mainLoad.css">
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

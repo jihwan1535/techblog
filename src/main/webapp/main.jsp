@@ -60,11 +60,6 @@
     </div>
 </div>
 
-<div id="modalContainer"></div>
-<div id="loginModalContainer"></div>
-
-<script src="/js/RegisterModal.js"></script>
-<script src="/js/LoginModal.js"></script>
 <script src="/js/mainLoad.js"></script>
 <script src="/js/post.js"></script>
 
