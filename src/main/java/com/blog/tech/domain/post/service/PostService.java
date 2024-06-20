@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
@@ -19,6 +21,7 @@ import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.blog.tech.domain.post.entity.ConnectHashtag;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.domain.post.entity.PostText;
 import com.blog.tech.domain.post.entity.PostView;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
@@ -63,13 +66,13 @@ public class PostService {
 		});
 		final Post post = postParseHtmlFromMarkdown(memberId, request);
 		postRepository.save(post);
+		saveParsedHtml(post.getContent());
 
 		final List<Hashtag> hashtags = Optional.ofNullable(request.hashtags())
 			.orElse(Collections.emptyList())
 			.stream()
 			.map(Hashtag::to)
 			.toList();
-
 		connectHashtagWithPost(post.getId(), hashtags);
 
 		member.postIncreasing();
@@ -80,9 +83,16 @@ public class PostService {
 		final Parser parser = Parser.builder().build();
 		final HtmlRenderer renderer = HtmlRenderer.builder().build();
 		final String htmlContent = renderer.render(parser.parse(request.content()));
-		final Post post = Post.to(memberId, request, htmlContent);
 
-		return post;
+		return Post.to(memberId, request, htmlContent);
+	}
+
+	private void saveParsedHtml(final String html) throws SQLException {
+		final Document doc = Jsoup.parse(html);
+		final String text = doc.text();
+
+		final PostText postText = PostText.to(text);
+		postRepository.saveText(postText);
 	}
 
 	private void connectHashtagWithPost(final Long postId, final List<Hashtag> request) {
@@ -199,4 +209,5 @@ public class PostService {
 			.toList();
 
 	}
+
 }

@@ -17,6 +17,7 @@ import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Post;
 
 public class CommentDao implements CommentRepository {
+
 	private final Connection conn;
 
 	public CommentDao(final Connection conn) {
