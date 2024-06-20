@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/api/post/write")
+@WebServlet("/api/posts/write")
 public class PostServlet extends HttpServlet {
 
 	private PostController postController;

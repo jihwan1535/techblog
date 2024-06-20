@@ -12,10 +12,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/mainLoad.css">
+    <link rel="stylesheet" href="/css/navbar.css?after">
 </head>
 <body>
 
-<jsp:include page="/css/navbar.jsp" />
+<jsp:include page="/navbar.jsp"></jsp:include>
 
 <div class="container-fluid">
     <div class="row">
@@ -47,11 +48,6 @@
         </div>
         <div class="col-lg-4">
             <div id="nav-bar-right">
-                <input id="nav-toggle-right" type="checkbox"/>
-                <div id="nav-header-right"><a id="nav-title-right" href="#" target="_blank">해시태그</a>
-                    <label for="nav-toggle-right"><span id="nav-toggle-burger-right"></span></label>
-                    <hr/>
-                </div>
                 <div id="nav-content-right">
                     <div id="hashtag-container" class="mt-3"></div>
                 </div>
@@ -62,6 +58,25 @@
 
 <script src="/js/mainLoad.js"></script>
 <script src="/js/post.js"></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '/auth',
+            type: 'GET',
+            success: function (response) {
+                if (response.member_id <= 0) {
+                   // alert("로그인 안됨");
+                } else {
+                    //alert("로그인 됨");
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    });
+</script>
 
 </body>
 </html>

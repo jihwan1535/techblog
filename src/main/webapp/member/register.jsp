@@ -7,7 +7,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<link rel="stylesheet" href="/css/mainLoad.css">
 <!-- join modal 1 -->
 <div class="modal fade" id="signUpModal1" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -81,7 +80,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary me-2" data-bs-target="#signUpmodal1" data-bs-toggle="modal">이전</button>
-                <button id="registerBtn" type="submit" class="btn btn-primary" value="Submit" disabled>가입완료</button>
+                <button id="registerBtn" type="button" class="btn btn-primary" disabled>가입완료</button>
             </div>
         </div>
     </div>

@@ -87,7 +87,7 @@ $(document).ready(function() {
         type: 'GET',
         success: function (hashtags) {
             hashtags.forEach(function (hashtag) {
-                var hashtagElement = $('<div class="hashtag" data-id="' + hashtag.id + '">' + hashtag.tag + '</div>');
+                var hashtagElement = $('<div class="hashtag" data-id="' + hashtag.id + '">#' + hashtag.tag + '</div>');
                 $('#hashtag-container').append(hashtagElement);
             });
 

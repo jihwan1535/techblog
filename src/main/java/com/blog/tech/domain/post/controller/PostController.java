@@ -46,4 +46,8 @@ public class PostController {
 		return postService.getAllPostsByCategory(postId, categoryId);
 	}
 
+	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) throws SQLException {
+		return postService.searchPosts(postId, keyword);
+	}
+
 }

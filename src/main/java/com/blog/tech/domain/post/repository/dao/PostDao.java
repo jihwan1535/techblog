@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.domain.post.entity.PostText;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 
@@ -200,6 +200,80 @@ public class PostDao implements PostRepository {
 		post.setCategory(category);
 
 		return post;
+	}
+
+	@Override
+	public PostText saveText(final PostText data) throws SQLException {
+		if (data.getId() > 0) {
+			update(data);
+			return data;
+		}
+		return create(data);
+	}
+
+	private void update(final PostText data) throws SQLException {
+		final String sql = "UPDATE post_text SET content = ? WHERE id = ?";
+		final PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, data.getContent());
+		pstmt.setLong(2, data.getId());
+
+		final int rows = pstmt.executeUpdate();
+		pstmt.close();
+		System.out.println("Updated post_text " + rows + " row(s).");
+	}
+
+	private PostText create(final PostText data) throws SQLException {
+		final String sql = "INSERT INTO post_text (id, content) VALUES (?, ?)";
+		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		pstmt.setLong(1, data.getId());
+		pstmt.setString(2, data.getContent());
+
+		final int rows = pstmt.executeUpdate();
+		ResultSet rs = pstmt.getGeneratedKeys();
+		if (rs.next()) {
+			data.setId(rs.getLong(1));
+		}
+		rs.close();
+		pstmt.close();
+		System.out.println("Inserted post " + rows + " row(s).");
+
+		return data;
+	}
+
+	@Override
+	public List<Post> searchPostsContainKeyword(final Long postId, final String keyword) throws SQLException {
+		final PreparedStatement pstmt = conn.prepareStatement("""
+			SELECT p.*, m.*, t.*, c.* FROM post p
+			JOIN member_info m ON p.member_info_id = m.id
+			JOIN topic t ON p.topic_id = t.id
+			JOIN category c ON p.category_id = c.id
+			JOIN (
+				SELECT id FROM (
+					SELECT id FROM post_text WHERE MATCH(content) AGAINST(? IN BOOLEAN MODE) AND id < ?
+					UNION
+					SELECT id FROM post WHERE MATCH(title) AGAINST(? IN BOOLEAN MODE) AND id < ?
+				) AS combined_results
+			) pt ON p.id = pt.id
+			ORDER BY p.id DESC
+			LIMIT 10;
+		""");
+
+		pstmt.setString(1, keyword);
+		pstmt.setLong(2, postId);
+		pstmt.setString(3, keyword);
+		pstmt.setLong(4, postId);
+
+		final ResultSet rs = pstmt.executeQuery();
+
+		final List<Post> posts = new ArrayList<>();
+		while (rs.next()) {
+			posts.add(getJoinPost(rs));
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return posts;
 	}
 
 }
