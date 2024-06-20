@@ -15,32 +15,71 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .form-container-left {
-            width: 49%;
-            float: left;
-            padding: 20px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            background-color: #FFFFFF;
+        .container-sm{
+            width:60%;
+            background-color: #ffffff;
+            margin-top: 5%;
+            border-radius: 1rem;
+            border: 2px solid black;
         }
-        .form-container-right {
-            width: 49%;
-            float: right;
-            padding: 20px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-color: #FFFFFF;
+        #profileForm{
+            padding: 3% 3% 3%;
         }
         textarea {
             width: 100%;
+            height: 30%;
             padding: 20px;
             margin-bottom: 10px;
             border: 1px solid #ced4da;
             border-radius: 5px;
+            resize: none;
+        }
+        #imageButton{
+            width: 100%;
+        }
+        .dropdown-menu{
+            background-color: #ffffff;
+            border: 1px solid black;
+            width: 50%;
+        }
+        #editImg, #updateImgBtn{
+            font-size: 0.8rem;
+            font-weight: bold;
+            width: 50%;
+        }
+        .profileImage{
+            width: 200px;
+            height: 180px;
+            object-fit: fill;
+        }
+        .profileTitle{
+            text-align: center;
+            font-size: 1.3rem;
+        }
+        .imagePreview{
+            justify-content: center;
+        }
+        .profileImage{
+            border: 1px solid black;
+            border-radius: 1rem;
+        }
+        .btn-outline-dark{
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .btn-outline-secondary{
+            font-weight: bold;
+            border-radius: 0rem;
+        }
+        .post-count-label-wrap{
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 2%;
+        }
+        .post-count-label-wrap.btn-outline-dark{
+            flex: 1;
         }
     </style>
-
 </head>
 
 <body style="background-color: #F5F5F7;">
@@ -59,60 +98,63 @@
     final String aboutMe = profile.aboutMe();
 %>
 
-<div class="container mt-5">
+<div class="container-sm">
     <form id="profileForm" action="/api/members/profile" method="post">
-        <div class="form-container-left">
-            <fieldset>
-                <div style="text-align: center;"><h2><label id="memberNickname"><%= nickname %></label>의 프로필</h2></div>
-                <div class="mb-3">
-                    <label for="nickname">닉네임</label><br>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="nickname" name="nickname" value="<%= nickname %>">
-                        <button type="button" id="checkNickname" class="btn btn-outline-secondary">닉네임 중복검사</button>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="about_me">자기소개</label><br>
-                    <textarea class="form-control" id="about_me" name="about_me"><%= aboutMe %></textarea>
-                </div>
-                <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 20px;">
-                    <div style="border: 1px solid #000; padding: 20px 140px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px; background-color: #f9f9f9;">
-                        <p><%= aboutMe %> - 자기소개</p>
-                        <p><%= profile.postCount() %> 작성한 게시글 수</p>
-                        <p><%= profile.commentCount() %> 작성한 댓글 수</p>
-                        <p><%= profile.updateAt() %> 마지막 프로필 수정일</p>
-                    </div>
-                </div>
-            </fieldset>
+        <div class="row">
+            <div class="col-6 mb-3 profileTitle">Profile Image</div>
+            <div class="col-6 mb-3 profileTitle"><label id="memberNickname"><%= nickname %></label>의 프로필</div>
         </div>
-
-        <div class="form-container-right">
-            <fieldset>
-                <div style="text-align: center;"><h2>프로필 사진</h2></div>
+        <div class="row">
+            <div class="col">
                 <div class="mb-3">
-                    <div class="imagePreview" id="imagePreview">
+                    <div class="imagePreview mb-3" id="imagePreview">
                         <input type="file" id="imageUploader" style="display:none;"><br>
-                        <div style="text-align: center;"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image" style="max-width: 200px;"></div>
+                        <div style="text-align: center;" class="justify-content-center mb-3"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image"></div>
                         <input type="hidden" id="image" name="image" value="<%= image %>">
-                    </div><br>
-                    <div style="text-align: center; margin-top: 10px;"><button type="button" id="imageButton">이미지 선택</button></div>
-                    <div style="text-align: center; margin-top: 5px;"><button type="button" id="defaultImageButton">기본 이미지로 변경</button></div>
+                    </div>
+                    <div class="dropdown mb-3 row">
+                        <button class="btn btn-outline-dark dropdown-toggle container-fluid" id="editImg" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Edit Image </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" type="button" id="imageButton">이미지 선택</a></li>
+                            <li><a class="dropdown-item" type="button" id="defaultImageButton">기본 이미지로 변경</a></li>
+                        </ul>
+                    </div>
+                    <div class="row mb-4 d-flex justify-content-center">
+                        <input class="btn btn-outline-dark" id="updateImgBtn" type="submit" value="프로필 이미지 수정">
+                    </div>
                 </div>
-            </fieldset>
-        </div>
-        <div style="text-align: right;">
-            <input type="submit" value="프로필 수정하기" class="btn btn-primary">
-        </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="/main">메인으로 돌아가기</a>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label for="nickname">닉네임</label>
+                    <div class="d-flex input-group mb-3">
+                        <input type="text" class="form-control" maxlength="8" id="nickname" name="nickname" value="<%= nickname %>">
+                        <div class="input-group-append"><button type="button" id="checkNickname" class="container-fluid btn btn-outline-secondary">닉네임 중복검사</button></div>
+                    </div>
+                    <div class="form-text text-start mb-2" style="font-size: 10px;">* 닉네임은 8자까지 설정할 수 있습니다.</div>
+                    <div class="mb-3"><label for="about_me">자기소개</label><br></div>
+                    <div class="mb-1"><textarea class="form-control" id="about_me" name="about_me" maxlength="100"><%= aboutMe %></textarea></div>
+                    <div class="text-end"><span id="text-limit">0</span><span>/100</span></div>
+                </div>
+            </div>
         </div>
     </form>
+    <div class="post-count-label-wrap d-flex justify-content-end ms-5">
+        <div class="me-2"><button class="btn btn-outline-dark">작성한 게시글(<%= profile.postCount() %>)</button></div>
+        <div class="me-2"><button class="btn btn-outline-dark">작성한 댓글(<%= profile.commentCount() %>)</button></div>
+        <div><button class="btn btn-outline-dark float-end" id="profileUpdateBtn" type="submit" value="프로필 수정하기">프로필 수정</button></div>
+    </div>
 </div>
 
 <script>
     var isNicknameAvailable = true;
     var nickName = $("#memberNickname").val();
     const defaultImageUrl = 'http://localhost:8888/upload/images/profile/profile.png'
+    var originalChar = $("#about_me").val().length;
+    var nicknameChar = $("#nickname").val().length;
+
+    $("#text-limit").text(originalChar);
 
     $("#checkNickname").click(function(){
         var changeNickname = $("#nickname").val();
@@ -182,6 +224,11 @@
     $('#defaultImageButton').click(function() {
         $("#profileImage").attr("src", defaultImageUrl);
         $("#image").val(defaultImageUrl);
+    });
+
+    $(document).on('keydown', '#about_me', function (){
+        var limitChar = $("#about_me").val().length;
+        $("#text-limit").text(limitChar);
     });
 </script>
 </body>
