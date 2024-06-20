@@ -79,7 +79,7 @@
 </head>
 <body>
 
-<jsp:include page="/css/navbar.jsp" />
+<jsp:include page="/navbar.jsp" />
 
 <div class="container mt-5">
     <div class="card">

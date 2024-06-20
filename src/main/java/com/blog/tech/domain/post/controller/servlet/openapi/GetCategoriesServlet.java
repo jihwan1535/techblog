@@ -28,7 +28,6 @@ public class GetCategoriesServlet extends HttpServlet {
 		this.objectMapper = (ObjectMapper)servletContext.getAttribute("objectMapper");
 	}
 
-
 	@Override
 	protected void doGet(
 		final HttpServletRequest req,

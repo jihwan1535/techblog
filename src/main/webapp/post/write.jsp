@@ -113,7 +113,7 @@
                 };
 
                 $.ajax({
-                    url: '/api/post/write',
+                    url: '/api/posts/write',
                     method: 'POST',
                     contentType: "application/json",
                     data: JSON.stringify(postData),

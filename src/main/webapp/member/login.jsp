@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" session="false" %>
-<link rel="stylesheet" href="/css/mainLoad.css">
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel2" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -15,8 +14,7 @@
                 <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- form -->
-                <form class="needs-validation" id="loginForm" action="/login" method="post">
+                <form class="needs-validation" id="loginForm">
                     <div class="row mb-3">
                         <div class="col-sm-12">
                             <input class="form-control" name = "email" type="email" id="login_email" placeholder="1234@naver.com">

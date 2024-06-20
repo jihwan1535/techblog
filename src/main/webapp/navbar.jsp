@@ -80,5 +80,8 @@
 <div id="loginModalContainer"></div>
 <script src="/js/RegisterModal.js"></script>
 <script src="/js/LoginModal.js"></script>
+<script>
+
+</script>
 </body>
 </html>
