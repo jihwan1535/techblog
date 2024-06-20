@@ -12,7 +12,7 @@ public record CommentInfoResult(
 	Long commentId,
 	String content,
 	Boolean alarm,
-	String createAt,
+	String createdAt,
 	Boolean notModified
 ) {
 

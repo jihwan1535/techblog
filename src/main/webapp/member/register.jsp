@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<link rel="stylesheet" href="/css/modal-form.css">
+<link rel="stylesheet" href="/css/mainLoad.css">
 <!-- join modal 1 -->
 <div class="modal fade" id="signUpModal1" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
