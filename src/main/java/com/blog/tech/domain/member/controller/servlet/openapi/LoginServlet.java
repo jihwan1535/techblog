@@ -15,7 +15,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/login")
+@WebServlet("/openapi/login")
 public class LoginServlet extends HttpServlet {
 
 	private MemberController memberController;
@@ -24,15 +24,6 @@ public class LoginServlet extends HttpServlet {
 	public void init() throws ServletException {
 		final ServletContext context = this.getServletContext();
 		memberController = (MemberController) context.getAttribute("memberController");
-	}
-
-	@Override
-	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
-	) throws ServletException, IOException {
-		final RequestDispatcher rd = req.getRequestDispatcher("/member/login.jsp");
-		rd.forward(req, resp);
 	}
 
 	@Override
@@ -47,30 +38,17 @@ public class LoginServlet extends HttpServlet {
 		try {
 			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, encodedPassword));
 			req.setAttribute("member", member);
-			final RequestDispatcher rd = switch (member.status()) {
-				case MemberStatus.REGISTERED -> setCookie(req, resp, member);
-				case MemberStatus.DORMANCY -> req.getRequestDispatcher("/member/dormancyStatus.jsp");
-				case MemberStatus.UNREGISTERED -> req.getRequestDispatcher("/member/unRegisteredStatus.jsp");
+			switch (member.status()) {
+				case MemberStatus.REGISTERED -> {
+					final HttpSession session = req.getSession();
+					session.setAttribute("member", member);
+				}
+				case MemberStatus.DORMANCY -> resp.sendRedirect("/member/dormancyStatus.jsp");
+				case MemberStatus.UNREGISTERED -> resp.sendRedirect("/member/unRegisteredStatus.jsp");
 			};
-			rd.forward(req, resp);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private RequestDispatcher setCookie(
-		final HttpServletRequest req,
-		final HttpServletResponse resp,
-		final MemberResponseBean member
-	) {
-		final HttpSession session = req.getSession();
-		session.setAttribute("member", member);
-
-		final Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
-		sessionCookie.setMaxAge(30 * 60);
-		resp.addCookie(sessionCookie);
-
-		return req.getRequestDispatcher("/member/loginSuccess.jsp");
 	}
 
 }

@@ -9,31 +9,63 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <style>
+        .no-click {
+            pointer-events: none;
+        }
+        .category-select, .topic-select {
+            width: 100%;
+            font-size: 0.9rem; /* 카테고리 글자 크기 조정 */
+        }
+        #title {
+            border: none;
+            border-bottom: 2px solid black;
+            font-size: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            #title {
+                font-size: 2rem;
+            }
+        }
+        .category-container {
+            width: 50%;
+        }
+        .container{
+            margin-top: 50px;
+        }
+    </style>
 </head>
 <body>
+<jsp:include page="/navbar4.jsp"></jsp:include>
+
 <div class="container">
-    <h2 class="text-center mt-4">Hello, TOAST UI Editor!</h2>
-
-    <div class="form-group">
-        <label for="title">제목</label>
-        <input type="text" class="form-control" id="title" placeholder="제목을 입력해 주세요.">
+    <div class="row category-container">
+        <div class="col-md-6 form-group">
+            <select class="form-control category-select" id="category">
+                <option selected value="0">카테고리</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <select class="form-control topic-select" id="topic">
+                <option selected value="0">주제</option>
+            </select>
+        </div>
     </div>
-
     <div class="form-group">
-        <label for="category">카테고리</label>
-        <select class="form-control" id="category"> </select>
+        <input type="text" class="form-control my-lg-0" id="title" placeholder="제목을 입력하세요">
     </div>
-
-    <div class="form-group">
-        <label for="topic">토픽</label>
-        <select class="form-control" id="topic"> </select>
-    </div>
-
     <div id="content" class="form-group"></div>
-    <div class="editor_tag"></div>
-    <button id="submitBtn" class="btn btn-primary">작성</button>
+    <div class="editor_tag px-3"></div>
+    <div class="d-flex justify-content-end px-2 mb-3">
+        <button id="submitBtn" class="btn btn-outline-dark"> 업로드 </button>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
 
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
         function getHashtags() {
             let tags = [];
@@ -98,10 +130,23 @@
             });
 
             $('#submitBtn').click(function() {
-                const title = $('#title').val();
                 const category = $('#category').val();
+                if (category == 0) {
+                    alert("카테고리를 선택하세요");
+                    return;
+                }
                 const topic = $('#topic').val();
+
+                const title = $('#title').val();
+                if (title.length < 2) {
+                    alert("제목은 두글자 이상으로 작성해주세요.");
+                    return;
+                }
                 const content = editor.getMarkdown();
+                if (content.length < 5) {
+                    alert("내용은 다섯글자 이상으로 작성해주세요.");
+                    return;
+                }
                 const hashtags = getHashtags();
 
                 const postData = {
@@ -113,7 +158,7 @@
                 };
 
                 $.ajax({
-                    url: '/api/post/write',
+                    url: '/api/posts/write',
                     method: 'POST',
                     contentType: "application/json",
                     data: JSON.stringify(postData),
@@ -171,7 +216,7 @@
     </script>
     <script>
         let categoryMap = new Map();
-
+        categoryMap.set(0, [{id: 0, name: "주제"}]);
         $(document).ready(function() {
             $.ajax({
                 url: '/categories',
@@ -189,8 +234,6 @@
                             categoryMap.set(categoryId, topics);
                         });
                     });
-                }, complete: function () {
-                    fetchTopics(1);
                 }
             });
         });

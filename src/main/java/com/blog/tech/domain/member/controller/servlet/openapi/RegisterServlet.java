@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/register")
+@WebServlet("/openapi/register")
 public class RegisterServlet extends HttpServlet {
 
 	private MemberController memberController;
@@ -25,15 +25,6 @@ public class RegisterServlet extends HttpServlet {
 	public void init() throws ServletException {
 		final ServletContext context = this.getServletContext();
 		memberController = (MemberController) context.getAttribute("memberController");
-	}
-
-	@Override
-	protected void doGet(
-		final HttpServletRequest req,
-		final HttpServletResponse resp
-	) throws ServletException, IOException {
-		final RequestDispatcher rd = req.getRequestDispatcher("/member/register.jsp");
-		rd.forward(req, resp);
 	}
 
 	@Override

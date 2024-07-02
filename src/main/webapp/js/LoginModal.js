@@ -1,6 +1,6 @@
 var isLoginModalOpen = false;
 
-$(".login-btn").click(function () {
+$(".login-btn").click(function (event) {
     if (isLoginModalOpen) return;
     isLoginModalOpen = true;
 
@@ -18,4 +18,30 @@ $(".login-btn").click(function () {
             isLoginModalOpen = false; // AJAX 요청 완료 후 플래그 해제
         }
     });
+
+    $(document).on("click", "#loginBtn", function (event) {
+        event.preventDefault();
+        let email = $("#login_email").val();
+        let password = $("#login_password").val();
+
+        $.ajax({
+            url: '/openapi/login',
+            data: {
+                email : email,
+                password : password,
+            },
+            type: 'POST',
+            success: function (){
+                alert("로그인이 완료되었습니다.");
+                let currentPath = window.location.pathname;
+                let currentSearch = window.location.search;
+                window.location.href = currentPath + currentSearch;
+            }, error: function () {
+                $("#login_email").css("border", "2px solid red");
+                $("#login_password").css("border", "2px solid red");
+                alert("아이디 또는 비밀번호를 확인하세요");
+            }
+        });
+    });
+
 });

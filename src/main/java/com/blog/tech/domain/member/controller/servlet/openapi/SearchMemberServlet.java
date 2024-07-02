@@ -1,11 +1,11 @@
-package com.blog.tech.domain.post.controller.servlet.openapi;
+package com.blog.tech.domain.member.controller.servlet.openapi;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.blog.tech.domain.post.dto.response.CategoryResponse;
-import com.blog.tech.domain.post.controller.PostController;
+import com.blog.tech.domain.member.controller.MemberController;
+import com.blog.tech.domain.member.dto.response.SearchMemberResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -15,16 +15,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/categories")
-public class GetCategoriesServlet extends HttpServlet {
 
-	private PostController postController;
+@WebServlet("/search/members")
+public class SearchMemberServlet extends HttpServlet {
+
+	private MemberController memberController;
 	private ObjectMapper objectMapper;
 
 	@Override
 	public void init() throws ServletException {
 		final ServletContext servletContext = this.getServletContext();
-		this.postController = (PostController)servletContext.getAttribute("postController");
+		this.memberController = (MemberController)servletContext.getAttribute("memberController");
 		this.objectMapper = (ObjectMapper)servletContext.getAttribute("objectMapper");
 	}
 
@@ -33,9 +34,11 @@ public class GetCategoriesServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
+		final String nickname = req.getParameter("nickname");
+		final Long memberId = Long.parseLong(req.getParameter("member_id"));
 		try {
-			final List<CategoryResponse> categories = postController.getAllCategories();
-			final String json = objectMapper.writeValueAsString(categories);
+			final List<SearchMemberResponse> members = memberController.searchMember(nickname, memberId);
+			final String json = objectMapper.writeValueAsString(members);
 
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");

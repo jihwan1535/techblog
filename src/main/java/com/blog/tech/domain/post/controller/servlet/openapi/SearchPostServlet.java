@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.controller.PostController;
+import com.blog.tech.domain.post.dto.response.AllPostResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletContext;
@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/categories")
-public class GetCategoriesServlet extends HttpServlet {
+@WebServlet("/search/posts")
+public class SearchPostServlet extends HttpServlet {
 
 	private PostController postController;
 	private ObjectMapper objectMapper;
@@ -33,9 +33,11 @@ public class GetCategoriesServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
+		final String keyword = req.getParameter("keyword");
+		final Long postId = Long.parseLong(req.getParameter("post_id"));
 		try {
-			final List<CategoryResponse> categories = postController.getAllCategories();
-			final String json = objectMapper.writeValueAsString(categories);
+			final List<AllPostResponse> posts = postController.searchPosts(postId, keyword);
+			final String json = objectMapper.writeValueAsString(posts);
 
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");

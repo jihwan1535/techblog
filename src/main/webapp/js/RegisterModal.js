@@ -56,7 +56,7 @@ $(".sign-btn").click(function () {
     isSignUpModalOpen = true;
 
     $.ajax({
-        url: "/member/register.jsp",
+        url: "/register",
         success: function (data) {
             console.log("click");
             $("#modalContainer").html(data); // 모달 콘텐츠 삽입
@@ -231,7 +231,7 @@ $(document).on("click", "#registerBtn", function () {
     let aboutMe = $("#about_me").val();
 
     $.ajax({
-        url: '/register',
+        url: '/openapi/register',
         data: {
             email : email,
             password : password,
@@ -244,4 +244,5 @@ $(document).on("click", "#registerBtn", function () {
             window.location.href = "/main";
         }
     });
+
 });

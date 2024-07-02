@@ -79,6 +79,10 @@
         .post-count-label-wrap.btn-outline-dark{
             flex: 1;
         }
+        .post-count-label-wrap > button {
+             flex: 1; /* 버튼들이 동일한 너비를 가지도록 설정 */
+             margin: 0 5px; /* 버튼 사이의 간격을 조절 */
+         }
     </style>
 </head>
 
@@ -89,7 +93,7 @@
     }
 %>
 
-<jsp:include page="/css/navbar.jsp" />
+<jsp:include page="/navbar.jsp" />
 
 <%
     final ProfileResponseBean profile = (ProfileResponseBean)request.getAttribute("profile");
@@ -102,7 +106,7 @@
     <form id="profileForm" action="/api/members/profile" method="post">
         <div class="row">
             <div class="col-6 mb-3 profileTitle">Profile Image</div>
-            <div class="col-6 mb-3 profileTitle"><label id="memberNickname"><%= nickname %></label>의 프로필</div>
+            <div class="col-6 mb-3 profileTitle"><label id="memberNickname">@<%= nickname %></></div>
         </div>
         <div class="row">
             <div class="col">
@@ -136,15 +140,17 @@
                     <div class="mb-3"><label for="about_me">자기소개</label><br></div>
                     <div class="mb-1"><textarea class="form-control" id="about_me" name="about_me" maxlength="100"><%= aboutMe %></textarea></div>
                     <div class="text-end"><span id="text-limit">0</span><span>/100</span></div>
+
+                    <div class="post-count-label-wrap d-flex justify-content-between ms-3">
+                        <button class="btn btn-outline-dark">작성한 게시글(<%= profile.postCount() %>)</button>
+                        <button class="btn btn-outline-dark">작성한 댓글(<%= profile.commentCount() %>)</button>
+                        <button class="btn btn-outline-dark" id="profileUpdateBtn" type="submit">프로필 수정</button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </form>
-    <div class="post-count-label-wrap d-flex justify-content-end ms-5">
-        <div class="me-2"><button class="btn btn-outline-dark">작성한 게시글(<%= profile.postCount() %>)</button></div>
-        <div class="me-2"><button class="btn btn-outline-dark">작성한 댓글(<%= profile.commentCount() %>)</button></div>
-        <div><button class="btn btn-outline-dark float-end" id="profileUpdateBtn" type="submit" value="프로필 수정하기">프로필 수정</button></div>
-    </div>
 </div>
 
 <script>
@@ -157,6 +163,7 @@
     $("#text-limit").text(originalChar);
 
     $("#checkNickname").click(function(){
+        console.log("CHK");
         var changeNickname = $("#nickname").val();
         $.ajax({
             url: '/checkNickname',
