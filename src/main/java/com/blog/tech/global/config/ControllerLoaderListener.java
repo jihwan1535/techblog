@@ -1,6 +1,9 @@
 package com.blog.tech.global.config;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import com.blog.tech.domain.comment.controller.CommentController;
 import com.blog.tech.domain.comment.repository.dao.CommentDao;
@@ -38,11 +41,17 @@ public class ControllerLoaderListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		final Connection conn = (Connection)sce.getServletContext().getAttribute("conn");
-		setDaoConnection(conn);
-		setMemberController(sce);
-		setPostController(sce);
-		setCommentController(sce);
+		final DataSource dataSource = (DataSource)sce.getServletContext().getAttribute("dataSource");
+		final Connection conn;
+		try {
+			conn = dataSource.getConnection();
+			setDaoConnection(conn);
+			setMemberController(sce);
+			setPostController(sce);
+			setCommentController(sce);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void setDaoConnection(final Connection conn) {
