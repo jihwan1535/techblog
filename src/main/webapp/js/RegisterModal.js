@@ -224,11 +224,17 @@ $(document).on('keydown', '#about_me', function (e){
     }
 });
 
-$(document).on("click", "#registerBtn", function () {
+
+$(document).on("click", "#registerBtn", function (event) {
+    event.preventDefault();
     let email = $("#email").val();
     let password = $("#password").val();
     let nickname = $("#nickname").val();
     let aboutMe = $("#about_me").val();
+
+    if (aboutMe == null) {
+        aboutMe = "";
+    }
 
     $.ajax({
         url: '/openapi/register',
@@ -236,10 +242,11 @@ $(document).on("click", "#registerBtn", function () {
             email : email,
             password : password,
             nickname : nickname,
-            aboutMe : aboutMe
+            about_me : aboutMe
         },
         type: 'POST',
         success: function (response){
+            console.log(aboutMe);
             alert("회원가입이 완료되었습니다.")
             window.location.href = "/main";
         }

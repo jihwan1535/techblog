@@ -15,16 +15,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        .container-sm{
-            width:60%;
+        .container-sm {
+            width: 60%;
             background-color: #ffffff;
             margin-top: 5%;
             border-radius: 1rem;
             border: 2px solid black;
         }
-        #profileForm{
+
+        #profileForm {
             padding: 3% 3% 3%;
         }
+
         textarea {
             width: 100%;
             height: 30%;
@@ -34,55 +36,67 @@
             border-radius: 5px;
             resize: none;
         }
-        #imageButton{
+
+        #imageButton {
             width: 100%;
         }
-        .dropdown-menu{
+
+        .dropdown-menu {
             background-color: #ffffff;
             border: 1px solid black;
             width: 50%;
         }
-        #editImg, #updateImgBtn{
+
+        #editImg, #updateImgBtn {
             font-size: 0.8rem;
             font-weight: bold;
             width: 50%;
         }
-        .profileImage{
+
+        .profileImage {
             width: 200px;
             height: 180px;
             object-fit: fill;
         }
-        .profileTitle{
+
+        .profileTitle {
             text-align: center;
             font-size: 1.3rem;
         }
-        .imagePreview{
+
+        .imagePreview {
             justify-content: center;
         }
-        .profileImage{
+
+        .profileImage {
             border: 1px solid black;
             border-radius: 1rem;
         }
-        .btn-outline-dark{
+
+        .btn-outline-dark {
             font-weight: bold;
             font-size: 0.9rem;
         }
-        .btn-outline-secondary{
+
+        .btn-outline-secondary {
             font-weight: bold;
             border-radius: 0rem;
         }
-        .post-count-label-wrap{
+
+        .post-count-label-wrap {
             display: flex;
             align-items: stretch;
             margin-bottom: 2%;
         }
-        .post-count-label-wrap.btn-outline-dark{
+
+        .post-count-label-wrap.btn-outline-dark {
             flex: 1;
         }
+
         .post-count-label-wrap > button {
-             flex: 1; /* 버튼들이 동일한 너비를 가지도록 설정 */
-             margin: 0 5px; /* 버튼 사이의 간격을 조절 */
-         }
+            flex: 1; /* 버튼들이 동일한 너비를 가지도록 설정 */
+            margin: 0 5px; /* 버튼 사이의 간격을 조절 */
+        }
     </style>
 </head>
 
@@ -93,7 +107,7 @@
     }
 %>
 
-<jsp:include page="/navbar.jsp" />
+<jsp:include page="/navbar.jsp"/>
 
 <%
     final ProfileResponseBean profile = (ProfileResponseBean)request.getAttribute("profile");
@@ -106,19 +120,27 @@
     <form id="profileForm" action="/api/members/profile" method="post">
         <div class="row">
             <div class="col-6 mb-3 profileTitle">Profile Image</div>
-            <div class="col-6 mb-3 profileTitle"><label id="memberNickname">@<%= nickname %></></div>
+            <div class="col-6 mb-3 profileTitle"><label id="memberNickname">@<%= nickname %>
+            </>
+            </div>
         </div>
         <div class="row">
             <div class="col">
                 <div class="mb-3">
                     <div class="imagePreview mb-3" id="imagePreview">
                         <input type="file" id="imageUploader" style="display:none;"><br>
-                        <div style="text-align: center;" class="justify-content-center mb-3"><img class="profileImage" id="profileImage" src="<%= image %>" alt="Profile Image"></div>
+                        <div style="text-align: center;" class="justify-content-center mb-3"><img class="profileImage"
+                                                                                                  id="profileImage"
+                                                                                                  src="<%= image %>"
+                                                                                                  alt="Profile Image">
+                        </div>
                         <input type="hidden" id="image" name="image" value="<%= image %>">
                     </div>
                     <div class="dropdown mb-3 row">
-                        <button class="btn btn-outline-dark dropdown-toggle container-fluid" id="editImg" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Edit Image </button>
+                        <button class="btn btn-outline-dark dropdown-toggle container-fluid" id="editImg" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Edit Image
+                        </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" type="button" id="imageButton">이미지 선택</a></li>
                             <li><a class="dropdown-item" type="button" id="defaultImageButton">기본 이미지로 변경</a></li>
@@ -133,12 +155,18 @@
                 <div class="mb-3">
                     <label for="nickname">닉네임</label>
                     <div class="d-flex input-group mb-3">
-                        <input type="text" class="form-control" maxlength="8" id="nickname" name="nickname" value="<%= nickname %>">
-                        <div class="input-group-append"><button type="button" id="checkNickname" class="container-fluid btn btn-outline-secondary">닉네임 중복검사</button></div>
+                        <input type="text" class="form-control" maxlength="8" id="nickname" name="nickname"
+                               value="<%= nickname %>">
+                        <div class="input-group-append">
+                            <button type="button" id="checkNickname" class="container-fluid btn btn-outline-secondary">
+                                닉네임 중복검사
+                            </button>
+                        </div>
                     </div>
                     <div class="form-text text-start mb-2" style="font-size: 10px;">* 닉네임은 8자까지 설정할 수 있습니다.</div>
                     <div class="mb-3"><label for="about_me">자기소개</label><br></div>
-                    <div class="mb-1"><textarea class="form-control" id="about_me" name="about_me" maxlength="100"><%= aboutMe %></textarea></div>
+                    <div class="mb-1"><textarea class="form-control" id="about_me" name="about_me"
+                                                maxlength="100"><%= aboutMe %></textarea></div>
                     <div class="text-end"><span id="text-limit">0</span><span>/100</span></div>
 
                     <div class="post-count-label-wrap d-flex justify-content-between ms-3">
@@ -162,15 +190,15 @@
 
     $("#text-limit").text(originalChar);
 
-    $("#checkNickname").click(function(){
+    $("#checkNickname").click(function () {
         console.log("CHK");
         var changeNickname = $("#nickname").val();
         $.ajax({
             url: '/checkNickname',
             data: {nickname: changeNickname},
             type: 'GET',
-            success: function(response){
-                if(response == 'AVAILABLE'){
+            success: function (response) {
+                if (response == 'AVAILABLE') {
                     alert("사용 가능한 닉네임입니다.");
                     isNicknameAvailable = true;
                 } else {
@@ -178,13 +206,13 @@
                     isNicknameAvailable = false;
                 }
             },
-            error: function(error){
+            error: function (error) {
                 console.log(error);
             }
         });
     });
 
-    $("#checkNickname").change(function(){
+    $("#checkNickname").change(function () {
         var changeNickname = $("#nickname").val();
         if (nickName != changeNickname) {
             isNicknameAvailable = false;
@@ -193,19 +221,19 @@
         }
     });
 
-    $("#profileForm").submit(function(e){
+    $("#profileForm").submit(function (e) {
 
-        if(!isNicknameAvailable){
+        if (!isNicknameAvailable) {
             e.preventDefault();
             alert("닉네임 중복 검사를 통과해야 합니다.");
         }
     });
 
-    $('#imageButton').click(function() {
+    $('#imageButton').click(function () {
         $('#imageUploader').click();
     });
 
-    $("#imageUploader").change(function(){
+    $("#imageUploader").change(function () {
         var file = this.files[0];
         if (file) {
             var formData = new FormData();
@@ -217,23 +245,23 @@
                 type: 'POST',
                 contentType: false,
                 processData: false,
-                success: function(response){
+                success: function (response) {
                     $("#profileImage").attr("src", response);
                     $("#image").val(response);
                 },
-                error: function(error){
+                error: function (error) {
                     console.error('이미지 업로드 실패');
                 }
             });
         }
     });
 
-    $('#defaultImageButton').click(function() {
+    $('#defaultImageButton').click(function () {
         $("#profileImage").attr("src", defaultImageUrl);
         $("#image").val(defaultImageUrl);
     });
 
-    $(document).on('keydown', '#about_me', function (){
+    $(document).on('keydown', '#about_me', function () {
         var limitChar = $("#about_me").val().length;
         $("#text-limit").text(limitChar);
     });
