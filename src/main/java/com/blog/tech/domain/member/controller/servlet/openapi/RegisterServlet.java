@@ -36,6 +36,7 @@ public class RegisterServlet extends HttpServlet {
 		final String password = req.getParameter("password");
 		final String nickname = req.getParameter("nickname");
 		final String aboutMe = req.getParameter("about_me");
+		System.out.println(aboutMe);
 		final String encodedPassword = HashEncoder.generateHash(password);
 		try {
 			memberController.register(RegisterRequestBean.of(email, encodedPassword, nickname, aboutMe));

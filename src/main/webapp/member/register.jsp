@@ -59,7 +59,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="needs-validation" id="registerForm2" action="register.jsp" method="post">
+                <form class="needs-validation" id="registerForm2">
                     <div class="mb-3 row">
                         <label for="nickname" class="form-label">Nickname</label>
                         <div class="col-sm-8">

@@ -27,7 +27,7 @@ function myComment(commentInfo, edit) {
                                 </div>
                                 <div class="d-flex justify-content-start ml-5">
                                     <small class="text-muted">${commentInfo.created_at}</small>
-                                    <a href="#" class="btn btn-sm">답글</a>
+                                    <a href="#" class="btn btn-sm">답글 쓰기</a>
                                 </div>
                                 <hr>
                             </div>`;
@@ -58,7 +58,7 @@ function notMyComment(commentInfo, edit) {
                             </div>`;
 }
 
-function myReply(rely, edit) {
+function myReply(reply, edit) {
     return `<div class="list-group-item no-border ml-5">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex align-items-center">
@@ -119,13 +119,13 @@ function notMyReply(reply, edit) {
 }
 
 let isLoading = false;
-let postId;
+var postId = 0;
 let myMemberId = 0;
 
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     postId = urlParams.get('post_id');
-
+    console.log(postId);
     $.ajax({
         url: '/auth',
         success: function (data) {
@@ -161,18 +161,18 @@ $(document).ready(function () {
                 height: 'auto'
             });
 
-            if (myMemberId == parseInt(memberInfo.id)) {
+            if (myMemberId > 0) {
                 $('.write-container').append(`
-        <form id="comment-form">
-        <div class="form-group d-flex">
-            <a href="#" class="mr-3">
-                <img src="${memberInfo.image}" alt="프로필 사진" class="rounded-circle" style="width: 50px; height: 50px;">
-            </a>
-            <textarea class="form-control flex-grow-1" id="comment-content" rows="3" placeholder="댓글을 입력하세요..." style="resize: none;"></textarea>
-        </div>
-        <div class="text-right">
-            <button type="submit" class="btn btn-secondary">댓글 작성</button>
-        </div></form>`);
+                <form >
+                <div class="form-group d-flex">
+                    <a href="#" class="mr-3">
+                        <img src="${memberInfo.image}" alt="프로필 사진" class="rounded-circle" style="width: 50px; height: 50px;">
+                    </a>
+                    <textarea class="form-control flex-grow-1" id="comment-content" rows="3" placeholder="댓글을 입력하세요..." style="resize: none;"></textarea>
+                </div>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-secondary" id="comment-form">댓글 작성</button>
+                </div></form>`);
             }
 
             if (memberInfo.alarm) {
@@ -205,7 +205,7 @@ $(document).ready(function () {
     function loadComments(postId) {
         console.log(postId);
         $.ajax({
-            url: `/comments?post_id=${postId}`,
+            url: `/comments?post_id=` + postId,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -245,7 +245,7 @@ $(document).ready(function () {
         });
     }
 
-    $('#comment-form').submit(function (event) {
+    $(document).on("click", "#comment-form", function (event) {
         event.preventDefault();
         const content = $('#comment-content').val();
 
