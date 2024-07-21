@@ -1,16 +1,20 @@
 package com.blog.tech.domain.post.service;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
 import com.blog.tech.domain.member.entity.MemberInfo;
@@ -23,6 +27,7 @@ import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.entity.PostText;
 import com.blog.tech.domain.post.entity.PostView;
+import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
@@ -41,23 +46,21 @@ public class PostService {
 	private final TopicRepository topicRepository;
 	private final HashtagRepository hashtagRepository;
 	private final ConnectHashtagRepository connectHashtagRepository;
+	private final TransactionManager transactionManager;
 
 	public PostService(
-		final PostRepository postRepository,
-		final PostViewRepository postViewRepository,
 		final MemberInfoRepository memberRepository,
-		final CategoryRepository categoryRepository,
-		final TopicRepository topicRepository,
-		final HashtagRepository hashtagRepository,
-		final ConnectHashtagRepository connectHashtagRepository
+		final DataSource dataSource
 	) {
-		this.postRepository = postRepository;
-		this.postViewRepository = postViewRepository;
+		this.transactionManager = new TransactionManager(dataSource);
+		final Connection conn = transactionManager.getConnection();
+		this.postRepository = PostDaoFactory.getPostDao(conn);
+		this.postViewRepository = PostDaoFactory.getPostViewDao(conn);
 		this.memberRepository = memberRepository;
-		this.categoryRepository = categoryRepository;
-		this.topicRepository = topicRepository;
-		this.hashtagRepository = hashtagRepository;
-		this.connectHashtagRepository = connectHashtagRepository;
+		this.categoryRepository = PostDaoFactory.getCategoryDao(conn);
+		this.topicRepository = PostDaoFactory.getTopicDao(conn);
+		this.hashtagRepository = PostDaoFactory.getHashtagDao(conn);
+		this.connectHashtagRepository = PostDaoFactory.getConnectHashtagDao(conn);
 	}
 
 	public void writeOnPost(final Long memberId, final PostRequest request) throws SQLException {

@@ -6,21 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.BaseDao;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.entity.PostView;
 import com.blog.tech.domain.post.repository.ifs.PostViewRepository;
 
-public class PostViewDao implements PostViewRepository {
-
-	private final Connection conn;
-
-	public PostViewDao(Connection conn) {
-		this.conn = conn;
-	}
+public class PostViewDao extends BaseDao implements PostViewRepository {
 
 	@Override
 	public PostView save(final PostView data) throws SQLException {
@@ -33,7 +27,7 @@ public class PostViewDao implements PostViewRepository {
 
 	private void update(final PostView data) throws SQLException {
 		final String sql = "UPDATE post_view SET ip = ?, view_at = ? WHERE id = ?";
-		final PreparedStatement pstmt = conn.prepareStatement(sql);
+		final PreparedStatement pstmt = connection.prepareStatement(sql);
 		pstmt.setString(1, data.getIp());
 		pstmt.setDate(2, Date.valueOf(data.getViewAt()));
 		pstmt.setLong(3, data.getId());
@@ -45,7 +39,7 @@ public class PostViewDao implements PostViewRepository {
 
 	private PostView create(final PostView data) throws SQLException {
 		final String sql = "INSERT INTO post_view (id, post_id, ip, view_at) VALUES (?, ?, ?, ?)";
-		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
 		pstmt.setLong(2, data.getPostId());
 		pstmt.setString(3, data.getIp());
@@ -80,7 +74,7 @@ public class PostViewDao implements PostViewRepository {
 
 	@Override
 	public Optional<PostView> findByPostIdAndIP(final Long postId, final String ip) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM post_view v JOIN post p "
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post_view v JOIN post p "
 			+ "ON v.post_id = p.id WHERE v.ip = ? AND v.post_id = ?");
 		pstmt.setString(1, ip);
 		pstmt.setLong(2, postId);

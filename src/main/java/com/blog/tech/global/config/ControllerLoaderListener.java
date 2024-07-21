@@ -9,6 +9,7 @@ import com.blog.tech.domain.comment.controller.CommentController;
 import com.blog.tech.domain.comment.repository.dao.CommentDao;
 import com.blog.tech.domain.comment.repository.dao.ReplyDao;
 import com.blog.tech.domain.comment.service.CommentService;
+import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.member.controller.MemberController;
 import com.blog.tech.domain.member.repository.dao.MemberDao;
 import com.blog.tech.domain.member.repository.dao.MemberInfoDao;
@@ -37,11 +38,12 @@ public class ControllerLoaderListener implements ServletContextListener {
 	private ReplyDao reply;
 	private HashtagDao hashtag;
 	private ConnectHashtagDao connectHash;
+	private DataSource dataSource;
 
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		final DataSource dataSource = (DataSource)sce.getServletContext().getAttribute("dataSource");
+		this.dataSource = (DataSource)sce.getServletContext().getAttribute("dataSource");
 		final Connection conn;
 		try {
 			conn = dataSource.getConnection();
@@ -57,24 +59,24 @@ public class ControllerLoaderListener implements ServletContextListener {
 	private void setDaoConnection(final Connection conn) {
 		this.member = new MemberDao(conn);
 		this.memberInfo = new MemberInfoDao(conn);
-		this.category = new CategoryDao(conn);
-		this.topic = new TopicDao(conn);
-		this.post = new PostDao(conn);
+		this.category = new CategoryDao();
+		this.topic = new TopicDao();
+		this.post = new PostDao();
 		this.comment = new CommentDao(conn);
 		this.reply = new ReplyDao(conn);
-		this.hashtag = new HashtagDao(conn);
-		this.connectHash = new ConnectHashtagDao(conn);
-		this.postView = new PostViewDao(conn);
+		this.hashtag = new HashtagDao();
+		this.connectHash = new ConnectHashtagDao();
+		this.postView = new PostViewDao();
 	}
 
 	private void setPostController(final ServletContextEvent sce) {
-		final PostService postService = new PostService(post, postView, memberInfo, category, topic, hashtag, connectHash);
+		final PostService postService = new PostService(memberInfo, dataSource);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}
 
 	private void setCommentController(final ServletContextEvent sce) {
-		final CommentService commentService = new CommentService(memberInfo, post, comment, reply);
+		final CommentService commentService = new CommentService(memberInfo, comment, reply, dataSource);
 		final CommentController commentController = new CommentController(commentService);
 		sce.getServletContext().setAttribute("commentController", commentController);
 	}

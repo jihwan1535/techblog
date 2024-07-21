@@ -8,16 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.BaseDao;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.TopicRepository;
 
-public class TopicDao implements TopicRepository {
-
-	private final Connection conn;
-
-	public TopicDao(Connection conn) {
-		this.conn = conn;
-	}
+public class TopicDao extends BaseDao implements TopicRepository {
 
 	@Override
 	public Topic save(final Topic data) throws SQLException {
@@ -26,7 +21,7 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public Optional<Topic> findById(final Long id) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic WHERE id = ?");
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic WHERE id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
 
@@ -45,7 +40,7 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAll() throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic");
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic");
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Topic> topics = new ArrayList<>();
@@ -65,7 +60,7 @@ public class TopicDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAllByCategoryId(final Long categoryId) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM topic WHERE category_id = ?");
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic WHERE category_id = ?");
 		pstmt.setLong(1, categoryId);
 		final ResultSet rs = pstmt.executeQuery();
 

@@ -3,6 +3,8 @@ package com.blog.tech.domain.comment.service;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
@@ -15,9 +17,11 @@ import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
+import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.entity.Post;
+import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 
 public class CommentService {
@@ -26,15 +30,17 @@ public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
 	private final ReplyRepository replyRepository;
+	private final TransactionManager transactionManager;
 
 	public CommentService(
 		final MemberInfoRepository memberInfoRepository,
-		final PostRepository postRepository,
 		final CommentRepository commentRepository,
-		final ReplyRepository replyRepository
+		final ReplyRepository replyRepository,
+		final DataSource dataSource
 	) {
+		this.transactionManager = new TransactionManager(dataSource);
 		this.memberInfoRepository = memberInfoRepository;
-		this.postRepository = postRepository;
+		this.postRepository = PostDaoFactory.getPostDao(transactionManager.getConnection());
 		this.commentRepository = commentRepository;
 		this.replyRepository = replyRepository;
 	}
