@@ -38,12 +38,9 @@ public class PostServlet extends HttpServlet {
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
 		final PostRequest request = objectMapper.readValue(req.getInputStream(), PostRequest.class);
 
-		try {
-			postController.writeOnPost(member.id(), request);
-			resp.setStatus(HttpServletResponse.SC_OK);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+
+		postController.writeOnPost(member.id(), request);
+		resp.setStatus(HttpServletResponse.SC_OK);
 	}
 
 }

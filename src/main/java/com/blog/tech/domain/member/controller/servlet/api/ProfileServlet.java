@@ -46,17 +46,14 @@ public class ProfileServlet  extends HttpServlet {
 		final String aboutMe = req.getParameter("about_me");
 		final ProfileRequestBean updateInfo = ProfileRequestBean.of(nickname, image, aboutMe);
 		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-		try {
-			final ProfileResponseBean profile = memberController.profileUpdate(member.id(), updateInfo);
-			session.setAttribute("member", profile.member());
-			final String contextPath = "/profile/@";
-			final String profileNickName = profile.member().nickname();
-			final String encodedNickname = URLEncoder.encode(profileNickName, StandardCharsets.UTF_8.toString());
-			final String redirectUrl = contextPath + encodedNickname;
-			resp.sendRedirect(redirectUrl);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		final ProfileResponseBean profile = memberController.profileUpdate(member.id(), updateInfo);
+
+		session.setAttribute("member", profile.member());
+		final String contextPath = "/profile/@";
+		final String profileNickName = profile.member().nickname();
+		final String encodedNickname = URLEncoder.encode(profileNickName, StandardCharsets.UTF_8.toString());
+		final String redirectUrl = contextPath + encodedNickname;
+		resp.sendRedirect(redirectUrl);
 	}
 
 }

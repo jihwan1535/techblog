@@ -33,16 +33,12 @@ public class GetCategoriesServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		try {
-			final List<CategoryResponse> categories = postController.getAllCategories();
-			final String json = objectMapper.writeValueAsString(categories);
+		final List<CategoryResponse> categories = postController.getAllCategories();
+		final String json = objectMapper.writeValueAsString(categories);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 
 }

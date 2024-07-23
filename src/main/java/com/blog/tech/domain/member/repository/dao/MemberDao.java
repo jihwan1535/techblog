@@ -9,16 +9,11 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
 
 public class MemberDao implements MemberRepository {
-
-	private final Connection conn;
-
-	public MemberDao(final Connection conn) {
-		this.conn = conn;
-	}
 
 	@Override
 	public Member save(final Member data) throws SQLException {
@@ -30,6 +25,7 @@ public class MemberDao implements MemberRepository {
 	}
 
 	private void update(final Member data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "UPDATE member SET email = ?, password = ?, created_at = ?, updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		setUpdatePstmt(pstmt, data);
@@ -40,6 +36,7 @@ public class MemberDao implements MemberRepository {
 	}
 
 	private Member create(final Member data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO member (id, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		setCreatePstmt(pstmt, data);
@@ -58,6 +55,7 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public Optional<Member> findById(final Long id) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member WHERE id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
@@ -87,6 +85,7 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public void delete(final Long id) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "DELETE FROM member WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setLong(1, id);
@@ -98,6 +97,7 @@ public class MemberDao implements MemberRepository {
 
 	@Override
 	public Optional<Member> findByEmail(final String email) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member WHERE email = ?");
 		pstmt.setString(1, email);
 		final ResultSet rs = pstmt.executeQuery();

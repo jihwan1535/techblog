@@ -36,11 +36,7 @@ public class UpdateReplyServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
 		final EditReplyRequest request = objectMapper.readValue(req.getInputStream(), EditReplyRequest.class);
-		try {
-			commentController.updateReply(memberId, request);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		commentController.updateReply(memberId, request);
 	}
 
 }

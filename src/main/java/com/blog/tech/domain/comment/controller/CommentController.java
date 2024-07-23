@@ -20,31 +20,31 @@ public class CommentController {
 		this.commentService = commentService;
 	}
 
-	public void writeCommentOnPost(final Long memberId, final CommentRequest request) throws SQLException {
+	public void writeCommentOnPost(final Long memberId, final CommentRequest request) {
 		commentService.writeCommentOnPost(memberId, request);
 	}
 
-	public List<CommentResponse> allCommentsOnPost(final Long postId) throws SQLException {
+	public List<CommentResponse> allCommentsOnPost(final Long postId) {
 		return commentService.allCommentsAndReplies(postId);
 	}
 
-	public void unRegisterComment(final Long memberId, final DeleteCommentRequest request) throws SQLException {
+	public void unRegisterComment(final Long memberId, final DeleteCommentRequest request) {
 		commentService.unRegisterComment(memberId, request);
 	}
 
-	public void updateComment(final Long memberId, final EditCommentRequest request) throws SQLException {
+	public void updateComment(final Long memberId, final EditCommentRequest request) {
 		commentService.updateComment(memberId, request);
 	}
 
-	public void writeReplyOnComment(final Long memberId, final ReplyRequest request) throws SQLException {
+	public void writeReplyOnComment(final Long memberId, final ReplyRequest request) {
 		commentService.writeReplyOnComment(memberId, request);
 	}
 
-	public void updateReply(final Long memberId, final EditReplyRequest request) throws SQLException {
+	public void updateReply(final Long memberId, final EditReplyRequest request) {
 		commentService.updateReply(memberId, request);
 	}
 
-	public void unRegisterReply(final Long memberId, final DeleteReplyRequest request) throws SQLException {
+	public void unRegisterReply(final Long memberId, final DeleteReplyRequest request) {
 		commentService.unRegisterReply(memberId, request);
 	}
 }

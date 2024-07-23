@@ -21,31 +21,31 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	public RegisterResponseBean register(final RegisterRequestBean request) throws SQLException {
+	public RegisterResponseBean register(final RegisterRequestBean request) {
 		return memberService.register(request);
 	}
 
-	public MemberResponseBean login(final LoginRequestBean request) throws SQLException {
+	public MemberResponseBean login(final LoginRequestBean request) {
 		return memberService.login(request);
 	}
 
-	public ProfileResponseBean profile(final String nickname) throws SQLException {
+	public ProfileResponseBean profile(final String nickname) {
 		return memberService.getProfile(nickname);
 	}
 
-	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) throws SQLException {
+	public ProfileResponseBean profileUpdate(final Long id, final ProfileRequestBean request) {
 		return memberService.profileUpdate(id, request);
 	}
 
-	public AvailableResponseBean checkNickname(final String nickname) throws SQLException {
+	public AvailableResponseBean checkNickname(final String nickname) {
 		return memberService.isValidNickname(nickname);
 	}
 
-	public AvailableResponseBean checkEmail(final String email) throws SQLException {
+	public AvailableResponseBean checkEmail(final String email) {
 		return memberService.isValidEmail(email);
 	}
 
-	public List<SearchMemberResponse> searchMember(final String nickname, final Long memberId) throws SQLException {
+	public List<SearchMemberResponse> searchMember(final String nickname, final Long memberId) {
 		return memberService.searchMember(nickname, memberId);
 	}
 

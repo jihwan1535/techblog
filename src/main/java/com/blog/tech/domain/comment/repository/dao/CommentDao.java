@@ -1,28 +1,18 @@
 package com.blog.tech.domain.comment.repository.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import com.blog.tech.domain.comment.entity.Comment;
+import com.blog.tech.domain.comment.entity.vo.Status;
+import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
+import com.blog.tech.domain.common.ConnectionManager;
+import com.blog.tech.domain.member.entity.MemberInfo;
+import com.blog.tech.domain.post.entity.Post;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.blog.tech.domain.comment.entity.Comment;
-import com.blog.tech.domain.comment.entity.vo.Status;
-import com.blog.tech.domain.comment.repository.ifs.CommentRepository;
-import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.domain.post.entity.Post;
-
 public class CommentDao implements CommentRepository {
-
-	private final Connection conn;
-
-	public CommentDao(final Connection conn) {
-		this.conn = conn;
-	}
 
 	@Override
 	public Comment save(final Comment data) throws SQLException {
@@ -34,6 +24,7 @@ public class CommentDao implements CommentRepository {
 	}
 
 	private Comment create(final Comment data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO comment (id, member_info_id, post_id, content, status, created_at, updated_at) "
 			+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -59,6 +50,7 @@ public class CommentDao implements CommentRepository {
 	}
 
 	private void update(final Comment data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "UPDATE comment SET content = ?, report_count = ?, alarm = ?, status = ?, updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, data.getContent());
@@ -75,6 +67,7 @@ public class CommentDao implements CommentRepository {
 
 	@Override
 	public Optional<Comment> findById(final Long id) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment c join member_info m "
 			+ "on c.member_info_id = m.id join post p on c.post_id = p.id WHERE c.id = ?");
 		pstmt.setLong(1, id);
@@ -105,6 +98,7 @@ public class CommentDao implements CommentRepository {
 
 	@Override
 	public List<Comment> findTop10ByPostIdAndStatusDescId(final Long postId, final Status status) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM comment c join member_info m "
 			+ "on c.member_info_id = m.id join post p on c.post_id = p.id "
 			+ "WHERE c.post_id = ? AND c.status = ? "

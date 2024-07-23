@@ -34,11 +34,8 @@ public class WriteCommentServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
 		final CommentRequest request = objectMapper.readValue(req.getInputStream(), CommentRequest.class);
-		try {
-			commentController.writeCommentOnPost(memberId, request);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+
+		commentController.writeCommentOnPost(memberId, request);
 	}
 
 }

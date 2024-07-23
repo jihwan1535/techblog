@@ -8,44 +8,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Category;
-import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
 
-public class CategoryDao implements CategoryRepository {
-
-	private final Connection conn;
-
-	public CategoryDao(final Connection conn) {
-		this.conn = conn;
-	}
+public class CategoryDao implements com.blog.tech.domain.post.repository.ifs.CategoryRepository {
 
 	@Override
-	public Category save(final Category data) throws SQLException {
+	public Category save(final Category data) {
 		return null;
 	}
 
+	// 에러 수정 템플릿
 	@Override
-	public Optional<Category> findById(final Long id) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM category WHERE id = ?");
-		pstmt.setLong(1, id);
-		final ResultSet rs = pstmt.executeQuery();
-
-		if (!rs.next()) {
-			rs.close();
-			pstmt.close();
-			return Optional.empty();
+	public Optional<Category> findById(final Long id) {
+		final Connection connection = ConnectionManager.getConnection();
+		try (final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM category WHERE id = ?")){
+			pstmt.setLong(1, id);
+			try (final ResultSet rs = pstmt.executeQuery()) {
+				if (!rs.next()) {
+					return Optional.empty();
+				}
+				final Category category = Category.builder().id(rs.getLong(1)).name(rs.getString(2)).build();
+				return Optional.of(category);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
 		}
-
-		final Category category = Category.builder().id(rs.getLong(1)).name(rs.getString(2)).build();
-		rs.close();
-		pstmt.close();
-
-		return Optional.of(category);
 	}
 
 	@Override
 	public List<Category> findAll() throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM category");
+		final Connection connection = ConnectionManager.getConnection();
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM category");
 		final ResultSet rs = pstmt.executeQuery();
 
 		final List<Category> categories = new ArrayList<>();

@@ -4,7 +4,7 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
     <listener>
-        <listener-class>com.blog.tech.global.config.MysqlLoaderListener</listener-class>
+        <listener-class>com.blog.tech.global.config.DataSourceLoaderListener</listener-class>
     </listener>
     <listener>
         <listener-class>com.blog.tech.global.config.ControllerLoaderListener</listener-class>

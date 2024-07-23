@@ -18,35 +18,35 @@ public class PostController {
 		this.postService = postService;
 	}
 
-	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) throws SQLException {
+	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) {
 		return postService.getAllPostsByTopic(postId, topicId);
 	}
 
-	public void writeOnPost(final Long memberId, final PostRequest request) throws SQLException {
+	public void writeOnPost(final Long memberId, final PostRequest request) {
 		postService.writeOnPost(memberId, request);
 	}
 
-	public List<AllPostResponse> getAllPosts(final Long postId) throws SQLException {
+	public List<AllPostResponse> getAllPosts(final Long postId) {
 		return postService.getAllPosts(postId);
 	}
 
-	public PostResponse getPost(final Long postId, final String ip) throws SQLException {
+	public PostResponse getPost(final Long postId, final String ip) {
 		return postService.getPost(postId, ip);
 	}
 
-	public List<CategoryResponse> getAllCategories() throws SQLException {
+	public List<CategoryResponse> getAllCategories() {
 		return postService.getAllCategories();
 	}
 
-	public List<HashtagInfoResult> getRandomHashtags() throws SQLException {
+	public List<HashtagInfoResult> getRandomHashtags()  {
 		return postService.getRandomHashtags();
 	}
 
-	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) throws SQLException {
+	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) {
 		return postService.getAllPostsByCategory(postId, categoryId);
 	}
 
-	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) throws SQLException {
+	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) {
 		return postService.searchPosts(postId, keyword);
 	}
 

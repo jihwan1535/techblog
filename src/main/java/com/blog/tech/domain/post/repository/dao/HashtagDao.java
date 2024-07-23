@@ -9,21 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Hashtag;
 import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
 
 public class HashtagDao implements HashtagRepository {
 
-	private final Connection conn;
-
-	public HashtagDao(Connection conn) {
-		this.conn = conn;
-	}
-
 	@Override
 	public Hashtag save(final Hashtag data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO hashtag (id, tag) VALUES (?, ?)";
-		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
 		pstmt.setString(2, data.getTag());
 
@@ -57,7 +54,8 @@ public class HashtagDao implements HashtagRepository {
 
 	@Override
 	public Optional<Hashtag> findByName(final String tag) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag WHERE tag = ?");
+		final Connection connection = ConnectionManager.getConnection();
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM hashtag WHERE tag = ?");
 		pstmt.setString(1, tag);
 		final ResultSet rs = pstmt.executeQuery();
 
@@ -76,7 +74,8 @@ public class HashtagDao implements HashtagRepository {
 
 	@Override
 	public List<Hashtag> findAllByPostId(final Long postId) throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag h "
+		final Connection connection = ConnectionManager.getConnection();
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM hashtag h "
 			+ "JOIN connect_hashtag c ON h.id = c.hashtag_id WHERE post_id = ?;");
 		pstmt.setLong(1, postId);
 
@@ -96,7 +95,8 @@ public class HashtagDao implements HashtagRepository {
 
 	@Override
 	public List<Hashtag> findTop20DescRandom() throws SQLException {
-		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM hashtag ORDER BY RAND() LIMIT 20");
+		final Connection connection = ConnectionManager.getConnection();
+		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM hashtag ORDER BY RAND() LIMIT 20");
 
 		final ResultSet rs = pstmt.executeQuery();
 		final List<Hashtag> hashtags = new ArrayList<>();
