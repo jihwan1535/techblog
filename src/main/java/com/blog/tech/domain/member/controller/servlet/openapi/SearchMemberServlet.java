@@ -36,16 +36,12 @@ public class SearchMemberServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String nickname = req.getParameter("nickname");
 		final Long memberId = Long.parseLong(req.getParameter("member_id"));
-		try {
-			final List<SearchMemberResponse> members = memberController.searchMember(nickname, memberId);
-			final String json = objectMapper.writeValueAsString(members);
+		final List<SearchMemberResponse> members = memberController.searchMember(nickname, memberId);
+		final String json = objectMapper.writeValueAsString(members);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.blog.tech.domain.post.repository.factory;
 
-import java.sql.Connection;
-
 import com.blog.tech.domain.post.repository.dao.CategoryDao;
 import com.blog.tech.domain.post.repository.dao.ConnectHashtagDao;
 import com.blog.tech.domain.post.repository.dao.HashtagDao;
@@ -9,7 +7,7 @@ import com.blog.tech.domain.post.repository.dao.PostDao;
 import com.blog.tech.domain.post.repository.dao.PostViewDao;
 import com.blog.tech.domain.post.repository.dao.TopicDao;
 
-public class PostDaoFactory {
+public class PostRepositoryFactory {
 
 	private static CategoryDao categoryDao;
 	private static ConnectHashtagDao connectHashtagDao;

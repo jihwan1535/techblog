@@ -3,8 +3,6 @@ package com.blog.tech.domain.comment.service;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import com.blog.tech.domain.comment.dto.request.CommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteCommentRequest;
 import com.blog.tech.domain.comment.dto.request.DeleteReplyRequest;
@@ -21,13 +19,13 @@ import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
+import com.blog.tech.domain.post.repository.factory.PostRepositoryFactory;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 
 public class CommentService {
 
 	private final MemberInfoRepository memberInfoRepository;
-	private final PostRepository postRepository = PostDaoFactory.getPostDao();
+	private final PostRepository postRepository = PostRepositoryFactory.getPostDao();
 	private final CommentRepository commentRepository;
 	private final ReplyRepository replyRepository;
 	private final TransactionManager transactionManager;

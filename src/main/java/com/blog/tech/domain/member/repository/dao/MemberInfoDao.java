@@ -10,16 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 
 public class MemberInfoDao implements MemberInfoRepository {
-
-	private final Connection conn;
-
-	public MemberInfoDao(final Connection conn) {
-		this.conn = conn;
-	}
 
 	@Override
 	public MemberInfo save(final MemberInfo data) throws SQLException {
@@ -31,6 +26,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	private MemberInfo create(final MemberInfo data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO member_info (id, member_id, nickname, image, about_me, role, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		setCreatePstmt(pstmt, data);
@@ -48,6 +44,8 @@ public class MemberInfoDao implements MemberInfoRepository {
 	}
 
 	private void update(final MemberInfo data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
+
 		final String sql = "UPDATE member_info SET member_id = ?, nickname = ?, image = ?, about_me = ?, role = ?, "
 			+ "post_count = ?, comment_count = ?, alarm_count = ?, status = ?, created_at = ?, updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -60,6 +58,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public Optional<MemberInfo> findById(final Long id) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
@@ -89,6 +88,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public Optional<MemberInfo> findByMemberId(final Long memberId) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE member_id = ?");
 		pstmt.setLong(1, memberId);
 		final ResultSet rs = pstmt.executeQuery();
@@ -109,6 +109,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public Optional<MemberInfo> findByNickname(final String nickname) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE nickname = ?");
 		pstmt.setString(1, nickname);
 		final ResultSet rs = pstmt.executeQuery();
@@ -156,6 +157,7 @@ public class MemberInfoDao implements MemberInfoRepository {
 
 	@Override
 	public List<MemberInfo> searchMember(final String nickName, final Long memberId) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM member_info WHERE MATCH(nickname) "
 			+ "AGAINST(? IN BOOLEAN MODE) AND id < ? ORDER BY id DESC LIMIT 10");
 		pstmt.setString(1, nickName);

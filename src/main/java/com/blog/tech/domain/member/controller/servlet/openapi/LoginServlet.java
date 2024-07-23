@@ -35,20 +35,16 @@ public class LoginServlet extends HttpServlet {
 		final String password = req.getParameter("password");
 		final String encodedPassword = HashEncoder.generateHash(password);
 
-		try {
-			final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, encodedPassword));
-			req.setAttribute("member", member);
-			switch (member.status()) {
-				case MemberStatus.REGISTERED -> {
-					final HttpSession session = req.getSession();
-					session.setAttribute("member", member);
-				}
-				case MemberStatus.DORMANCY -> resp.sendRedirect("/member/dormancyStatus.jsp");
-				case MemberStatus.UNREGISTERED -> resp.sendRedirect("/member/unRegisteredStatus.jsp");
-			};
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		final MemberResponseBean member = memberController.login(LoginRequestBean.of(email, encodedPassword));
+		req.setAttribute("member", member);
+		switch (member.status()) {
+			case MemberStatus.REGISTERED -> {
+				final HttpSession session = req.getSession();
+				session.setAttribute("member", member);
+			}
+			case MemberStatus.DORMANCY -> resp.sendRedirect("/member/dormancyStatus.jsp");
+			case MemberStatus.UNREGISTERED -> resp.sendRedirect("/member/unRegisteredStatus.jsp");
+		};
 	}
 
 }

@@ -30,12 +30,8 @@ public class CheckNameServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String nickname = req.getParameter("nickname");
-		try {
-			final AvailableResponseBean isAvail = memberController.checkNickname(nickname);
-			resp.setContentType("text/plain");
-			resp.getWriter().write(isAvail.status());
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		final AvailableResponseBean isAvail = memberController.checkNickname(nickname);
+		resp.setContentType("text/plain");
+		resp.getWriter().write(isAvail.status());
 	}
 }

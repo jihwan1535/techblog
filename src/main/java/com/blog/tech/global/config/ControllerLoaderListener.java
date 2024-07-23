@@ -52,14 +52,12 @@ public class ControllerLoaderListener implements ServletContextListener {
 	}
 
 	private void setDaoConnection(final Connection conn) {
-		this.member = new MemberDao(conn);
-		this.memberInfo = new MemberInfoDao(conn);
 		this.comment = new CommentDao(conn);
 		this.reply = new ReplyDao(conn);
 	}
 
 	private void setPostController(final ServletContextEvent sce) {
-		final PostService postService = new PostService(memberInfo, transactionManager);
+		final PostService postService = new PostService(transactionManager);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}
@@ -71,7 +69,7 @@ public class ControllerLoaderListener implements ServletContextListener {
 	}
 
 	private void setMemberController(final ServletContextEvent sce) {
-		final MemberService memberService = new MemberService(member, memberInfo);
+		final MemberService memberService = new MemberService(transactionManager);
 		final MemberController memberController = new MemberController(memberService);
 		sce.getServletContext().setAttribute("memberController", memberController);
 	}

@@ -30,13 +30,9 @@ public class CheckEmailServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final String email = req.getParameter("email");
-		try {
-			final AvailableResponseBean isAvail = memberController.checkEmail(email);
-			resp.setContentType("text/plain");
-			resp.getWriter().write(isAvail.status());
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		final AvailableResponseBean isAvail = memberController.checkEmail(email);
+		resp.setContentType("text/plain");
+		resp.getWriter().write(isAvail.status());
 	}
 
 }

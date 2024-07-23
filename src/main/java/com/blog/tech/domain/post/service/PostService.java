@@ -3,6 +3,7 @@ package com.blog.tech.domain.post.service;
 import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.common.TransactionTemplate;
 import com.blog.tech.domain.member.entity.MemberInfo;
+import com.blog.tech.domain.member.repository.factory.MemberDaoFactory;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.dto.request.PostRequest;
 import com.blog.tech.domain.post.dto.response.AllPostResponse;
@@ -10,7 +11,7 @@ import com.blog.tech.domain.post.dto.response.CategoryResponse;
 import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
 import com.blog.tech.domain.post.dto.response.PostResponse;
 import com.blog.tech.domain.post.entity.*;
-import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
+import com.blog.tech.domain.post.repository.factory.PostRepositoryFactory;
 import com.blog.tech.domain.post.repository.ifs.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -25,22 +26,17 @@ import java.util.Optional;
 
 public class PostService {
 
-	private final PostRepository postRepository = PostDaoFactory.getPostDao();
-	private final PostViewRepository postViewRepository = PostDaoFactory.getPostViewDao();
-	private final CategoryRepository categoryRepository = PostDaoFactory.getCategoryDao();
-	private final TopicRepository topicRepository = PostDaoFactory.getTopicDao();
-	private final HashtagRepository hashtagRepository = PostDaoFactory.getHashtagDao();
-	private final ConnectHashtagRepository connectHashtagRepository = PostDaoFactory.getConnectHashtagDao();
-
-	private final MemberInfoRepository memberRepository;
+	private final PostRepository postRepository = PostRepositoryFactory.getPostDao();
+	private final PostViewRepository postViewRepository = PostRepositoryFactory.getPostViewDao();
+	private final CategoryRepository categoryRepository = PostRepositoryFactory.getCategoryDao();
+	private final TopicRepository topicRepository = PostRepositoryFactory.getTopicDao();
+	private final HashtagRepository hashtagRepository = PostRepositoryFactory.getHashtagDao();
+	private final ConnectHashtagRepository connectHashtagRepository = PostRepositoryFactory.getConnectHashtagDao();
+	private final MemberInfoRepository memberRepository = MemberDaoFactory.getMemberInfoDao();
 	private final TransactionManager transactionManager;
 
-	public PostService(
-		final MemberInfoRepository memberRepository,
-		final TransactionManager transactionManager
-	) {
+	public PostService(final TransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
-		this.memberRepository = memberRepository;
     }
 
 	public void writeOnPost(final Long memberId, final PostRequest request) {

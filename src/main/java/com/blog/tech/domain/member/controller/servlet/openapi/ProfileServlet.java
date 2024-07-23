@@ -40,22 +40,18 @@ public class ProfileServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String requestURI = req.getRequestURI();
 		final String encodedNickname = requestURI.substring(requestURI.lastIndexOf('/') + 2);
-		try {
-			final String nickname = URLDecoder.decode(encodedNickname, StandardCharsets.UTF_8.toString());
-			final ProfileResponseBean profile = memberController.profile(nickname);
-			req.setAttribute("profile", profile);
+		final String nickname = URLDecoder.decode(encodedNickname, StandardCharsets.UTF_8.toString());
+		final ProfileResponseBean profile = memberController.profile(nickname);
+		req.setAttribute("profile", profile);
 
-			final HttpSession session = req.getSession(false);
-			final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
-			if (Objects.isNull(session) || Objects.isNull(member)) {
-				includeToProfile(req, resp, OTHER_PROFILE);
-			} else if (member.nickname().equals(nickname)) {
-				includeToProfile(req, resp, MY_PROFILE);
-			} else {
-				includeToProfile(req, resp, OTHER_PROFILE);
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+		final HttpSession session = req.getSession(false);
+		final MemberResponseBean member = (MemberResponseBean)session.getAttribute("member");
+		if (Objects.isNull(session) || Objects.isNull(member)) {
+			includeToProfile(req, resp, OTHER_PROFILE);
+		} else if (member.nickname().equals(nickname)) {
+			includeToProfile(req, resp, MY_PROFILE);
+		} else {
+			includeToProfile(req, resp, OTHER_PROFILE);
 		}
 	}
 
