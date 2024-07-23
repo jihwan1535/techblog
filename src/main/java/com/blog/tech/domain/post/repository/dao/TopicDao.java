@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.TopicRepository;
 
-public class TopicDao extends BaseDao implements TopicRepository {
+public class TopicDao implements TopicRepository {
 
 	@Override
 	public Topic save(final Topic data) throws SQLException {
@@ -21,6 +22,7 @@ public class TopicDao extends BaseDao implements TopicRepository {
 
 	@Override
 	public Optional<Topic> findById(final Long id) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic WHERE id = ?");
 		pstmt.setLong(1, id);
 		final ResultSet rs = pstmt.executeQuery();
@@ -40,6 +42,7 @@ public class TopicDao extends BaseDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAll() throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic");
 		final ResultSet rs = pstmt.executeQuery();
 
@@ -60,6 +63,7 @@ public class TopicDao extends BaseDao implements TopicRepository {
 
 	@Override
 	public List<Topic> findAllByCategoryId(final Long categoryId) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM topic WHERE category_id = ?");
 		pstmt.setLong(1, categoryId);
 		final ResultSet rs = pstmt.executeQuery();

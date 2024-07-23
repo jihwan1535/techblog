@@ -35,16 +35,12 @@ public class SearchPostServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final String keyword = req.getParameter("keyword");
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
-		try {
-			final List<AllPostResponse> posts = postController.searchPosts(postId, keyword);
-			final String json = objectMapper.writeValueAsString(posts);
+		final List<AllPostResponse> posts = postController.searchPosts(postId, keyword);
+		final String json = objectMapper.writeValueAsString(posts);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 
 }

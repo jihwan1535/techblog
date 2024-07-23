@@ -18,7 +18,7 @@ public class PostDaoFactory {
 	private static PostViewDao postViewDao;
 	private static TopicDao topicDao;
 
-	public static CategoryDao getCategoryDao(final Connection connection) {
+	public static CategoryDao getCategoryDao() {
 		if (categoryDao == null) {
 			synchronized (CategoryDao.class) {
 				if (categoryDao == null) {
@@ -26,11 +26,10 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		categoryDao.setConnection(connection);
 		return categoryDao;
 	}
 
-	public static ConnectHashtagDao getConnectHashtagDao(final Connection connection) {
+	public static ConnectHashtagDao getConnectHashtagDao() {
 		if (connectHashtagDao == null) {
 			synchronized (CategoryDao.class) {
 				if (connectHashtagDao == null) {
@@ -38,11 +37,10 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		categoryDao.setConnection(connection);
 		return connectHashtagDao;
 	}
 
-	public static HashtagDao getHashtagDao(final Connection connection) {
+	public static HashtagDao getHashtagDao() {
 		if (hashtagDao == null) {
 			synchronized (HashtagDao.class) {
 				if (hashtagDao == null) {
@@ -50,11 +48,10 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		hashtagDao.setConnection(connection);
 		return hashtagDao;
 	}
 
-	public static PostDao getPostDao(final Connection connection) {
+	public static PostDao getPostDao() {
 		if (postDao == null) {
 			synchronized (PostDao.class) {
 				if (postDao == null) {
@@ -62,11 +59,10 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		postDao.setConnection(connection);
 		return postDao;
 	}
 
-	public static PostViewDao getPostViewDao(final Connection connection) {
+	public static PostViewDao getPostViewDao() {
 		if (postViewDao == null) {
 			synchronized (PostViewDao.class) {
 				if (postViewDao == null) {
@@ -74,11 +70,10 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		postViewDao.setConnection(connection);
 		return postViewDao;
 	}
 
-	public static TopicDao getTopicDao(final Connection connection) {
+	public static TopicDao getTopicDao() {
 		if (topicDao == null) {
 			synchronized (TopicDao.class) {
 				if (topicDao == null) {
@@ -86,7 +81,6 @@ public class PostDaoFactory {
 				}
 			}
 		}
-		topicDao.setConnection(connection);
 		return topicDao;
 	}
 

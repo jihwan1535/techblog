@@ -36,17 +36,12 @@ public class GetPostServlet extends HttpServlet {
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
 		final String ip = getIpAddress(req);
 		final String encodingIp = HashEncoder.generateHash(ip);
+		final PostResponse post = postController.getPost(postId, encodingIp);
+		final String json = objectMapper.writeValueAsString(post);
 
-		try {
-			final PostResponse post = postController.getPost(postId, encodingIp);
-			final String json = objectMapper.writeValueAsString(post);
-
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 
 	private String getIpAddress(final HttpServletRequest req) {

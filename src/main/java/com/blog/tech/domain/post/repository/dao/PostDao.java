@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.entity.Post;
@@ -18,7 +19,7 @@ import com.blog.tech.domain.post.entity.PostText;
 import com.blog.tech.domain.post.entity.Topic;
 import com.blog.tech.domain.post.repository.ifs.PostRepository;
 
-public class PostDao extends BaseDao implements PostRepository {
+public class PostDao implements PostRepository {
 
 	@Override
 	public Post save(final Post data) throws SQLException {
@@ -30,6 +31,7 @@ public class PostDao extends BaseDao implements PostRepository {
 	}
 
 	private void update(final Post data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "UPDATE post SET topic_id = ?, category_id = ?, title = ?, content = ?, comment_count = ?, "
 			+ "reply_count = ?, view_count = ?, report_count = ?, scrap_count = ?, alarm = ?, status = ?, "
 			+ "updated_at = ? WHERE id = ?";
@@ -58,6 +60,7 @@ public class PostDao extends BaseDao implements PostRepository {
 	}
 
 	private Post create(final Post data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO post (id, member_info_id, topic_id, category_id, title, content, "
 			+ "status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -89,6 +92,7 @@ public class PostDao extends BaseDao implements PostRepository {
 
 	@Override
 	public Optional<Post> findById(final Long id) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
 			+ "WHERE p.id = ?");
@@ -120,6 +124,8 @@ public class PostDao extends BaseDao implements PostRepository {
 
 	@Override
 	public List<Post> findTop10ByLessThanIdDescId(final Long id) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
+
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
 			+ "WHERE p.id < ? ORDER BY p.id DESC LIMIT 10;");
@@ -141,6 +147,7 @@ public class PostDao extends BaseDao implements PostRepository {
 		final Long postId,
 		final Long topicId
 	) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
 			+ "WHERE p.id < ? AND p.topic_id = ? ORDER BY p.id DESC LIMIT 10;");
@@ -165,6 +172,7 @@ public class PostDao extends BaseDao implements PostRepository {
 		final Long postId,
 		final Long categoryId
 	) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post p JOIN member_info m "
 			+ "ON p.member_info_id = m.id JOIN topic t ON p.topic_id = t.id JOIN category c ON p.category_id = c.id "
 			+ "WHERE p.id < ? AND p.category_id = ? ORDER BY p.id DESC LIMIT 10;");
@@ -207,6 +215,7 @@ public class PostDao extends BaseDao implements PostRepository {
 	}
 
 	private void update(final PostText data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "UPDATE post_text SET content = ? WHERE id = ?";
 		final PreparedStatement pstmt = connection.prepareStatement(sql);
 		pstmt.setString(1, data.getContent());
@@ -218,6 +227,7 @@ public class PostDao extends BaseDao implements PostRepository {
 	}
 
 	private PostText create(final PostText data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO post_text (id, content) VALUES (?, ?)";
 		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
@@ -237,6 +247,7 @@ public class PostDao extends BaseDao implements PostRepository {
 
 	@Override
 	public List<Post> searchPostsContainKeyword(final Long postId, final String keyword) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("""
 			SELECT p.*, m.*, t.*, c.* FROM post p
 			JOIN member_info m ON p.member_info_id = m.id

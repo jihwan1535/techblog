@@ -34,19 +34,15 @@ public class GetAllPostServlet extends HttpServlet {
 		final HttpServletRequest req,
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
-		try {
-			final List<AllPostResponse> posts = getPostsResponse(req);
-			final String json = objectMapper.writeValueAsString(posts);
+		final List<AllPostResponse> posts = getPostsResponse(req);
+		final String json = objectMapper.writeValueAsString(posts);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 
-	private List<AllPostResponse> getPostsResponse(final HttpServletRequest req) throws SQLException {
+	private List<AllPostResponse> getPostsResponse(final HttpServletRequest req) {
 		final Long postId = Long.parseLong(req.getParameter("post_id"));
 		final Long topicId = Long.parseLong(req.getParameter("topic_id"));
 		final Long categoryId = Long.parseLong(req.getParameter("category_id"));

@@ -1,85 +1,73 @@
 package com.blog.tech.domain.post.service;
 
-import java.sql.Connection;
+import com.blog.tech.domain.common.TransactionManager;
+import com.blog.tech.domain.common.TransactionTemplate;
+import com.blog.tech.domain.member.entity.MemberInfo;
+import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
+import com.blog.tech.domain.post.dto.request.PostRequest;
+import com.blog.tech.domain.post.dto.response.AllPostResponse;
+import com.blog.tech.domain.post.dto.response.CategoryResponse;
+import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
+import com.blog.tech.domain.post.dto.response.PostResponse;
+import com.blog.tech.domain.post.entity.*;
+import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
+import com.blog.tech.domain.post.repository.ifs.*;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import com.blog.tech.domain.common.TransactionManager;
-import com.blog.tech.domain.post.dto.response.CategoryResponse;
-import com.blog.tech.domain.post.dto.response.HashtagInfoResult;
-import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
-import com.blog.tech.domain.post.dto.request.PostRequest;
-import com.blog.tech.domain.post.dto.response.PostResponse;
-import com.blog.tech.domain.post.dto.response.AllPostResponse;
-import com.blog.tech.domain.post.entity.ConnectHashtag;
-import com.blog.tech.domain.post.entity.Hashtag;
-import com.blog.tech.domain.post.entity.Post;
-import com.blog.tech.domain.post.entity.PostText;
-import com.blog.tech.domain.post.entity.PostView;
-import com.blog.tech.domain.post.repository.factory.PostDaoFactory;
-import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
-import com.blog.tech.domain.post.repository.ifs.HashtagRepository;
-import com.blog.tech.domain.post.repository.ifs.PostRepository;
-import com.blog.tech.domain.post.entity.Category;
-import com.blog.tech.domain.post.entity.Topic;
-import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
-import com.blog.tech.domain.post.repository.ifs.PostViewRepository;
-import com.blog.tech.domain.post.repository.ifs.TopicRepository;
-
 public class PostService {
 
-	private final PostRepository postRepository;
-	private final PostViewRepository postViewRepository;
+	private final PostRepository postRepository = PostDaoFactory.getPostDao();
+	private final PostViewRepository postViewRepository = PostDaoFactory.getPostViewDao();
+	private final CategoryRepository categoryRepository = PostDaoFactory.getCategoryDao();
+	private final TopicRepository topicRepository = PostDaoFactory.getTopicDao();
+	private final HashtagRepository hashtagRepository = PostDaoFactory.getHashtagDao();
+	private final ConnectHashtagRepository connectHashtagRepository = PostDaoFactory.getConnectHashtagDao();
+
 	private final MemberInfoRepository memberRepository;
-	private final CategoryRepository categoryRepository;
-	private final TopicRepository topicRepository;
-	private final HashtagRepository hashtagRepository;
-	private final ConnectHashtagRepository connectHashtagRepository;
 	private final TransactionManager transactionManager;
 
 	public PostService(
 		final MemberInfoRepository memberRepository,
-		final DataSource dataSource
+		final TransactionManager transactionManager
 	) {
-		this.transactionManager = new TransactionManager(dataSource);
-		final Connection conn = transactionManager.getConnection();
-		this.postRepository = PostDaoFactory.getPostDao(conn);
-		this.postViewRepository = PostDaoFactory.getPostViewDao(conn);
+		this.transactionManager = transactionManager;
 		this.memberRepository = memberRepository;
-		this.categoryRepository = PostDaoFactory.getCategoryDao(conn);
-		this.topicRepository = PostDaoFactory.getTopicDao(conn);
-		this.hashtagRepository = PostDaoFactory.getHashtagDao(conn);
-		this.connectHashtagRepository = PostDaoFactory.getConnectHashtagDao(conn);
-	}
+    }
 
-	public void writeOnPost(final Long memberId, final PostRequest request) throws SQLException {
-		final MemberInfo member = memberRepository.findById(memberId).orElseThrow(() -> {
-			throw new RuntimeException("Invalid Member, " + memberId);
+	public void writeOnPost(final Long memberId, final PostRequest request) {
+		new TransactionTemplate(transactionManager).execute(() -> {
+            final MemberInfo member;
+            try {
+                member = memberRepository.findById(memberId).orElseThrow(() -> {
+                    throw new RuntimeException("Invalid Member, " + memberId);
+                });
+				final Post post = postParseHtmlFromMarkdown(memberId, request);
+				postRepository.save(post);
+				saveParsedHtml(post.getContent());
+
+				final List<Hashtag> hashtags = Optional.ofNullable(request.hashtags())
+						.orElse(Collections.emptyList())
+						.stream()
+						.map(Hashtag::to)
+						.toList();
+				connectHashtagWithPost(post.getId(), hashtags);
+
+				member.postIncreasing();
+				memberRepository.save(member);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+			return null;
 		});
-		final Post post = postParseHtmlFromMarkdown(memberId, request);
-		postRepository.save(post);
-		saveParsedHtml(post.getContent());
-
-		final List<Hashtag> hashtags = Optional.ofNullable(request.hashtags())
-			.orElse(Collections.emptyList())
-			.stream()
-			.map(Hashtag::to)
-			.toList();
-		connectHashtagWithPost(post.getId(), hashtags);
-
-		member.postIncreasing();
-		memberRepository.save(member);
 	}
 
 	private Post postParseHtmlFromMarkdown(final Long memberId, final PostRequest request) {
@@ -125,28 +113,41 @@ public class PostService {
 		}
 	}
 
-	public List<AllPostResponse> getAllPosts(final Long postId) throws SQLException {
-		final List<Post> posts = postRepository.findTop10ByLessThanIdDescId(postId);
+	public List<AllPostResponse> getAllPosts(final Long postId) {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+			final List<Post> posts;
+            try {
+                posts = postRepository.findTop10ByLessThanIdDescId(postId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-		return posts.stream()
-			.map(AllPostResponse::of)
-			.toList();
+            return posts.stream()
+                    .map(AllPostResponse::of)
+                    .toList();
+        });
 	}
 
-	public PostResponse getPost(final Long postId, final String ip) throws SQLException {
-		final Post post = postRepository.findById(postId).orElseThrow(() -> {
-			throw new RuntimeException("Not Found post : " + postId);
+	public PostResponse getPost(final Long postId, final String ip) {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+            final Post post;
+            try {
+                post = postRepository.findById(postId).orElseThrow(() -> {
+                    throw new RuntimeException("Not Found post : " + postId);
+                });
+				final List<Hashtag> hashtags = hashtagRepository.findAllByPostId(postId);
+				final Optional<PostView> postViewInfo = postViewRepository.findByPostIdAndIP(postId, ip);
+
+				if (postViewInfo.isPresent()) {
+					alreadyVisitor(post, postViewInfo.get());
+				} else {
+					firstGetPost(post, ip);
+				}
+				return PostResponse.of(post, hashtags);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 		});
-		final List<Hashtag> hashtags = hashtagRepository.findAllByPostId(postId);
-		final Optional<PostView> postViewInfo = postViewRepository.findByPostIdAndIP(postId, ip);
-
-		if (postViewInfo.isPresent()) {
-			alreadyVisitor(post, postViewInfo.get());
-		} else {
-			firstGetPost(post, ip);
-		}
-
-		return PostResponse.of(post, hashtags);
 	}
 
 	private void firstGetPost(final Post post, final String ip) throws SQLException {
@@ -166,16 +167,23 @@ public class PostService {
 		}
 	}
 
-	public List<CategoryResponse> getAllCategories() throws SQLException {
-		final List<Category> categories = categoryRepository.findAll();
-		getAllTopicsByCategory(categories);
+	public List<CategoryResponse> getAllCategories() {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+            final List<Category> categories;
+            try {
+                categories = categoryRepository.findAll();
+				getAllTopicsByCategory(categories);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-		return categories.stream()
-			.map(CategoryResponse::of)
-			.toList();
+            return categories.stream()
+					.map(CategoryResponse::of)
+					.toList();
+		});
 	}
 
-	private void getAllTopicsByCategory(final List<Category> categories) throws SQLException {
+	private void getAllTopicsByCategory(final List<Category> categories) {
 		categories.stream().forEach(
 			category -> {
 				try {
@@ -188,37 +196,66 @@ public class PostService {
 		);
 	}
 
-	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) throws SQLException {
-		final List<Post> posts = postRepository.findTop10ByLessThanIdAndTopicIdDescId(postId, topicId);
+	public List<AllPostResponse> getAllPostsByTopic(final Long postId, final Long topicId) {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+            final List<Post> posts;
+            try {
+                posts = postRepository.findTop10ByLessThanIdAndTopicIdDescId(postId, topicId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-		return posts.stream()
+            return posts.stream()
 			.map(AllPostResponse::of)
 			.toList();
+		});
 	}
 
-	public List<HashtagInfoResult> getRandomHashtags() throws SQLException {
-		final List<Hashtag> hashtags = hashtagRepository.findTop20DescRandom();
+	public List<HashtagInfoResult> getRandomHashtags() {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+            final List<Hashtag> hashtags;
+            try {
+                hashtags = hashtagRepository.findTop20DescRandom();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-		return hashtags.stream()
-			.map(HashtagInfoResult::of)
-			.toList();
+            return hashtags.stream()
+					.map(HashtagInfoResult::of)
+					.toList();
+		});
 	}
 
-	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) throws SQLException {
-		final List<Post> posts = postRepository.findTop10ByLessThanIdAndCategoryIdDescId(postId, categoryId);
+	public List<AllPostResponse> getAllPostsByCategory(final Long postId, final Long categoryId) {
+		return new TransactionTemplate(transactionManager).execute(() -> {
+            final List<Post> posts;
+            try {
+                posts = postRepository.findTop10ByLessThanIdAndCategoryIdDescId(postId, categoryId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
-		return posts.stream()
-			.map(AllPostResponse::of)
-			.toList();
+            return posts.stream()
+					.map(AllPostResponse::of)
+					.toList();
+		});
 	}
 
-	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) throws SQLException {
-		final String keywordQuery = keyword + "*";
-		final List<Post> posts = postRepository.searchPostsContainKeyword(postId, keywordQuery);
+	public List<AllPostResponse> searchPosts(final Long postId, final String keyword) {
 
-		return posts.stream()
-			.map(AllPostResponse::of)
-			.toList();
+		return new TransactionTemplate(transactionManager).execute(() -> {
+			final String keywordQuery = keyword + "*";
+            final List<Post> posts;
+            try {
+                posts = postRepository.searchPostsContainKeyword(postId, keywordQuery);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            return posts.stream()
+					.map(AllPostResponse::of)
+					.toList();
+		});
 	}
 
 }

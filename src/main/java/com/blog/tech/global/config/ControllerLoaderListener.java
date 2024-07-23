@@ -30,20 +30,15 @@ public class ControllerLoaderListener implements ServletContextListener {
 
 	private MemberDao member;
 	private MemberInfoDao memberInfo;
-	private CategoryDao category;
-	private TopicDao topic;
-	private PostDao post;
-	private PostViewDao postView;
 	private CommentDao comment;
 	private ReplyDao reply;
-	private HashtagDao hashtag;
-	private ConnectHashtagDao connectHash;
-	private DataSource dataSource;
+	private TransactionManager transactionManager;
 
 
 	@Override
 	public void contextInitialized(final ServletContextEvent sce) {
-		this.dataSource = (DataSource)sce.getServletContext().getAttribute("dataSource");
+		final DataSource dataSource = (DataSource)sce.getServletContext().getAttribute("dataSource");
+		this.transactionManager = new TransactionManager(dataSource);
 		final Connection conn;
 		try {
 			conn = dataSource.getConnection();
@@ -59,24 +54,18 @@ public class ControllerLoaderListener implements ServletContextListener {
 	private void setDaoConnection(final Connection conn) {
 		this.member = new MemberDao(conn);
 		this.memberInfo = new MemberInfoDao(conn);
-		this.category = new CategoryDao();
-		this.topic = new TopicDao();
-		this.post = new PostDao();
 		this.comment = new CommentDao(conn);
 		this.reply = new ReplyDao(conn);
-		this.hashtag = new HashtagDao();
-		this.connectHash = new ConnectHashtagDao();
-		this.postView = new PostViewDao();
 	}
 
 	private void setPostController(final ServletContextEvent sce) {
-		final PostService postService = new PostService(memberInfo, dataSource);
+		final PostService postService = new PostService(memberInfo, transactionManager);
 		final PostController postController = new PostController(postService);
 		sce.getServletContext().setAttribute("postController", postController);
 	}
 
 	private void setCommentController(final ServletContextEvent sce) {
-		final CommentService commentService = new CommentService(memberInfo, comment, reply, dataSource);
+		final CommentService commentService = new CommentService(memberInfo, comment, reply, transactionManager);
 		final CommentController commentController = new CommentController(commentService);
 		sce.getServletContext().setAttribute("commentController", commentController);
 	}

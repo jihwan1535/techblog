@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Post;
 import com.blog.tech.domain.post.entity.PostView;
 import com.blog.tech.domain.post.repository.ifs.PostViewRepository;
 
-public class PostViewDao extends BaseDao implements PostViewRepository {
+public class PostViewDao implements PostViewRepository {
 
 	@Override
 	public PostView save(final PostView data) throws SQLException {
@@ -26,6 +27,7 @@ public class PostViewDao extends BaseDao implements PostViewRepository {
 	}
 
 	private void update(final PostView data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "UPDATE post_view SET ip = ?, view_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = connection.prepareStatement(sql);
 		pstmt.setString(1, data.getIp());
@@ -38,6 +40,7 @@ public class PostViewDao extends BaseDao implements PostViewRepository {
 	}
 
 	private PostView create(final PostView data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO post_view (id, post_id, ip, view_at) VALUES (?, ?, ?, ?)";
 		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
@@ -74,6 +77,7 @@ public class PostViewDao extends BaseDao implements PostViewRepository {
 
 	@Override
 	public Optional<PostView> findByPostIdAndIP(final Long postId, final String ip) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM post_view v JOIN post p "
 			+ "ON v.post_id = p.id WHERE v.ip = ? AND v.post_id = ?");
 		pstmt.setString(1, ip);

@@ -27,7 +27,7 @@ import com.blog.tech.domain.post.repository.ifs.PostRepository;
 public class CommentService {
 
 	private final MemberInfoRepository memberInfoRepository;
-	private final PostRepository postRepository;
+	private final PostRepository postRepository = PostDaoFactory.getPostDao();
 	private final CommentRepository commentRepository;
 	private final ReplyRepository replyRepository;
 	private final TransactionManager transactionManager;
@@ -36,11 +36,10 @@ public class CommentService {
 		final MemberInfoRepository memberInfoRepository,
 		final CommentRepository commentRepository,
 		final ReplyRepository replyRepository,
-		final DataSource dataSource
+		final TransactionManager transactionManager
 	) {
-		this.transactionManager = new TransactionManager(dataSource);
+		this.transactionManager = transactionManager;
 		this.memberInfoRepository = memberInfoRepository;
-		this.postRepository = PostDaoFactory.getPostDao(transactionManager.getConnection());
 		this.commentRepository = commentRepository;
 		this.replyRepository = replyRepository;
 	}

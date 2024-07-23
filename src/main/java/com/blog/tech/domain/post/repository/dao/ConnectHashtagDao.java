@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.ConnectHashtag;
 import com.blog.tech.domain.post.repository.ifs.ConnectHashtagRepository;
 
-public class ConnectHashtagDao extends BaseDao implements ConnectHashtagRepository {
+public class ConnectHashtagDao implements ConnectHashtagRepository {
 
 	@Override
 	public ConnectHashtag save(final ConnectHashtag data) throws SQLException {
@@ -24,6 +25,7 @@ public class ConnectHashtagDao extends BaseDao implements ConnectHashtagReposito
 	}
 
 	private ConnectHashtag create(final ConnectHashtag data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "INSERT INTO connect_hashtag (id, hashtag_id, post_id) VALUES (?, ?, ?)";
 		final PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setLong(1, data.getId());
@@ -43,6 +45,7 @@ public class ConnectHashtagDao extends BaseDao implements ConnectHashtagReposito
 	}
 
 	private void update(final ConnectHashtag data) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final String sql = "UPDATE connect_hashtag SET hashtag_id, post_id = ? WHERE id = ?";
 		final PreparedStatement pstmt = connection.prepareStatement(sql);
 		pstmt.setLong(1, data.getHashtagId());
@@ -74,6 +77,7 @@ public class ConnectHashtagDao extends BaseDao implements ConnectHashtagReposito
 		final Long hashtagId,
 		final Long postId
 	) throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement(
 			"SELECT * FROM connect_hashtag WHERE hashtag_id = ? AND post_id = ?");
 		pstmt.setLong(1, hashtagId);

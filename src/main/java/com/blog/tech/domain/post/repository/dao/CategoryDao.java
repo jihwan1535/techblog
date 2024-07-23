@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blog.tech.domain.common.BaseDao;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Category;
 import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
 
-public class CategoryDao extends BaseDao implements CategoryRepository {
+public class CategoryDao implements CategoryRepository {
 
 	@Override
 	public Category save(final Category data) {
@@ -22,6 +23,7 @@ public class CategoryDao extends BaseDao implements CategoryRepository {
 	// 에러 수정 템플릿
 	@Override
 	public Optional<Category> findById(final Long id) {
+		final Connection connection = ConnectionManager.getConnection();
 		try (final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM category WHERE id = ?")){
 			pstmt.setLong(1, id);
 			try (final ResultSet rs = pstmt.executeQuery()) {
@@ -38,6 +40,7 @@ public class CategoryDao extends BaseDao implements CategoryRepository {
 
 	@Override
 	public List<Category> findAll() throws SQLException {
+		final Connection connection = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM category");
 		final ResultSet rs = pstmt.executeQuery();
 
