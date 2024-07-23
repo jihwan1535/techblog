@@ -3,7 +3,7 @@ package com.blog.tech.domain.post.service;
 import com.blog.tech.domain.common.TransactionManager;
 import com.blog.tech.domain.common.TransactionTemplate;
 import com.blog.tech.domain.member.entity.MemberInfo;
-import com.blog.tech.domain.member.repository.factory.MemberDaoFactory;
+import com.blog.tech.domain.member.repository.factory.MemberRepositoryFactory;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.post.dto.request.PostRequest;
 import com.blog.tech.domain.post.dto.response.AllPostResponse;
@@ -26,13 +26,13 @@ import java.util.Optional;
 
 public class PostService {
 
-	private final PostRepository postRepository = PostRepositoryFactory.getPostDao();
-	private final PostViewRepository postViewRepository = PostRepositoryFactory.getPostViewDao();
-	private final CategoryRepository categoryRepository = PostRepositoryFactory.getCategoryDao();
-	private final TopicRepository topicRepository = PostRepositoryFactory.getTopicDao();
-	private final HashtagRepository hashtagRepository = PostRepositoryFactory.getHashtagDao();
-	private final ConnectHashtagRepository connectHashtagRepository = PostRepositoryFactory.getConnectHashtagDao();
-	private final MemberInfoRepository memberRepository = MemberDaoFactory.getMemberInfoDao();
+	private final PostRepository postRepository = PostRepositoryFactory.getPostRepository();
+	private final PostViewRepository postViewRepository = PostRepositoryFactory.getPostViewRepository();
+	private final CategoryRepository categoryRepository = PostRepositoryFactory.getCategoryRepository();
+	private final TopicRepository topicRepository = PostRepositoryFactory.getTopicRepository();
+	private final HashtagRepository hashtagRepository = PostRepositoryFactory.getHashtagRepository();
+	private final ConnectHashtagRepository connectHashtagRepository = PostRepositoryFactory.getConnectHashtagRepository();
+	private final MemberInfoRepository memberRepository = MemberRepositoryFactory.getMemberInfoRepository();
 	private final TransactionManager transactionManager;
 
 	public PostService(final TransactionManager transactionManager) {

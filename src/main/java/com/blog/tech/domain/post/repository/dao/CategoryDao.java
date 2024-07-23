@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.blog.tech.domain.common.BaseDao;
 import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.post.entity.Category;
-import com.blog.tech.domain.post.repository.ifs.CategoryRepository;
 
-public class CategoryDao implements CategoryRepository {
+public class CategoryDao implements com.blog.tech.domain.post.repository.ifs.CategoryRepository {
 
 	@Override
 	public Category save(final Category data) {

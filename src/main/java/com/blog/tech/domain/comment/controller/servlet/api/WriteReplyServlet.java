@@ -36,11 +36,8 @@ public class WriteReplyServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
 		final ReplyRequest request = objectMapper.readValue(req.getInputStream(), ReplyRequest.class);
-		try {
-			commentController.writeReplyOnComment(memberId, request);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+
+		commentController.writeReplyOnComment(memberId, request);
 	}
 
 }

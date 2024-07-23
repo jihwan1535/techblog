@@ -34,11 +34,8 @@ public class UpdateCommentServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
 		final EditCommentRequest request = objectMapper.readValue(req.getInputStream(), EditCommentRequest.class);
-		try {
-			commentController.updateComment(memberId, request);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+
+		commentController.updateComment(memberId, request);
 	}
 
 }

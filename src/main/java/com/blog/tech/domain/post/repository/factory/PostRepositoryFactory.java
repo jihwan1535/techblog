@@ -6,80 +6,81 @@ import com.blog.tech.domain.post.repository.dao.HashtagDao;
 import com.blog.tech.domain.post.repository.dao.PostDao;
 import com.blog.tech.domain.post.repository.dao.PostViewDao;
 import com.blog.tech.domain.post.repository.dao.TopicDao;
+import com.blog.tech.domain.post.repository.ifs.*;
 
 public class PostRepositoryFactory {
 
-	private static CategoryDao categoryDao;
-	private static ConnectHashtagDao connectHashtagDao;
-	private static HashtagDao hashtagDao;
-	private static PostDao postDao;
-	private static PostViewDao postViewDao;
-	private static TopicDao topicDao;
+	private static CategoryRepository categoryRepository;
+	private static ConnectHashtagRepository connectHashtagRepository;
+	private static HashtagRepository hashtagRepository;
+	private static PostRepository postRepository;
+	private static PostViewRepository postViewRepository;
+	private static TopicRepository topicRepository;
 
-	public static CategoryDao getCategoryDao() {
-		if (categoryDao == null) {
-			synchronized (CategoryDao.class) {
-				if (categoryDao == null) {
-					categoryDao = new CategoryDao();
+	public static CategoryRepository getCategoryRepository() {
+		if (categoryRepository == null) {
+			synchronized (CategoryRepository.class) {
+				if (categoryRepository == null) {
+					categoryRepository = new CategoryDao();
 				}
 			}
 		}
-		return categoryDao;
+		return categoryRepository;
 	}
 
-	public static ConnectHashtagDao getConnectHashtagDao() {
-		if (connectHashtagDao == null) {
-			synchronized (CategoryDao.class) {
-				if (connectHashtagDao == null) {
-					connectHashtagDao = new ConnectHashtagDao();
+	public static ConnectHashtagRepository getConnectHashtagRepository() {
+		if (connectHashtagRepository == null) {
+			synchronized (ConnectHashtagRepository.class) {
+				if (connectHashtagRepository == null) {
+					connectHashtagRepository = new ConnectHashtagDao();
 				}
 			}
 		}
-		return connectHashtagDao;
+		return connectHashtagRepository;
 	}
 
-	public static HashtagDao getHashtagDao() {
-		if (hashtagDao == null) {
-			synchronized (HashtagDao.class) {
-				if (hashtagDao == null) {
-					hashtagDao = new HashtagDao();
+	public static HashtagRepository getHashtagRepository() {
+		if (hashtagRepository == null) {
+			synchronized (HashtagRepository.class) {
+				if (hashtagRepository == null) {
+					hashtagRepository = new HashtagDao();
 				}
 			}
 		}
-		return hashtagDao;
+		return hashtagRepository;
 	}
 
-	public static PostDao getPostDao() {
-		if (postDao == null) {
-			synchronized (PostDao.class) {
-				if (postDao == null) {
-					postDao = new PostDao();
+	public static PostRepository getPostRepository() {
+		if (postRepository == null) {
+			synchronized (PostRepository.class) {
+				if (postRepository == null) {
+					postRepository = new PostDao();
 				}
 			}
 		}
-		return postDao;
+		return postRepository;
 	}
 
-	public static PostViewDao getPostViewDao() {
-		if (postViewDao == null) {
-			synchronized (PostViewDao.class) {
-				if (postViewDao == null) {
-					postViewDao = new PostViewDao();
+	public static PostViewRepository getPostViewRepository() {
+		if (postViewRepository == null) {
+			synchronized (PostViewRepository.class) {
+				if (postViewRepository == null) {
+					postViewRepository = new PostViewDao();
 				}
 			}
 		}
-		return postViewDao;
+		return postViewRepository;
 	}
 
-	public static TopicDao getTopicDao() {
-		if (topicDao == null) {
-			synchronized (TopicDao.class) {
-				if (topicDao == null) {
-					topicDao = new TopicDao();
+	public static TopicRepository getTopicRepository() {
+		if (topicRepository == null) {
+			synchronized (TopicRepository.class) {
+				if (topicRepository == null) {
+					topicRepository = new TopicDao();
 				}
 			}
 		}
-		return topicDao;
+		return topicRepository;
 	}
 
 

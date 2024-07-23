@@ -1,28 +1,18 @@
 package com.blog.tech.domain.comment.repository.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.blog.tech.domain.comment.entity.Comment;
 import com.blog.tech.domain.comment.entity.Reply;
 import com.blog.tech.domain.comment.entity.vo.Status;
 import com.blog.tech.domain.comment.repository.ifs.ReplyRepository;
+import com.blog.tech.domain.common.ConnectionManager;
 import com.blog.tech.domain.member.entity.MemberInfo;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class ReplyDao implements ReplyRepository {
-
-	private final Connection conn;
-
-	public ReplyDao(final Connection conn) {
-		this.conn = conn;
-	}
 
 	@Override
 	public Reply save(final Reply data) throws SQLException {
@@ -34,6 +24,7 @@ public class ReplyDao implements ReplyRepository {
 	}
 
 	private Reply create(final Reply data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql =
 			"INSERT INTO reply (id, member_info_id, comment_id, content, status, created_at, updated_at) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -60,6 +51,7 @@ public class ReplyDao implements ReplyRepository {
 	}
 
 	private void update(final Reply data) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final String sql = "UPDATE reply SET content = ?, report_count = ?, status = ?, updated_at = ? WHERE id = ?";
 		final PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, data.getContent());
@@ -75,6 +67,7 @@ public class ReplyDao implements ReplyRepository {
 
 	@Override
 	public Optional<Reply> findById(final Long id) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM reply r join member_info m "
 			+ "on r.member_info_id = m.id join comment c on r.comment_id = c.id WHERE r.id = ?");
 		pstmt.setLong(1, id);
@@ -105,6 +98,7 @@ public class ReplyDao implements ReplyRepository {
 
 	@Override
 	public List<Reply> findAllByCommentIdAndStatus(final Long commentId, final Status status) throws SQLException {
+		final Connection conn = ConnectionManager.getConnection();
 		final PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM reply r join member_info m "
 			+ "on r.member_info_id = m.id join comment c on r.comment_id = c.id "
 			+ "WHERE r.comment_id = ? AND r.status = ? ORDER BY r.id;");

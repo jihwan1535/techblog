@@ -34,15 +34,11 @@ public class GetCommentServlet extends HttpServlet {
 		final HttpServletResponse resp
 	) throws ServletException, IOException {
 		final Long postId = Long.valueOf(req.getParameter("post_id"));
-		try {
-			final List<CommentResponse> comments = commentController.allCommentsOnPost(postId);
-			final String json = objectMapper.writeValueAsString(comments);
+		final List<CommentResponse> comments = commentController.allCommentsOnPost(postId);
+		final String json = objectMapper.writeValueAsString(comments);
 
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(json);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(json);
 	}
 }

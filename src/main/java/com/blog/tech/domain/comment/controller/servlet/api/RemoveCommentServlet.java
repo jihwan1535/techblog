@@ -35,11 +35,7 @@ public class RemoveCommentServlet extends HttpServlet {
 	) throws ServletException, IOException {
 		final Long memberId = Long.parseLong((String)req.getAttribute("memberID"));
 		final DeleteCommentRequest request = objectMapper.readValue(req.getInputStream(), DeleteCommentRequest.class);
-		try {
-			commentController.unRegisterComment(memberId, request);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		commentController.unRegisterComment(memberId, request);
 	}
 
 }

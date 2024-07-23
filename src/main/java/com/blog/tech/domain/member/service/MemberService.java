@@ -18,15 +18,15 @@ import com.blog.tech.domain.member.entity.Member;
 import com.blog.tech.domain.member.entity.MemberInfo;
 import com.blog.tech.domain.member.entity.vo.MemberRole;
 import com.blog.tech.domain.member.entity.vo.MemberStatus;
-import com.blog.tech.domain.member.repository.factory.MemberDaoFactory;
+import com.blog.tech.domain.member.repository.factory.MemberRepositoryFactory;
 import com.blog.tech.domain.member.repository.ifs.MemberInfoRepository;
 import com.blog.tech.domain.member.repository.ifs.MemberRepository;
 import com.blog.tech.global.utility.Uploader;
 
 public class MemberService {
 
-	private final MemberRepository memberRepository = MemberDaoFactory.getMemberDao();
-	private final MemberInfoRepository memberInfoRepository = MemberDaoFactory.getMemberInfoDao();
+	private final MemberRepository memberRepository = MemberRepositoryFactory.getMemberRepository();
+	private final MemberInfoRepository memberInfoRepository = MemberRepositoryFactory.getMemberInfoRepository();
 	private final String duplication = "DUPLICATION";
 	private final String available = "AVAILABLE";
 	private final TransactionManager transactionManager;
